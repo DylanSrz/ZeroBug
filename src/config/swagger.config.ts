@@ -3,7 +3,7 @@ import { INestApplication, Logger } from "@nestjs/common";
 
 const logger = new Logger('Swagger');
 
-export const swaggerConfiguration = (app: INestApplication): void => {
+export const swaggerConfiguration = (app: INestApplication, port: number): void => {
 
     const config = new DocumentBuilder()
         .setTitle('Add Description')
@@ -16,5 +16,5 @@ export const swaggerConfiguration = (app: INestApplication): void => {
     const document = SwaggerModule.createDocument(app, config);
     SwaggerModule.setup('api/docs', app, document)
 
-    logger.log(`Docs available at http://localhost:3000/api/docs`)
+    logger.log(`Docs available at http://localhost:${port}/api/docs`)
 }
