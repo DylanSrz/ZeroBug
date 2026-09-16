@@ -3,6 +3,14 @@ export const EnvConfig = () => ({
         port: Number(process.env.APP_PORT),
         env: process.env.APP_NODE,
     },
+    database: {
+        host: process.env.DATABASE_HOST,
+        port: Number(process.env.DATABASE_PORT),
+        user: process.env.DATABASE_USER,
+        password: process.env.DATABASE_PASSWORD,
+        name: process.env.DATABASE_NAME,
+
+    },
     observe: {
         appKey: process.env.OBSERVE_APP_KEY,
         appSecret: process.env.OBSERVE_APP_SECRET,
