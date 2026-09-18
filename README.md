@@ -8,6 +8,7 @@ Backend en NestJS + TypeScript sobre PostgreSQL, desarrollado con metodología S
 - 📋 Tablero: <https://github.com/users/DylanSrz/projects/7>
 - 📘 Historias de usuario y reglas de negocio (RN-xxx): [`docs/`](docs/)
 - 🌿 Cómo trabajamos con Git: [`docs/guia-git.md`](docs/guia-git.md)
+- 🤝 Acuerdos de trabajo y Definition of Done: [`docs/working-agreement.md`](docs/working-agreement.md)
 - 📖 Documentación de la API (Swagger): `http://localhost:3000/api/docs` con la app corriendo
 
 ## Stack
@@ -218,7 +219,7 @@ npm run migration:create -- src/database/migrations/NombreDescriptivo   # migrac
 
 Cada PR ejecuta el workflow **CI** (`.github/workflows/ci.yml`): `quality` (lint sin warnings, Prettier, build, unit) y `e2e` (PostgreSQL efímero, migraciones, tests e2e). Ambos checks son obligatorios para mergear en `dev` y `main`.
 
-SCRUM con sprints de 2 semanas. Cada tarea del tablero es una rama corta + un PR pequeño hacia `dev` con `Closes #N`, revisado por un compañero. `main` solo recibe merges de `dev` al cierre de cada sprint. Detalles en [`docs/guia-git.md`](docs/guia-git.md).
+SCRUM con sprints de 2 semanas; acuerdos de equipo y Definition of Done en [`docs/working-agreement.md`](docs/working-agreement.md). Cada tarea del tablero es una rama corta + un PR pequeño hacia `dev` con `Closes #N`, revisado por un compañero. `main` solo recibe merges de `dev` al cierre de cada sprint. Detalles en [`docs/guia-git.md`](docs/guia-git.md).
 
 ## Equipo
 
