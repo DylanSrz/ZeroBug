@@ -1,5 +1,6 @@
 import { INestApplication, ValidationPipe } from '@nestjs/common';
 import helmet from 'helmet';
+import { HttpExceptionFilter } from './common/filters/index.js';
 
 export interface AppSetupOptions {
   /** Orígenes permitidos por CORS. ['*'] permite cualquiera (solo desarrollo). */
@@ -9,7 +10,8 @@ export interface AppSetupOptions {
 /**
  * Configuración transversal de la aplicación HTTP (RN-010, RN-011, RN-002).
  * Se usa desde main.ts y desde los tests e2e para que ambos apliquen exactamente
- * las mismas reglas: validación global de DTOs, cabeceras de seguridad y CORS.
+ * las mismas reglas: validación global de DTOs, cabeceras de seguridad, CORS
+ * y formato uniforme de errores.
  */
 export function setupApp(
   app: INestApplication,
@@ -49,4 +51,8 @@ export function setupApp(
       transform: true,
     }),
   );
+
+  // Toda excepción (HttpException, errores de BD o inesperados) sale con el
+  // mismo cuerpo: { statusCode, error, message, path, timestamp }.
+  app.useGlobalFilters(new HttpExceptionFilter());
 }
