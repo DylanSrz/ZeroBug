@@ -51,21 +51,21 @@ describe('HttpExceptionFilter (e2e)', () => {
 
   it('404 de dominio con el formato uniforme', async () => {
     const res = await request(app.getHttpServer())
-      .get('/errors/not-found/42')
+      .get('/api/v1/errors/not-found/42')
       .expect(404);
 
     expect(res.body).toEqual({
       statusCode: 404,
       error: 'Not Found',
       message: 'Mesa con id 42 no existe',
-      path: '/errors/not-found/42',
+      path: '/api/v1/errors/not-found/42',
       timestamp: expect.any(String),
     });
   });
 
   it('409 de regla de negocio incluye la RN', async () => {
     const res = await request(app.getHttpServer())
-      .get('/errors/conflict')
+      .get('/api/v1/errors/conflict')
       .expect(409);
 
     expect(res.body).toMatchObject({
@@ -77,19 +77,19 @@ describe('HttpExceptionFilter (e2e)', () => {
 
   it('ruta inexistente → 404 con el mismo formato', async () => {
     const res = await request(app.getHttpServer())
-      .get('/no-existe')
+      .get('/api/v1/no-existe')
       .expect(404);
 
     expect(res.body).toMatchObject({
       statusCode: 404,
       error: 'Not Found',
-      path: '/no-existe',
+      path: '/api/v1/no-existe',
     });
   });
 
   it('error no controlado → 500 sin filtrar detalles', async () => {
     const res = await request(app.getHttpServer())
-      .get('/errors/boom')
+      .get('/api/v1/errors/boom')
       .expect(500);
 
     expect(res.body).toMatchObject({
@@ -101,7 +101,7 @@ describe('HttpExceptionFilter (e2e)', () => {
 
   it('las respuestas correctas no se ven afectadas', async () => {
     await request(app.getHttpServer())
-      .get('/errors/ok')
+      .get('/api/v1/errors/ok')
       .expect(200, { ok: true });
   });
 });

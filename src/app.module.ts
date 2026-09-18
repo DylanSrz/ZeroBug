@@ -9,6 +9,7 @@ import {
   databaseConfiguration,
 } from './config/index.js';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { HealthModule } from './modules/health/health.module.js';
 
 export const { ObserveModule, ObserveInstrument } = createObserveModule();
 
@@ -31,6 +32,7 @@ export const { ObserveModule, ObserveInstrument } = createObserveModule();
       inject: [ConfigService],
       useFactory: databaseConfiguration,
     }),
+    HealthModule,
   ],
   controllers: [AppController],
   providers: [AppService],

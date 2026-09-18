@@ -1,4 +1,8 @@
-import { INestApplication, ValidationPipe } from '@nestjs/common';
+import {
+  INestApplication,
+  ValidationPipe,
+  VersioningType,
+} from '@nestjs/common';
 import helmet from 'helmet';
 import { HttpExceptionFilter } from './common/filters/index.js';
 
@@ -10,13 +14,18 @@ export interface AppSetupOptions {
 /**
  * Configuración transversal de la aplicación HTTP (RN-010, RN-011, RN-002).
  * Se usa desde main.ts y desde los tests e2e para que ambos apliquen exactamente
- * las mismas reglas: validación global de DTOs, cabeceras de seguridad, CORS
- * y formato uniforme de errores.
+ * las mismas reglas: prefijo /api/v1, validación global de DTOs, cabeceras de
+ * seguridad, CORS y formato uniforme de errores.
  */
 export function setupApp(
   app: INestApplication,
   options: AppSetupOptions,
 ): void {
+  // Prefijo global + versionado por URI (RN-003): todo controlador queda bajo /api/v1/...
+  // Con barra inicial: sin ella Nest 12 + Express 5 no montan el manejador de 404 bajo el prefijo.
+  app.setGlobalPrefix('/api');
+  app.enableVersioning({ type: VersioningType.URI, defaultVersion: '1' });
+
   // Cabeceras de seguridad. La CSP se relaja solo en script/style porque
   // Swagger UI (/api/docs) usa scripts y estilos inline.
   app.use(

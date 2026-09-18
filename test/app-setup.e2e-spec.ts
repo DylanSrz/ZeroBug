@@ -53,7 +53,7 @@ describe('setupApp (ValidationPipe, Helmet, CORS)', () => {
   describe('ValidationPipe global', () => {
     it('acepta un body válido y transforma tipos (transform: true)', async () => {
       const res = await request(app.getHttpServer())
-        .post('/probe')
+        .post('/api/v1/probe')
         .send({ name: 'Mesa 1', capacity: '4' })
         .expect(201);
 
@@ -65,7 +65,7 @@ describe('setupApp (ValidationPipe, Helmet, CORS)', () => {
 
     it('responde 400 ante un campo desconocido (forbidNonWhitelisted)', async () => {
       const res = await request(app.getHttpServer())
-        .post('/probe')
+        .post('/api/v1/probe')
         .send({ name: 'Mesa 1', capacity: 4, hacker: true })
         .expect(400);
 
@@ -76,7 +76,7 @@ describe('setupApp (ValidationPipe, Helmet, CORS)', () => {
 
     it('responde 400 ante valores inválidos con mensajes por campo', async () => {
       const res = await request(app.getHttpServer())
-        .post('/probe')
+        .post('/api/v1/probe')
         .send({ name: 'M', capacity: 0 })
         .expect(400);
 
@@ -89,7 +89,7 @@ describe('setupApp (ValidationPipe, Helmet, CORS)', () => {
   describe('Helmet', () => {
     it('añade cabeceras de seguridad', async () => {
       const res = await request(app.getHttpServer())
-        .post('/probe')
+        .post('/api/v1/probe')
         .send({ name: 'ok', capacity: 1 });
 
       expect(res.headers['x-content-type-options']).toBe('nosniff');
@@ -104,7 +104,7 @@ describe('setupApp (ValidationPipe, Helmet, CORS)', () => {
   describe('CORS', () => {
     it('permite un origen configurado', async () => {
       const res = await request(app.getHttpServer())
-        .options('/probe')
+        .options('/api/v1/probe')
         .set('Origin', 'http://localhost:5173')
         .set('Access-Control-Request-Method', 'POST');
 
@@ -116,7 +116,7 @@ describe('setupApp (ValidationPipe, Helmet, CORS)', () => {
 
     it('rechaza un origen no configurado', async () => {
       const res = await request(app.getHttpServer())
-        .options('/probe')
+        .options('/api/v1/probe')
         .set('Origin', 'http://evil.example')
         .set('Access-Control-Request-Method', 'POST');
 
@@ -126,7 +126,7 @@ describe('setupApp (ValidationPipe, Helmet, CORS)', () => {
     it('con "*" permite cualquier origen (modo desarrollo)', async () => {
       const devApp = await createApp(['*']);
       const res = await request(devApp.getHttpServer())
-        .options('/probe')
+        .options('/api/v1/probe')
         .set('Origin', 'http://cualquiera.local')
         .set('Access-Control-Request-Method', 'POST');
 
