@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Guía de Git y GitFlow
+    url: https://github.com/DylanSrz/ZeroBug/blob/dev/docs/guia-git.md
+    about: Cómo trabajamos con ramas, commits y PRs.
+  - name: Tablero del proyecto
+    url: https://github.com/users/DylanSrz/projects/7
+    about: Backlog, sprint actual y estado de cada tarea.
