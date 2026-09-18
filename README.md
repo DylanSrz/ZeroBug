@@ -21,9 +21,7 @@
   <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
   [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
 
-## EQUIPO
 
-- Diego Gonzalez ()
 
 ## Description
 
@@ -175,3 +173,5 @@ npm run migration:create -- src/database/migrations/NombreDescriptivo   # migrac
 | Nombre | Rol | Usuario de GitHub |
 |---|---|---|
 | Jonathan Rodríguez | Desarrollador | @rodriguezvjhona-droid |
+Kerin Barranco |  Desarrollador | @Kerin0011
+Diego Gonzales |  Desarrollador | @Gonza204658
