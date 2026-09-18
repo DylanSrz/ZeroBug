@@ -1,7 +1,7 @@
 import { NestFactory } from '@nestjs/core';
-import { VersioningType } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { AppModule, ObserveInstrument } from './app.module.js';
+import { setupApp } from './app.setup.js';
 import { swaggerConfiguration } from './config/index.js';
 
 async function bootstrap() {
@@ -9,11 +9,7 @@ async function bootstrap() {
     instrument: ObserveInstrument,
   });
 
-  app.setGlobalPrefix('api');
-  app.enableVersioning({
-    type: VersioningType.URI,
-    defaultVersion: '1',
-  });
+  setupApp(app);
 
   const port = app.get(ConfigService).getOrThrow<number>('app.port');
   swaggerConfiguration(app, port);
