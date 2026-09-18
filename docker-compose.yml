@@ -36,7 +36,7 @@ services:
 
     environment:
       APP_PORT: ${APP_PORT}
-      APP_NODE: ${APP_NODE}
+      NODE_ENV: ${NODE_ENV}
 
       # Dentro de Docker, PostgreSQL se alcanza usando el nombre del servicio: "db"
       DATABASE_HOST: db
