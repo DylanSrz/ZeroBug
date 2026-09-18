@@ -143,6 +143,7 @@ docker compose up -d db
 npm run migration:generate -- src/database/migrations/NombreDescriptivo
 
 # 3. Revisa el SQL generado en src/database/migrations/ y ajústalo si hace falta
+#    (usa `import type { MigrationInterface, QueryRunner } from 'typeorm'` — Vitest lo exige)
 
 # 4. Aplícala en tu base local
 npm run migration:run
