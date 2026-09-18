@@ -1,4 +1,4 @@
 export { EnvConfig } from "./env.config.js";
 export { envValidationSchema } from "./env.validation.schema.js";
 export { swaggerConfiguration } from "./swagger.config.js";
-export { databaseConfiguration } from './database.config.js'
+export { databaseConfiguration } from '../database/database.config.js'
