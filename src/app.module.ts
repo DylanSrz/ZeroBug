@@ -5,6 +5,7 @@ import { AppService } from './app.service.js';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { EnvConfig, envValidationSchema, databaseConfiguration } from './config/index.js';
 import { TypeOrmModule } from '@nestjs/typeorm'
+import { TableModule } from './table/table.module.js';
 
 export const { ObserveModule, ObserveInstrument } = createObserveModule();
 
@@ -26,7 +27,8 @@ export const { ObserveModule, ObserveInstrument } = createObserveModule();
       imports: [ConfigModule,],
       inject: [ConfigService],
       useFactory: databaseConfiguration,
-    })
+    }),
+    TableModule
   ],
   controllers: [AppController],
   providers: [AppService],
