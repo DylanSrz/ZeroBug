@@ -10,7 +10,8 @@ async function bootstrap() {
   });
   const config = app.get(ConfigService);
 
-  app.setGlobalPrefix('api');
+  // Con barra inicial: sin ella Nest 12 + Express 5 no montan el manejador de 404 bajo el prefijo.
+  app.setGlobalPrefix('/api');
   setupApp(app, {
     corsOrigins: config.getOrThrow<string[]>('app.corsOrigins'),
   });
