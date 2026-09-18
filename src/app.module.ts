@@ -10,6 +10,7 @@ import {
 } from './config/index.js';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { HealthModule } from './modules/health/health.module.js';
+import { TablesModule } from './modules/tables/tables.module.js';
 
 export const { ObserveModule, ObserveInstrument } = createObserveModule();
 
@@ -33,6 +34,7 @@ export const { ObserveModule, ObserveInstrument } = createObserveModule();
       useFactory: databaseConfiguration,
     }),
     HealthModule,
+    TablesModule,
   ],
   controllers: [AppController],
   providers: [AppService],
