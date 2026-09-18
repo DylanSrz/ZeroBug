@@ -1,5 +1,7 @@
 # ZeroBug — Restaurant API
 
+[![CI](https://github.com/DylanSrz/ZeroBug/actions/workflows/ci.yml/badge.svg?branch=dev)](https://github.com/DylanSrz/ZeroBug/actions/workflows/ci.yml)
+
 API REST para la gestión operativa de un restaurante: **mesas, menú, reservas, usuarios/roles y pedidos**.
 Backend en NestJS + TypeScript sobre PostgreSQL, desarrollado con metodología SCRUM en 4 sprints.
 
@@ -213,6 +215,8 @@ npm run migration:create -- src/database/migrations/NombreDescriptivo   # migrac
 | Prefijo global `'/api'` **con barra inicial**                                             | Sin ella Nest 12 + Express 5 no montan el manejador de 404 bajo el prefijo.                                                                     |
 
 ## Flujo de trabajo
+
+Cada PR ejecuta el workflow **CI** (`.github/workflows/ci.yml`): `quality` (lint sin warnings, Prettier, build, unit) y `e2e` (PostgreSQL efímero, migraciones, tests e2e). Ambos checks son obligatorios para mergear en `dev` y `main`.
 
 SCRUM con sprints de 2 semanas. Cada tarea del tablero es una rama corta + un PR pequeño hacia `dev` con `Closes #N`, revisado por un compañero. `main` solo recibe merges de `dev` al cierre de cada sprint. Detalles en [`docs/guia-git.md`](docs/guia-git.md).
 
