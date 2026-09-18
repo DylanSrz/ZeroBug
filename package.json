@@ -1,8 +1,8 @@
 {
-  "name": "initial-setting-nest",
+  "name": "zerobug-restaurant-api",
   "version": "0.0.1",
-  "description": "",
-  "author": "",
+  "description": "API REST para la gestión operativa de un restaurante: mesas, menú, reservas, usuarios y pedidos.",
+  "author": "Equipo ZeroBug",
   "private": true,
   "license": "UNLICENSED",
   "type": "module",
