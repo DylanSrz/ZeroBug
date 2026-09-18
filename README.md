@@ -113,6 +113,59 @@ Nest is an MIT-licensed open source project. It can grow thanks to the sponsors 
 
 Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
 
+## Base de datos y migraciones (TypeORM)
+
+El esquema de PostgreSQL se administra **únicamente** con migraciones versionadas de TypeORM
+(`synchronize: false`). Nunca se modifica la base de datos a mano.
+
+**Convención de carpetas**
+
+```text
+src/
+├── database/
+│   ├── data-source.ts        # DataSource para la CLI (npm run migration:*)
+│   ├── database.config.ts    # Conexión de la app NestJS (migrationsRun: true)
+│   └── migrations/           # <timestamp>-<Nombre>.ts, una por cambio de esquema
+└── modules/<dominio>/entities/*.entity.ts
+```
+
+**Flujo de trabajo**
+
+```bash
+# 0. Levanta PostgreSQL y ten el .env configurado (DATABASE_HOST=localhost en local)
+docker compose up -d db
+
+# 1. Modifica o crea una entidad (*.entity.ts)
+
+# 2. Genera la migración comparando entidades vs. base de datos
+npm run migration:generate -- src/database/migrations/NombreDescriptivo
+
+# 3. Revisa el SQL generado en src/database/migrations/ y ajústalo si hace falta
+
+# 4. Aplícala en tu base local
+npm run migration:run
+
+# 5. Verifica el estado ([X] aplicada, [ ] pendiente)
+npm run migration:show
+
+# 6. Commitea la entidad y la migración juntas en el mismo PR
+```
+
+Otros comandos:
+
+```bash
+npm run migration:revert   # deshace la última migración aplicada
+npm run migration:create -- src/database/migrations/NombreDescriptivo   # migración vacía (datos, índices manuales)
+```
+
+**Cómo se aplican en cada entorno**
+
+- **Local / Docker:** la API ejecuta las migraciones pendientes al arrancar (`migrationsRun: true`
+  en `database.config.ts`), por lo que `docker compose up -d` deja la base de datos lista.
+  En el contenedor se usan las migraciones compiladas en `dist/database/migrations/*.js`.
+- **Reglas:** una migración commiteada nunca se edita; si hay que corregir algo, se crea otra.
+  No uses `synchronize: true` ni cambies el esquema con SQL manual.
+
 ## Equipo
 
 | Nombre | Rol | Usuario de GitHub |
