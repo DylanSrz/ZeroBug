@@ -1,0 +1,56 @@
+name: container_zeroBug
+
+services:
+
+  db:
+    image: postgres:16-alpine
+    container_name: postgres-zeroBug
+    restart: unless-stopped
+
+    ports:
+      - "${DATABASE_PORT}:${DATABASE_PORT}"
+
+    environment:
+      POSTGRES_USER: "${DATABASE_USER}"
+      POSTGRES_PASSWORD: "${DATABASE_PASSWORD}"
+      POSTGRES_DB: "${DATABASE_NAME}"
+
+    volumes:
+      - db_zeroBug:/var/lib/postgresql/data
+
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U ${DATABASE_USER} -d ${DATABASE_NAME}" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+  restaurant-api:
+    build: .
+    container_name: api-zeroBug
+    restart: unless-stopped
+
+    depends_on:
+      db:
+        condition: service_healthy
+
+    environment:
+      APP_PORT: ${APP_PORT}
+      NODE_ENV: ${NODE_ENV}
+
+      # Dentro de Docker, PostgreSQL se alcanza usando el nombre del servicio: "db"
+      DATABASE_HOST: db
+      DATABASE_PORT: ${DATABASE_PORT}
+      DATABASE_USER: ${DATABASE_USER}
+      DATABASE_PASSWORD: ${DATABASE_PASSWORD}
+      DATABASE_NAME: ${DATABASE_NAME}
+
+      OBSERVE_APP_KEY: ${OBSERVE_APP_KEY}
+      OBSERVE_APP_SECRET: ${OBSERVE_APP_SECRET}
+      OBSERVE_SERVICE_ID: ${OBSERVE_SERVICE_ID}
+
+    ports:
+      - "${APP_PORT}:${APP_PORT}"
+
+volumes:
+  db_zeroBug:
