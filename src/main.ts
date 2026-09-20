@@ -8,10 +8,13 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
     instrument: ObserveInstrument,
   });
+  const config = app.get(ConfigService);
 
-  setupApp(app);
+  setupApp(app, {
+    corsOrigins: config.getOrThrow<string[]>('app.corsOrigins'),
+  });
 
-  const port = app.get(ConfigService).getOrThrow<number>('app.port');
+  const port = config.getOrThrow<number>('app.port');
   swaggerConfiguration(app, port);
 
   await app.listen(port);

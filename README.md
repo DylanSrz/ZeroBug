@@ -1,119 +1,153 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# ZeroBug — Restaurant API
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+[![CI](https://github.com/DylanSrz/ZeroBug/actions/workflows/ci.yml/badge.svg?branch=dev)](https://github.com/DylanSrz/ZeroBug/actions/workflows/ci.yml)
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+API REST para la gestión operativa de un restaurante: **mesas, menú, reservas, usuarios/roles y pedidos**.
+Backend en NestJS + TypeScript sobre PostgreSQL, desarrollado con metodología SCRUM en 4 sprints.
 
+- 📋 Tablero: <https://github.com/users/DylanSrz/projects/7>
+- 📘 Historias de usuario y reglas de negocio (RN-xxx): [`docs/`](docs/)
+- 🌿 Cómo trabajamos con Git: [`docs/guia-git.md`](docs/guia-git.md)
+- 🤝 Acuerdos de trabajo y Definition of Done: [`docs/working-agreement.md`](docs/working-agreement.md)
+- 📖 Documentación de la API (Swagger): `http://localhost:3000/api/docs` con la app corriendo
 
+## Stack
 
-## Description
+| Capa                | Herramienta                                                                |
+| ------------------- | -------------------------------------------------------------------------- |
+| Runtime / lenguaje  | Node.js 24 LTS · TypeScript (ESM)                                          |
+| Framework           | NestJS 12                                                                  |
+| Base de datos / ORM | PostgreSQL 16 · TypeORM con migraciones versionadas (`synchronize: false`) |
+| Configuración       | `@nestjs/config` + validación de variables con **zod**                     |
+| Validación HTTP     | `class-validator` + `class-transformer` (`ValidationPipe` global)          |
+| Documentación       | `@nestjs/swagger` (OpenAPI)                                                |
+| Testing             | Vitest + Supertest (unit y e2e)                                            |
+| Calidad             | oxlint · Prettier                                                          |
+| Seguridad base      | Helmet · CORS configurable por entorno · formato de error uniforme         |
+| Infraestructura     | Docker · Docker Compose                                                    |
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+## Requisitos
 
-## Project setup
+- Node.js ≥ 24 y npm
+- Docker y Docker Compose (para PostgreSQL)
+- Git
 
-```bash
-$ npm install
-```
-
-## Compile and run the project
-
-```bash
-# development
-$ npm run start
-
-# watch mode
-$ npm run start:dev
-
-# production mode
-$ npm run start:prod
-```
-
-## Run tests
+## Puesta en marcha
 
 ```bash
-# unit tests
-$ npm run test
+git clone git@github.com:DylanSrz/ZeroBug.git
+cd ZeroBug
+git checkout dev                 # el trabajo se integra en dev; main es producción
 
-# e2e tests
-$ npm run test:e2e
+cp .env.example .env             # y completa DATABASE_USER / DATABASE_PASSWORD / DATABASE_NAME
+npm install
 
-# test coverage
-$ npm run test:cov
+docker compose up -d db          # PostgreSQL en localhost:5432
+npm run start:dev                # API en http://localhost:3000 (aplica migraciones pendientes al arrancar)
 ```
 
-## Deployment
-
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
-
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
+Comprueba que todo está arriba:
 
 ```bash
-$ npm install -g @nestjs/mau
-$ mau deploy
+curl http://localhost:3000/api/v1/health
+# → {"status":"ok","service":"restaurant-api"}
 ```
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+Swagger: <http://localhost:3000/api/docs>
 
-## Observability
+### Todo en Docker (API + base de datos)
 
-In production applications, observability is essential for understanding how your system behaves, detecting issues early, and maintaining reliable performance.
+```bash
+docker compose up -d --build     # levanta db y restaurant-api con las variables del .env
+docker compose logs -f restaurant-api
+```
 
-[NestJS Observe](https://observe.nestjs.com) automatically instruments your NestJS application, giving you deep visibility into your system with minimal setup:
+Dentro de Docker la API alcanza PostgreSQL por el nombre del servicio (`DATABASE_HOST=db`, lo inyecta compose).
 
-- **Distributed tracing:** Follow requests across services and understand how they flow through your system.
-- **Waterfall analysis:** Visualize request execution and identify slow operations, bottlenecks, and unexpected delays.
-- **Performance analysis:** Analyze application performance in real time and quickly pinpoint areas that need optimization.
-- **Metrics:** Track key application and infrastructure metrics to understand system health and performance trends.
-- **Logging:** Centralize and correlate logs with traces and other telemetry to make debugging easier.
-- **Error tracking:** Detect errors quickly and investigate their root causes with the surrounding context.
-- **SLA monitoring:** Track service-level objectives and identify when your application is approaching or exceeding defined thresholds.
-- **Alarms and alerts:** Set up alerts for critical errors, performance degradation, SLA violations, and other anomalies so your team can react quickly.
+## Variables de entorno
 
-## Resources
+Todas están documentadas en [`.env.example`](.env.example). Si falta una obligatoria o tiene un valor inválido, **la aplicación no arranca** y muestra la lista de problemas.
 
-Check out a few resources that may come in handy when working with NestJS:
+| Variable                                | Descripción                                                            | Default       |
+| --------------------------------------- | ---------------------------------------------------------------------- | ------------- |
+| `NODE_ENV`                              | `development` · `production` · `test`                                  | `development` |
+| `APP_PORT`                              | Puerto HTTP                                                            | `3000`        |
+| `DATABASE_HOST/PORT/USER/PASSWORD/NAME` | Conexión a PostgreSQL                                                  | puerto `5432` |
+| `CORS_ORIGIN`                           | Orígenes permitidos separados por coma. En producción no se admite `*` | `*`           |
+| `OBSERVE_*`                             | NestJS Observe (opcional)                                              | —             |
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Auto-instrument your application with [NestJS Observer](https://observer.nestjs.com). Distributed tracing, metrics, and logging made easy. Error tracking and performance monitoring for your NestJS applications.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+Nunca se versiona `.env`; los secretos no van en el código (RN-013).
 
-## Support
+## Scripts
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+| Comando                                                         | Qué hace                                |
+| --------------------------------------------------------------- | --------------------------------------- |
+| `npm run start:dev`                                             | API en modo watch                       |
+| `npm run build` / `npm run start:prod`                          | Compila a `dist/` y ejecuta             |
+| `npm run lint`                                                  | oxlint sobre `src/` y `test/`           |
+| `npm run format`                                                | Prettier                                |
+| `npm run test`                                                  | Tests unitarios (`*.spec.ts`)           |
+| `npm run test:e2e`                                              | Tests end-to-end (`test/*.e2e-spec.ts`) |
+| `npm run test:cov`                                              | Cobertura                               |
+| `npm run migration:generate -- src/database/migrations/Nombre`  | Genera migración desde las entidades    |
+| `npm run migration:run` / `migration:revert` / `migration:show` | Aplica, deshace o lista migraciones     |
+| `npm run migration:create -- src/database/migrations/Nombre`    | Migración vacía                         |
 
-## Stay in touch
+## Estructura del proyecto
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+```text
+src/
+├── app.module.ts            # módulo raíz: Config, Observe, TypeORM y módulos de dominio
+├── app.setup.ts             # configuración transversal: /api/v1, ValidationPipe, Helmet, CORS, filtro de errores
+├── main.ts                  # bootstrap
+├── common/
+│   ├── exceptions/          # EntityNotFoundException (404), BusinessRuleException (409 + RN)
+│   └── filters/             # HttpExceptionFilter: formato de error uniforme
+├── config/                  # env.config, env.validation.schema (zod), swagger.config
+├── database/
+│   ├── data-source.ts       # DataSource para la CLI de TypeORM
+│   ├── database.config.ts   # conexión de la app (migrationsRun: true)
+│   └── migrations/          # <timestamp>-<Nombre>.ts
+└── modules/
+    └── <dominio>/           # un módulo NestJS por dominio (RN-004)
+        ├── dto/
+        ├── entities/
+        ├── <dominio>.controller.ts
+        ├── <dominio>.service.ts
+        └── <dominio>.module.ts
+test/                        # e2e (supertest)
+docs/                        # HU-001 … HU-020, guía de git
+```
 
-## License
+## Convenciones de la API
 
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+- Todos los endpoints viven bajo **`/api/v1`** (RN-003). Un controlador nuevo cae ahí automáticamente.
+- Los controladores son delgados; la lógica de negocio va en los services (RN-005/006) y el acceso a datos solo mediante TypeORM (RN-007).
+- Los DTOs se validan con decoradores de `class-validator`. Cualquier campo no declarado en el DTO responde **400**. Para query params numéricos usar `@Type(() => Number)`.
+- Errores: lanzar desde el service `EntityNotFoundException('Mesa', id)` → 404 o `BusinessRuleException('…', 'RN-016')` → 409. No hace falta `try/catch` en controladores; toda respuesta de error tiene la forma:
+
+  ```json
+  {
+    "statusCode": 409,
+    "error": "Conflict",
+    "message": "El número de mesa ya existe",
+    "rule": "RN-016",
+    "path": "/api/v1/tables",
+    "timestamp": "…"
+  }
+  ```
+
+- Cada controlador lleva `@ApiTags('Nombre')` para agruparse en Swagger (RN-012).
+- Todo cambio de esquema es una migración versionada (ver abajo).
+
+## Tests
+
+```bash
+npm run test          # unitarios, sin base de datos
+npm run test:e2e      # e2e; los specs que importan AppModule necesitan PostgreSQL arriba (docker compose up -d db)
+```
+
+Los e2e de configuración transversal (`test/app-setup.e2e-spec.ts`, `test/http-exception-filter.e2e-spec.ts`) no necesitan base de datos.
 
 ## Base de datos y migraciones (TypeORM)
 
@@ -143,6 +177,7 @@ docker compose up -d db
 npm run migration:generate -- src/database/migrations/NombreDescriptivo
 
 # 3. Revisa el SQL generado en src/database/migrations/ y ajústalo si hace falta
+#    (usa `import type { MigrationInterface, QueryRunner } from 'typeorm'` — Vitest lo exige)
 
 # 4. Aplícala en tu base local
 npm run migration:run
@@ -168,10 +203,29 @@ npm run migration:create -- src/database/migrations/NombreDescriptivo   # migrac
 - **Reglas:** una migración commiteada nunca se edita; si hay que corregir algo, se crea otra.
   No uses `synchronize: true` ni cambies el esquema con SQL manual.
 
+## Decisiones técnicas
+
+| Decisión                                                                                  | Motivo                                                                                                                                          |
+| ----------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- |
+| **TypeORM** en vez de Prisma (que menciona `docs/HU-001.md` original)                     | El proyecto ya estaba construido con TypeORM al planificar; se conservó y se actualizó la HU. Migraciones versionadas con `synchronize: false`. |
+| **Vitest** en vez de Jest                                                                 | Ya configurado por el starter; ESM nativo y más rápido. Requiere `import type` para tipos de `typeorm` en migraciones.                          |
+| **oxlint** en vez de ESLint                                                               | Ya configurado por el starter; suficiente para las reglas del proyecto.                                                                         |
+| **class-validator + class-transformer** para DTOs; **zod** solo para variables de entorno | Estándar NestJS y `@nestjs/swagger` documenta los DTOs automáticamente. Decisión del equipo (issue #30).                                        |
+| **`NODE_ENV`** (no `APP_NODE`)                                                            | Convención que leen Nest, TypeORM y el `Dockerfile`.                                                                                            |
+| Migraciones aplicadas **al arrancar** (`migrationsRun: true`)                             | `docker compose up` deja el entorno listo sin pasos manuales.                                                                                   |
+| Prefijo global `'/api'` **con barra inicial**                                             | Sin ella Nest 12 + Express 5 no montan el manejador de 404 bajo el prefijo.                                                                     |
+
+## Flujo de trabajo
+
+Cada PR ejecuta el workflow **CI** (`.github/workflows/ci.yml`): `quality` (lint sin warnings, Prettier, build, unit) y `e2e` (PostgreSQL efímero, migraciones, tests e2e). Ambos checks son obligatorios para mergear en `dev` y `main`.
+
+SCRUM con sprints de 2 semanas; acuerdos de equipo y Definition of Done en [`docs/working-agreement.md`](docs/working-agreement.md). Cada tarea del tablero es una rama corta + un PR pequeño hacia `dev` con `Closes #N`, revisado por un compañero. `main` solo recibe merges de `dev` al cierre de cada sprint. Detalles en [`docs/guia-git.md`](docs/guia-git.md).
+
 ## Equipo
 
-| Nombre | Rol | Usuario de GitHub |
-|---|---|---|
+| Nombre             | Rol           | Usuario de GitHub      |
+| ------------------ | ------------- | ---------------------- |
+| Dylan Suárez       | Scrum Master  | @DylanSrz              |
 | Jonathan Rodríguez | Desarrollador | @rodriguezvjhona-droid |
-Kerin Barranco |  Desarrollador | @Kerin0011
-Diego Gonzales |  Desarrollador | @Gonza204658
+| Kerin Barranco     | Desarrollador | @Kerin0011             |
+| Diego Gonzales     | Desarrollador | @Gonza204658           |

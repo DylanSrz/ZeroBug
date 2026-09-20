@@ -1,0 +1,85 @@
+name: 📘 Historia de usuario
+description: Nueva HU con el mismo formato que docs/HU-xxx.md
+title: "HU-0XX — "
+labels: ["historia"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Usa el mismo formato que las HU existentes en `docs/`. El documento fuente debe existir en `docs/HU-0XX.md` en la rama `dev` (o llegar en un PR `docs/...`).
+  - type: dropdown
+    id: epica
+    attributes:
+      label: Épica
+      options:
+        - Arquitectura e Infraestructura
+        - Gestión Operativa
+        - Gestión del Menú
+        - Gestión de Reservas
+        - Gestión de Usuarios
+        - Seguridad, Autenticación y Autorización
+        - Gestión de Pedidos
+    validations:
+      required: true
+  - type: dropdown
+    id: prioridad
+    attributes:
+      label: Prioridad
+      options: ["Crítica", "Muy Alta", "Alta", "Media"]
+    validations:
+      required: true
+  - type: input
+    id: puntos
+    attributes:
+      label: Story Points
+      placeholder: "8"
+    validations:
+      required: true
+  - type: input
+    id: dependencias
+    attributes:
+      label: Dependencias
+      placeholder: "#15 HU-007, #16 HU-008 (o 'Ninguna')"
+  - type: textarea
+    id: historia
+    attributes:
+      label: Historia de usuario
+      value: |
+        **Como** …
+        **Quiero** …
+        **Para** …
+    validations:
+      required: true
+  - type: textarea
+    id: descripcion
+    attributes:
+      label: Objetivo y descripción funcional
+    validations:
+      required: true
+  - type: textarea
+    id: reglas
+    attributes:
+      label: Reglas de negocio
+      description: Numeradas siguiendo la secuencia RN-xxx del documento.
+      value: |
+        **RN-1xx** …
+  - type: textarea
+    id: endpoints
+    attributes:
+      label: Endpoints
+      render: http
+      placeholder: |
+        POST /api/v1/orders/{id}/items
+  - type: textarea
+    id: validaciones
+    attributes:
+      label: Validaciones
+  - type: textarea
+    id: criterios
+    attributes:
+      label: Criterios de aceptación
+      description: Uno por línea; se convierten en checklist.
+      value: |
+        - [ ] …
+    validations:
+      required: true

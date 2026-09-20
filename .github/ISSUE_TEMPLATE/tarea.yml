@@ -1,0 +1,46 @@
+name: 🔧 Tarea técnica
+description: Sub-tarea de una HU (1 rama + 1 PR)
+labels: ["tarea"]
+body:
+  - type: input
+    id: hu
+    attributes:
+      label: HU padre
+      placeholder: "#10 HU-002 — Administración de Mesas"
+    validations:
+      required: true
+  - type: input
+    id: rama
+    attributes:
+      label: Rama sugerida
+      placeholder: "feature/hu-002-entidad-mesa"
+    validations:
+      required: true
+  - type: textarea
+    id: objetivo
+    attributes:
+      label: Objetivo
+      description: Una o dos frases. Qué queda funcionando cuando esto termine.
+    validations:
+      required: true
+  - type: textarea
+    id: alcance
+    attributes:
+      label: Alcance
+      description: Checklist de lo que incluye (y, si hace falta, lo que NO incluye).
+      value: |
+        - [ ] …
+    validations:
+      required: true
+  - type: input
+    id: reglas
+    attributes:
+      label: Reglas de negocio involucradas
+      placeholder: "RN-016, RN-017"
+  - type: textarea
+    id: terminado
+    attributes:
+      label: Terminado cuando
+      description: Cómo se verifica (comando, endpoint, test).
+    validations:
+      required: true

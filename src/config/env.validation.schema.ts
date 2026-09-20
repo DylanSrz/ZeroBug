@@ -15,6 +15,9 @@ export const envValidationSchema = z.object({
   DATABASE_PASSWORD: z.string().min(1),
   DATABASE_NAME: z.string().min(1),
 
+  // Orígenes permitidos por CORS, separados por coma. "*" solo fuera de producción.
+  CORS_ORIGIN: z.string().min(1).default('*'),
+
   OBSERVE_APP_KEY: z.string().optional(),
   OBSERVE_APP_SECRET: z.string().optional(),
   OBSERVE_SERVICE_ID: z.string().optional(),
@@ -22,8 +25,22 @@ export const envValidationSchema = z.object({
 
 export type Env = z.infer<typeof envValidationSchema>;
 
+const schemaWithRules = envValidationSchema.superRefine((env, ctx) => {
+  if (
+    env.NODE_ENV === 'production' &&
+    env.CORS_ORIGIN.split(',').some((o) => o.trim() === '*')
+  ) {
+    ctx.addIssue({
+      code: 'custom',
+      path: ['CORS_ORIGIN'],
+      message:
+        'En producción CORS_ORIGIN debe listar orígenes explícitos; "*" no está permitido (RN-002)',
+    });
+  }
+});
+
 export const validateEnv = (config: Record<string, unknown>): Env => {
-  const result = envValidationSchema.safeParse(config);
+  const result = schemaWithRules.safeParse(config);
 
   if (!result.success) {
     const details = result.error.issues

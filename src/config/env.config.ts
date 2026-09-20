@@ -2,6 +2,10 @@ export const EnvConfig = () => ({
   app: {
     port: Number(process.env.APP_PORT),
     env: process.env.NODE_ENV,
+    corsOrigins: (process.env.CORS_ORIGIN ?? '*')
+      .split(',')
+      .map((origin) => origin.trim())
+      .filter(Boolean),
   },
   database: {
     host: process.env.DATABASE_HOST,
