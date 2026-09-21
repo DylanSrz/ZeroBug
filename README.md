@@ -223,9 +223,10 @@ SCRUM con sprints de 2 semanas; acuerdos de equipo y Definition of Done en [`doc
 
 ## Equipo
 
-| Nombre             | Rol           | Usuario de GitHub      |
-| ------------------ | ------------- | ---------------------- |
-| Dylan Suárez       | Scrum Master  | @DylanSrz              |
-| Jonathan Rodríguez | Desarrollador | @rodriguezvjhona-droid |
-| Kerin Barranco     | Desarrollador | @Kerin0011             |
-| Diego Gonzales     | Desarrollador | @Gonza204658           |
+| Nombre             | Rol                          | Usuario de GitHub      |
+| ------------------ | ---------------------------- | ---------------------- |
+| Dylan Suárez       | Scrum Master · Desarrollador | @DylanSrz              |
+| Jonathan Rodríguez | Desarrollador                | @rodriguezvjhona-droid |
+| Kerin Barranco     | Desarrollador                | @Kerin0011             |
+| Diego Gonzales     | Desarrollador                | @Gonza204658           |
+| Jorel Hernández    | Desarrollador                | @jorel2610             |

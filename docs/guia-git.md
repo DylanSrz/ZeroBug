@@ -126,7 +126,7 @@ la versión que está en dev
 - Carpetas de dependencias (`node_modules/`, `.venv/`) y archivos del sistema.
 - Si un secreto se sube por accidente: avisar al líder DE INMEDIATO (se rota la credencial). No basta con borrarlo en otro commit: queda en el historial.
 
-## 8. Ejercicio de iniciación (obligatorio para los 6)
+## 8. Ejercicio de iniciación (obligatorio para los 5 integrantes)
 
 Cada integrante completa una vez el ciclo entero, sin riesgo:
 
