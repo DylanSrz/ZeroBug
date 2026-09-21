@@ -1,3 +1,4 @@
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import {
   Check,
   Column,
@@ -19,15 +20,19 @@ import { ProductAvailability, ProductStatus } from '../enums/index.js';
 // Un mismo nombre puede repetirse en categorías distintas, no dentro de la misma.
 @Index('UQ_products_category_name', ['categoryId', 'name'], { unique: true })
 export class Product {
+  @ApiProperty({ format: 'uuid' })
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
+  @ApiProperty({ example: 'Hamburguesa Clásica' })
   @Column({ type: 'varchar', length: 100 })
   name: string;
 
+  @ApiPropertyOptional({ nullable: true })
   @Column({ type: 'text', nullable: true })
   description: string | null;
 
+  @ApiProperty({ example: 25000 })
   @Column({
     type: 'decimal',
     precision: 10,
@@ -38,18 +43,25 @@ export class Product {
 
   // RN-025: todo producto pertenece a una categoría existente.
   // RESTRICT: no se puede borrar una categoría con productos.
+  @ApiProperty({ format: 'uuid' })
   @Column({ type: 'uuid' })
   categoryId: string;
 
+  @ApiPropertyOptional({
+    type: () => Category,
+    description: 'Presente en las consultas (GET)',
+  })
   @ManyToOne(() => Category, { onDelete: 'RESTRICT', nullable: false })
   @JoinColumn({ name: 'categoryId' })
   category: Category;
 
   // RN-027
+  @ApiProperty({ enum: ProductStatus })
   @Column({ type: 'enum', enum: ProductStatus, default: ProductStatus.ACTIVE })
   status: ProductStatus;
 
   // RN-028
+  @ApiProperty({ enum: ProductAvailability })
   @Column({
     type: 'enum',
     enum: ProductAvailability,
@@ -57,9 +69,11 @@ export class Product {
   })
   availability: ProductAvailability;
 
+  @ApiProperty()
   @CreateDateColumn({ type: 'timestamptz' })
   createdAt: Date;
 
+  @ApiProperty()
   @UpdateDateColumn({ type: 'timestamptz' })
   updatedAt: Date;
 }
