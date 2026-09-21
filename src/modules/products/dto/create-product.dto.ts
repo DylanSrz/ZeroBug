@@ -10,6 +10,7 @@ import {
 } from 'class-validator';
 
 export class CreateProductDto {
+  @ApiProperty({ example: 'Hamburguesa Clásica', minLength: 2, maxLength: 100 })
   @IsString()
   @MinLength(2)
   @MaxLength(100)
