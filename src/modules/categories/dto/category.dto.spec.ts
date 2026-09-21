@@ -49,6 +49,15 @@ describe('UpdateCategoryDto', () => {
       'name',
     ]);
   });
+
+  it('rechaza status: se cambia por PATCH /categories/{id}/status', async () => {
+    // Mismas opciones que el ValidationPipe global (app.setup.ts)
+    const errors = await validate(
+      plainToInstance(UpdateCategoryDto, { status: CategoryStatus.INACTIVE }),
+      { whitelist: true, forbidNonWhitelisted: true },
+    );
+    expect(errors.map((e) => e.property)).toEqual(['status']);
+  });
 });
 
 describe('UpdateCategoryStatusDto', () => {
