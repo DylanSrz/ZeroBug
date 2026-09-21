@@ -13,3 +13,4 @@ import { Table } from './entities/table.entity.js';
   exports: [TypeOrmModule]
 })
 export class TableModule { }
+
