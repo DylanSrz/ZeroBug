@@ -37,6 +37,7 @@ export const swaggerConfiguration = (
     .setVersion(pkg.version)
     .setContact('Equipo ZeroBug', 'https://github.com/DylanSrz/ZeroBug', '')
     .addTag('Health', 'Estado del servicio')
+    .addTag('Categories', 'Categorías del menú (HU-003)')
     .addTag('Products', 'Productos del menú (HU-004)')
     .addBearerAuth(
       {
