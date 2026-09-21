@@ -1,4 +1,5 @@
 import {
+  Check,
   Column,
   CreateDateColumn,
   Entity,
@@ -8,6 +9,7 @@ import {
 import { CategoryStatus } from '../enums/index.js';
 
 @Entity('categories')
+@Check('CHK_categories_name_length', 'char_length("name") BETWEEN 2 AND 50')
 export class Category {
   @PrimaryGeneratedColumn('uuid')
   id: string;

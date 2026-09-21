@@ -5,7 +5,7 @@ export class CreateCategories1789703888791 implements MigrationInterface {
     await queryRunner.query('CREATE EXTENSION IF NOT EXISTS "uuid-ossp"');
 
     await queryRunner.query(`
-      CREATE TYPE "category_status_enum" AS ENUM ('ACTIVE', 'INACTIVE')
+      CREATE TYPE "categories_status_enum" AS ENUM ('ACTIVE', 'INACTIVE')
     `);
 
     await queryRunner.query(`
@@ -13,7 +13,7 @@ export class CreateCategories1789703888791 implements MigrationInterface {
         "id" uuid NOT NULL DEFAULT uuid_generate_v4(),
         "name" character varying(50) NOT NULL,
         "description" text,
-        "status" "category_status_enum" NOT NULL DEFAULT 'ACTIVE',
+        "status" "categories_status_enum" NOT NULL DEFAULT 'ACTIVE',
         "createdAt" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(),
         "updatedAt" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(),
         CONSTRAINT "PK_categories_id" PRIMARY KEY ("id"),
@@ -25,6 +25,6 @@ export class CreateCategories1789703888791 implements MigrationInterface {
 
   public async down(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.query('DROP TABLE "categories"');
-    await queryRunner.query('DROP TYPE "category_status_enum"');
+    await queryRunner.query('DROP TYPE "categories_status_enum"');
   }
 }
