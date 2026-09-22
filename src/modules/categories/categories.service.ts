@@ -24,6 +24,7 @@ export class CategoriesService {
     await this.assertNameAvailable(dto.name);
 
    const category = this.categories.create({ ...dto, status: CategoryStatus.ACTIVE });
+  return this.categories.save(category);
   }
 
   /**
