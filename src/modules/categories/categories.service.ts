@@ -11,7 +11,6 @@ import {
   UpdateCategoryStatusDto,
 } from './dto/index.js';
 import { Category } from './entities/category.entity.js';
-import { CategoryStatus } from './enums/index.js';
 
 @Injectable()
 export class CategoriesService {
