@@ -20,7 +20,10 @@ export class FilterTablesDto {
   @IsEnum(TableZone)
   zone?: TableZone;
 
-  @ApiPropertyOptional({ example: 4, description: 'Capacidad mínima a filtrar' })
+  @ApiPropertyOptional({
+    example: 4,
+    description: 'Capacidad mínima a filtrar',
+  })
   @IsOptional()
   // Cuando alguien busca por internet (?capacity=4), ese "4" en realidad
   // llega como texto ("4"), no como número. @Type(() => Number) lo convierte
