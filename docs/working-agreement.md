@@ -8,7 +8,7 @@
 
 ## 1. Equipo y roles
 
-| Rol          | Quién                                                           | Responsabilidad          +                                                              |
+| Rol          | Quién                                                           | Responsabilidad                                                                        |
 | ------------ | --------------------------------------------------------------- | -------------------------------------------------------------------------------------- |
 | Scrum Master | @DylanSrz                                                       | Facilita ceremonias, mantiene el tablero, quita bloqueos, coordina merges `dev → main` |
 | Developers   | @Gonza204658 · @Kerin0011 · @rodriguezvjhona-droid · @jorel2610 | Diseñan, implementan, prueban y revisan                                                |
