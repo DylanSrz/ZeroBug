@@ -65,7 +65,7 @@ describe('CategoriesService', () => {
       expect(categories.findOneBy).toHaveBeenCalledWith({ name: dto.name });
       expect(categories.create).toHaveBeenCalledWith({
         ...dto,
-        status: CategoryStatus.ACTIVE,
+        status: 'ACTIVE',
       });
       expect(categories.save).toHaveBeenCalledWith(
         expect.objectContaining({
