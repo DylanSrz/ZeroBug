@@ -24,10 +24,7 @@ export class CategoriesService {
   async create(dto: CreateCategoryDto): Promise<Category> {
     await this.assertNameAvailable(dto.name);
 
-    const category = this.categories.create({
-      ...dto,
-      status: CategoryStatus.ACTIVE,
-    });
+    const category = this.categories.create(dto);
     return this.categories.save(category);
   }
 
