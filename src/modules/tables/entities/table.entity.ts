@@ -5,15 +5,13 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { TableStatus } from './table-status.enum.js';
-import { TableZone } from './table-zone.enum.js';
+import { TableStatus, TableZone } from '../enums/index.js';
 
 // @Entity('tables') le dice a TypeORM el nombre real de la tabla en Postgres.
 // Sin el nombre explícito, TypeORM usaría "table", que es palabra reservada en Postgres
 // y causaría errores al crear/consultar la tabla.
 @Entity('tables')
 export class Table {
-
   // Clave primaria autogenerada como UUID (convención del equipo)
   @PrimaryGeneratedColumn('uuid')
   id: string;
@@ -43,9 +41,9 @@ export class Table {
   status: TableStatus;
 
   // Timestamps automáticos que TypeORM llena solo al crear/actualizar el registro
-  @CreateDateColumn()
+  @CreateDateColumn({ type: 'timestamptz' })
   createdAt: Date;
 
-  @UpdateDateColumn()
+  @UpdateDateColumn({ type: 'timestamptz' })
   updatedAt: Date;
 }
