@@ -11,7 +11,7 @@ import {
   UpdateCategoryStatusDto,
 } from './dto/index.js';
 import { Category } from './entities/category.entity.js';
-
+import { CategoryStatus } from './enums/index.js';
 @Injectable()
 export class CategoriesService {
   constructor(
@@ -23,8 +23,8 @@ export class CategoriesService {
   async create(dto: CreateCategoryDto): Promise<Category> {
     await this.assertNameAvailable(dto.name);
 
-    const category = this.categories.create(dto);
-    return this.categories.save(category);
+  const category = this.categories.create(dto);
+   const category = this.categories.create({ ...dto, status: CategoryStatus.ACTIVE });
   }
 
   /**
