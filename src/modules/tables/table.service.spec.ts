@@ -127,13 +127,13 @@ describe('TableService', () => {
       // 2) para revisar si el nuevo número ya lo tiene otra mesa
       // mockResolvedValueOnce nos deja responder distinto en cada llamada,
       // en el orden en que ocurren
-      repository.findOne!
-        .mockResolvedValueOnce(baseTable) // primera llamada: la mesa a editar
+      repository
+        .findOne!.mockResolvedValueOnce(baseTable) // primera llamada: la mesa a editar
         .mockResolvedValueOnce({ ...baseTable, id: 'otra-mesa' }); // segunda: choque
 
-      await expect(
-        service.update('uuid-1', { number: 99 }),
-      ).rejects.toThrow(ConflictException);
+      await expect(service.update('uuid-1', { number: 99 })).rejects.toThrow(
+        ConflictException,
+      );
     });
 
     it('no revalida unicidad si number no cambia', async () => {
