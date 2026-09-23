@@ -105,10 +105,7 @@ export class TableService {
   }
 
   // Cambia únicamente el estado de una mesa (AVAILABLE/OCCUPIED/OUT_OF_SERVICE).
-  async updateStatus(
-    id: string,
-    dto: UpdateTableStatusDto,
-  ): Promise<Table> {
+  async updateStatus(id: string, dto: UpdateTableStatusDto): Promise<Table> {
     const table = await this.findOne(id); // 404 si no existe
 
     // RN-020 (solo estados válidos) ya quedó garantizada antes de llegar
@@ -134,9 +131,7 @@ export class TableService {
     if (existing) {
       // ConflictException se traduce automáticamente en HTTP 409,
       // el código correcto para "esto ya existe, hay un conflicto"
-      throw new ConflictException(
-        `Ya existe una mesa con el número ${number}`,
-      );
+      throw new ConflictException(`Ya existe una mesa con el número ${number}`);
     }
   }
 }
