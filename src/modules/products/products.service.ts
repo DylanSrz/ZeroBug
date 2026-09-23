@@ -17,6 +17,9 @@ import { Product } from './entities/product.entity.js';
 
 @Injectable()
 export class ProductsService {
+  findByCategoryActive(id: any) {
+    throw new Error('Method not implemented.');
+  }
   constructor(
     @InjectRepository(Product)
     private readonly products: Repository<Product>,

@@ -1,41 +1,189 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
-import { MenuResponseDto } from './dto/menu-response.dto.js';
+import {
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
+
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+
+import { Category } from '../categories/entities/category.entity.js';
+import { Product } from '../products/entities/product.entity.js';
+
+import { CategoryStatus } from '../categories/enums/index.js';
+import {
+  ProductStatus,
+} from '../products/enums/index.js';
+
+import {
+  MenuCategoryResponseDto,
+  MenuProductResponseDto,
+  MenuResponseDto,
+} from './dto/menu-response.dto.js';
+
 @Injectable()
 export class MenuService {
-  private readonly products: MenuResponseDto[] = [
-    {
-      id: 1,
-      name: 'Hamburguesa clásica',
-      description: 'Hamburguesa con carne, queso y vegetales',
-      price: 25000,
-      category: 'Hamburguesas',
-      availability: 'AVAILABLE',
-    },
-    {
-      id: 2,
-      name: 'Pizza de pepperoni',
-      description: 'Pizza con queso y pepperoni',
-      price: 30000,
-      category: 'Pizzas',
-      availability: 'AVAILABLE',
-    },
-    {
-      id: 3,
-      name: 'Hamburguesa BBQ',
-      description: 'Hamburguesa con salsa BBQ y queso',
-      price: 28000,
-      category: 'Hamburguesas',
-      availability: 'UNAVAILABLE',
-    },
-  ];
+  constructor(
+    @InjectRepository(Category)
+    private readonly categoryRepository: Repository<Category>,
 
-  findProductById(id: number): MenuResponseDto {
-    const product = this.products.find((product) => product.id === id);
+    @InjectRepository(Product)
+    private readonly productRepository: Repository<Product>,
+  ) {}
 
-    if (!product) {
-      throw new NotFoundException('Producto no encontrado');
+  /**
+   * GET /menu
+   *
+   * Consulta el menú completo.
+   *
+   * RN-031: solo categorías ACTIVE.
+   * RN-032: solo productos ACTIVE.
+   * RN-033: UNAVAILABLE se muestra como no disponible.
+   */
+  async getMenu(): Promise<MenuResponseDto> {
+    const categories = await this.categoryRepository.find({
+      where: {
+        status: CategoryStatus.ACTIVE,
+      },
+      order: {
+        name: 'ASC',
+      },
+    });
+
+    const products = await this.productRepository.find({
+      where: {
+        status: ProductStatus.ACTIVE,
+      },
+      order: {
+        name: 'ASC',
+      },
+    });
+
+    const categoriesWithProducts = categories.map((category) => {
+      const categoryProducts = products.filter(
+        (product) => product.categoryId === category.id,
+      );
+
+      return this.mapCategory(category, categoryProducts);
+    });
+
+    return {
+      categories: categoriesWithProducts,
+    };
+  }
+
+  /**
+   * GET /menu/categories
+   *
+   * Devuelve solamente las categorías activas.
+   */
+  async getActiveCategories(): Promise<MenuCategoryResponseDto[]> {
+    const categories = await this.categoryRepository.find({
+      where: {
+        status: CategoryStatus.ACTIVE,
+      },
+      order: {
+        name: 'ASC',
+      },
+    });
+
+    return categories.map((category) => ({
+      id: category.id,
+      name: category.name,
+      description: category.description,
+      products: [],
+    }));
+  }
+
+  /**
+   * GET /menu/categories/:categoryId/products
+   *
+   * Devuelve los productos activos de una categoría activa.
+   */
+  async getProductsByCategory(
+    categoryId: string,
+  ): Promise<MenuProductResponseDto[]> {
+    const category = await this.categoryRepository.findOne({
+      where: {
+        id: categoryId,
+        status: CategoryStatus.ACTIVE,
+      },
+    });
+
+    if (!category) {
+      throw new NotFoundException(
+        'La categoría no existe o no está activa',
+      );
     }
 
-    return product;
+    const products = await this.productRepository.find({
+      where: {
+        categoryId,
+        status: ProductStatus.ACTIVE,
+      },
+      order: {
+        name: 'ASC',
+      },
+    });
+
+    return products.map((product) => this.mapProduct(product));
+  }
+
+  /**
+   * GET /menu/products/:id
+   *
+   * Devuelve el detalle de un producto activo
+   * perteneciente a una categoría activa.
+   */
+  async getProductDetail(
+    productId: string,
+  ): Promise<MenuProductResponseDto> {
+    const product = await this.productRepository.findOne({
+      where: {
+        id: productId,
+        status: ProductStatus.ACTIVE,
+      },
+      relations: {
+        category: true,
+      },
+    });
+
+    if (!product) {
+      throw new NotFoundException(
+        'El producto no existe o no está activo',
+      );
+    }
+
+    if (product.category.status !== CategoryStatus.ACTIVE) {
+      throw new NotFoundException(
+        'El producto pertenece a una categoría que no está activa',
+      );
+    }
+
+    return this.mapProduct(product);
+  }
+
+  private mapCategory(
+    category: Category,
+    products: Product[],
+  ): MenuCategoryResponseDto {
+    return {
+      id: category.id,
+      name: category.name,
+      description: category.description,
+      products: products.map((product) =>
+        this.mapProduct(product),
+      ),
+    };
+  }
+
+  private mapProduct(product: Product): MenuProductResponseDto {
+    return {
+      id: product.id,
+      name: product.name,
+      description: product.description,
+      price: product.price,
+      categoryId: product.categoryId,
+      availability: product.availability,
+    };
   }
 }
