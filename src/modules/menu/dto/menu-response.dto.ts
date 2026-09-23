@@ -1,8 +1,8 @@
-export class MenuResponseDto{
-    id: number;
-    name: string;
-    description: string;
-    price: number;
-    category: string;
-    availability: string;
+export class MenuResponseDto {
+  id: number;
+  name: string;
+  description: string;
+  price: number;
+  category: string;
+  availability: string;
 }
