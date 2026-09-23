@@ -17,6 +17,6 @@ async function bootstrap() {
   const port = config.getOrThrow<number>('app.port');
   swaggerConfiguration(app, port);
 
-  await app.listen(port);
+  await app.listen(4000);
 }
 await bootstrap();
