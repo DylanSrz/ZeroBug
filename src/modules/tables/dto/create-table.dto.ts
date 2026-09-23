@@ -3,7 +3,7 @@
 
 import { ApiProperty } from '@nestjs/swagger';
 import { IsEnum, IsInt, IsPositive } from 'class-validator';
-import { TableZone } from '../enums/table-zone.enum.js';
+import { TableZone } from '../enums/index.js';
 
 export class CreateTableDto {
   // @ApiProperty: le pone una etiqueta bonita en Swagger para que

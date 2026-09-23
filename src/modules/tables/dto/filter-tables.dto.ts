@@ -5,8 +5,7 @@
 import { ApiPropertyOptional } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 import { IsEnum, IsInt, IsOptional, IsPositive } from 'class-validator';
-import { TableStatus } from '../enums/table-status.enum.js';
-import { TableZone } from '../enums/table-zone.enum.js';
+import { TableStatus, TableZone } from '../enums/index.js';
 
 export class FilterTablesDto {
   @ApiPropertyOptional({ enum: TableStatus })

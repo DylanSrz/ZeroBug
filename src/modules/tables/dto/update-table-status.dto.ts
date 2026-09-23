@@ -3,7 +3,7 @@
 
 import { ApiProperty } from '@nestjs/swagger';
 import { IsEnum } from 'class-validator';
-import { TableStatus } from '../enums/table-status.enum.js';
+import { TableStatus } from '../enums/index.js';
 
 export class UpdateTableStatusDto {
   @ApiProperty({ enum: TableStatus, example: TableStatus.OCCUPIED })
