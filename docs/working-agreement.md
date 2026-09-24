@@ -19,12 +19,14 @@ No hay Product Owner externo: las historias de usuario en `docs/` son el contrat
 
 | Sprint | Fechas              | Meta                                                                                  |
 | ------ | ------------------- | ------------------------------------------------------------------------------------- |
-| 1      | 18 sep – 2 oct 2026 | Plataforma base (HU-001) + mesas, categorías, productos y menú público (HU-002 … 005) |
-| 2      | 5 – 16 oct 2026     | Ciclo completo de reservas (HU-006 … 013)                                             |
-| 3      | 19 – 30 oct 2026    | Usuarios, login JWT, roles y perfil (HU-014 … 019)                                    |
-| 4      | 2 – 13 nov 2026     | Pedidos (HU-020 …)                                                                    |
+| 1      | 18 – 24 sep 2026    | Plataforma base (HU-001) + mesas, categorías, productos y menú público (HU-002 … 005) |
+| 2      | 24 sep – 2 oct 2026 | Reservas: disponibilidad, registro y consulta (HU-006 … 008)                          |
+| 3      | 5 – 9 oct 2026      | Reservas: modificación, cancelación, confirmación, check-in y no-show (HU-009 … 013)  |
+| 4      | 12 – 16 oct 2026    | Usuarios y seguridad (HU-014 … 019)                                                   |
 
-Sprints de **2 semanas**, de lunes a viernes de la segunda semana. El alcance comprometido en el Planning no se amplía a mitad de sprint; lo que no cabe vuelve al _Backlog_ con un comentario.
+**Desde el Sprint 2 los sprints duran una semana, de lunes a viernes** (acuerdo del 24 sep 2026; antes eran de dos semanas). El Sprint 2 arranca un jueves por el cierre anticipado del Sprint 1; a partir del Sprint 3 la cadencia queda alineada al lunes.
+
+Con media capacidad por sprint, el alcance comprometido baja en la misma proporción: como referencia, **entre 21 y 34 puntos por sprint**, no 55. El alcance comprometido en el Planning no se amplía a mitad de sprint; lo que no cabe vuelve al _Backlog_ con un comentario.
 
 ## 3. Ceremonias
 
@@ -32,8 +34,8 @@ Sprints de **2 semanas**, de lunes a viernes de la segunda semana. El alcance co
 | ------------------- | ------------------------------------------------------------------------------- | -------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | **Sprint Planning** | Primer día del sprint (lunes; el Sprint 1 arrancó el viernes 18 sep)            | ≤ 1 h    | Confirmar capacidad real (parciales, otras materias), fijar el Sprint Goal, mover HU y tareas de _Backlog_ a _Sprint Backlog_, asignar las primeras tareas |
 | **Daily**           | Todos los días hábiles, **hora: _a definir en el Planning del Sprint 1 (hoy)_** | ≤ 15 min | Cada uno: qué hice, qué haré, qué me bloquea. Se revisan issues `bloqueada` y PRs sin revisor                                                              |
-| **Sprint Review**   | Viernes de cierre                                                               | ≤ 45 min | Demo de cada HU terminada contra sus criterios de aceptación (Swagger); merge `dev → main` y tag `v0.N.0`                                                  |
-| **Retrospectiva**   | Viernes de cierre, tras la Review                                               | ≤ 30 min | Qué mantener / qué mejorar / acciones con responsable. Acta en `docs/retros/sprint-N.md`                                                                   |
+| **Sprint Review**   | Viernes de cierre                                                               | ≤ 30 min | Demo de cada HU terminada contra sus criterios de aceptación (Swagger); merge `dev → main` y tag `v0.N.0`                                                  |
+| **Retrospectiva**   | Viernes de cierre, tras la Review                                               | ≤ 20 min | Qué mantener / qué mejorar / acciones con responsable. Acta en `docs/retros/sprint-N.md`                                                                   |
 
 Si alguien no puede asistir a la Daily, deja su actualización por escrito en el canal antes de la hora.
 
