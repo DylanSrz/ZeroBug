@@ -1,5 +1,3 @@
-// src/modules/tables/table.service.ts
-
 // Este archivo es el "cerebro" de las mesas: aquí viven las reglas de negocio.
 // Los DTOs solo validan que los datos tengan la forma correcta;
 // aquí decidimos qué hacer con esos datos (crear, buscar, actualizar, rechazar).
@@ -7,11 +5,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-// Estas dos excepciones son propias del proyecto (no vienen de NestJS
-// directamente), y ya las usa categories.service.ts. Las usamos aquí
-// también para que TODOS los módulos devuelvan errores con el mismo
-// formato (statusCode, error, message, y en el caso de reglas de
-// negocio, también un campo "rule" con el código de la regla, ej. RN-016).
 import {
   BusinessRuleException,
   EntityNotFoundException,
@@ -30,32 +23,32 @@ export class TablesService {
     // que sabe hablar con la tabla 'tables' de Postgres". El Repository
     // es el objeto que realmente hace las consultas SQL (find, save, etc.)
     @InjectRepository(Table)
-    private readonly tables: Repository<Table>,
+    private readonly tableRepository: Repository<Table>,
   ) {}
 
-  /** RN-016, RN-018: número único y estado inicial AVAILABLE por defecto. */
+  // Crea una mesa nueva.
   async create(dto: CreateTableDto): Promise<Table> {
     // Antes de guardar, revisamos que no exista ya una mesa con ese número.
     // Si existe, esta función lanza el error y create() se detiene aquí.
-    await this.assertNumberAvailable(dto.number);
+    await this.ensureNumberIsUnique(dto.number);
 
-    // tables.create() NO guarda nada todavía, solo arma
+    // tableRepository.create() NO guarda nada todavía, solo arma
     // un objeto Table en memoria con los datos del DTO
-    const table = this.tables.create({
+    const table = this.tableRepository.create({
       ...dto,
       status: TableStatus.AVAILABLE, // RN-018: toda mesa nueva inicia AVAILABLE
     });
 
     // save() sí escribe el registro en la base de datos y devuelve
     // la mesa ya guardada (con su id generado, createdAt, etc.)
-    return this.tables.save(table);
+    return this.tableRepository.save(table);
   }
 
-  /** Lista mesas aplicando filtros opcionales por status, zone y capacity mínima. */
+  // Devuelve la lista de mesas, aplicando los filtros que lleguen (o ninguno).
   async findAll(filters: FilterTablesDto): Promise<Table[]> {
     // createQueryBuilder arma la consulta SQL "a mano", pieza por pieza,
     // en vez de usar un find() simple. Es útil cuando los filtros son opcionales.
-    const query = this.tables
+    const query = this.tableRepository
       .createQueryBuilder('table')
       .orderBy('table.number', 'ASC'); // siempre ordenado por número de mesa
 
@@ -82,76 +75,62 @@ export class TablesService {
 
   // Busca una mesa por su id. Si no existe, corta el flujo con un 404.
   async findOne(id: string): Promise<Table> {
-    // findOneBy es una forma corta de escribir findOne({ where: { id } }).
-    // Hace exactamente lo mismo, pero con menos código.
-    const table = await this.tables.findOneBy({ id });
+    const table = await this.tableRepository.findOne({ where: { id } });
 
     if (!table) {
-      // EntityNotFoundException es la excepción propia del proyecto:
-      // recibe el NOMBRE de la entidad ("Mesa") y el id que se buscó,
-      // y arma automáticamente un error 404 con un mensaje consistente
-      // en todos los módulos: "Mesa con id X no existe"
+      // EntityNotFoundException (src/common/exceptions) produce un 404 con el
+      // formato uniforme de errores que usa todo el proyecto
       throw new EntityNotFoundException('Mesa', id);
     }
 
     return table;
   }
 
-  /** RN-016: revalida unicidad del número si se modifica. */
+  // Actualiza los datos generales de una mesa (número, capacidad, zona).
   async update(id: string, dto: UpdateTableDto): Promise<Table> {
     const table = await this.findOne(id); // si no existe, ya lanza 404 aquí
 
     // Solo si el DTO trae un 'number' distinto al actual, revisamos
     // de nuevo que no choque con otra mesa. Si no cambia el número,
-    // no hace falta revalidar nada. Le pasamos el id de la mesa actual
-    // para que, si encuentra "otra mesa" con ese número, sea REALMENTE
-    // otra y no la misma mesa que estamos editando.
+    // no hace falta revalidar nada.
     if (dto.number !== undefined && dto.number !== table.number) {
-      await this.assertNumberAvailable(dto.number, id);
+      await this.ensureNumberIsUnique(dto.number);
     }
 
-    // merge() es el método de TypeORM para copiar sobre 'table' solo
-    // los campos que vengan en el dto, dejando intactos los que no se
-    // enviaron. Hace lo mismo que Object.assign, pero es el método
-    // "oficial" de TypeORM y el que ya usa el resto del proyecto.
-    this.tables.merge(table, dto);
+    // Object.assign copia sobre 'table' solo los campos que vengan en el dto,
+    // dejando intactos los que no se enviaron (por eso el DTO es "parcial")
+    Object.assign(table, dto);
 
-    return this.tables.save(table);
+    return this.tableRepository.save(table);
   }
 
-  /**
-   * RN-020: cambiar estado entre los definidos por el sistema.
-   * RN-019 (OUT_OF_SERVICE no reservable/no pedidos) se valida en
-   * HU-006/HU-020, no aquí — este método solo persiste el cambio de estado.
-   */
+  // Cambia únicamente el estado de una mesa (AVAILABLE/OCCUPIED/OUT_OF_SERVICE).
   async updateStatus(id: string, dto: UpdateTableStatusDto): Promise<Table> {
     const table = await this.findOne(id); // 404 si no existe
 
     // RN-020 (solo estados válidos) ya quedó garantizada antes de llegar
     // aquí, por el @IsEnum() del DTO — si el status fuera inválido,
     // Nest ya habría respondido 400 antes de entrar a este método.
+    //
+    // RN-019 dice que una mesa OUT_OF_SERVICE no puede usarse para
+    // reservas ni pedidos — esa regla NO se aplica aquí, sino en los
+    // módulos de reservas/pedidos (HU-006/HU-020), porque este método
+    // solo se encarga de guardar el cambio de estado en sí.
     table.status = dto.status;
 
-    return this.tables.save(table);
+    return this.tableRepository.save(table);
   }
 
-  /** RN-016: el número de mesa debe ser único en el sistema. */
-  private async assertNumberAvailable(
-    number: number,
-    // excludeId es opcional: solo se usa en update(), para permitir que
-    // una mesa "choque consigo misma" sin que eso cuente como duplicado
-    // (ej. actualizar una mesa sin cambiar realmente su número)
-    excludeId?: string,
-  ): Promise<void> {
-    const existing = await this.tables.findOneBy({ number });
+  // Método privado (solo se usa dentro de esta clase) que revisa
+  // si ya existe una mesa con el número dado, y si es así, corta el flujo.
+  private async ensureNumberIsUnique(number: number): Promise<void> {
+    const existing = await this.tableRepository.findOne({
+      where: { number },
+    });
 
-    // Si existe una mesa con ese número Y no es la misma mesa que estamos
-    // editando (existing.id !== excludeId), entonces sí es un duplicado real
-    if (existing && existing.id !== excludeId) {
-      // BusinessRuleException es la excepción propia del proyecto para
-      // errores de reglas de negocio: recibe el mensaje y el código de
-      // la regla (RN-016), y arma un error 409 que incluye ese código
-      // en la respuesta, igual que lo hace categories con RN-021.
+    if (existing) {
+      // BusinessRuleException sigue siendo un 409, pero agrega el campo "rule"
+      // para dejar trazada la regla de negocio incumplida
       throw new BusinessRuleException(
         `Ya existe una mesa con el número ${number}`,
         'RN-016',
