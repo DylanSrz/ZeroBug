@@ -3,29 +3,46 @@ import { createObserveModule } from '@nestjs/observe';
 import { AppController } from './app.controller.js';
 import { AppService } from './app.service.js';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { EnvConfig, envValidationSchema } from './config/index.js';
+import {
+  EnvConfig,
+  validateEnv,
+  databaseConfiguration,
+} from './config/index.js';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { HealthModule } from './modules/health/health.module.js';
+import { CategoriesModule } from './modules/categories/categories.module.js';
+import { ProductsModule } from './modules/products/products.module.js';
+import { TablesModule } from './modules/tables/tables.module.js';
+import { MenuModule } from './modules/menu/menu.module.js';
 
 export const { ObserveModule, ObserveInstrument } = createObserveModule();
 
 @Module({
   imports: [
-    // Distributed tracing, auto-correlated logs, request/job metrics, error
-    // telemetry, alarms, and more — out of the box. Sign up at https://observe.nestjs.com
     ConfigModule.forRoot({
       isGlobal: true,
       load: [EnvConfig],
-      validationSchema: envValidationSchema
+      validate: validateEnv,
     }),
     ObserveModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: (observeConfig: ConfigService) => ({
-        ...observeConfig.getOrThrow('observe')
-      })
-
+        ...observeConfig.getOrThrow('observe'),
+      }),
     }),
+    TypeOrmModule.forRootAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: databaseConfiguration,
+    }),
+    HealthModule,
+    CategoriesModule,
+    ProductsModule,
+    TablesModule,
+    MenuModule,
   ],
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule { }
+export class AppModule {}
