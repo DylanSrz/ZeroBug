@@ -13,6 +13,7 @@ import { HealthModule } from './modules/health/health.module.js';
 import { CategoriesModule } from './modules/categories/categories.module.js';
 import { ProductsModule } from './modules/products/products.module.js';
 import { TablesModule } from './modules/tables/tables.module.js';
+import { MenuModule } from './modules/menu/menu.module.js';
 
 export const { ObserveModule, ObserveInstrument } = createObserveModule();
 
@@ -39,6 +40,7 @@ export const { ObserveModule, ObserveInstrument } = createObserveModule();
     CategoriesModule,
     ProductsModule,
     TablesModule,
+    MenuModule,
   ],
   controllers: [AppController],
   providers: [AppService],

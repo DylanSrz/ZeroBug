@@ -1,4 +1,4 @@
-// Este archivo prueba TableService SIN tocar una base de datos real.
+// Este archivo prueba TablesService SIN tocar una base de datos real.
 // En vez de eso, "engañamos" al service dándole un repositorio falso
 // (mock) que responde lo que nosotros le digamos.
 
@@ -12,9 +12,12 @@
 import { describe, it, expect, beforeEach, vi, type Mock } from 'vitest';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
-import { ConflictException, NotFoundException } from '@nestjs/common';
+import {
+  BusinessRuleException,
+  EntityNotFoundException,
+} from '../../common/exceptions/index.js';
 import { Repository } from 'typeorm';
-import { TableService } from './table.service.js';
+import { TablesService } from './tables.service.js';
 import { Table } from './entities/table.entity.js';
 import { TableStatus, TableZone } from './enums/index.js';
 
@@ -34,8 +37,8 @@ const mockRepository = () => ({
 // cada método es en realidad un vi.fn() que podemos controlar"
 type MockRepo = Partial<Record<keyof Repository<Table>, Mock>>;
 
-describe('TableService', () => {
-  let service: TableService;
+describe('TablesService', () => {
+  let service: TablesService;
   let repository: MockRepo;
 
   // Una mesa de ejemplo que reutilizamos en varios tests,
@@ -56,7 +59,7 @@ describe('TableService', () => {
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
-        TableService,
+        TablesService,
         {
           // Le decimos a NestJS: "cuando alguien pida el repositorio
           // de Table, dale este mock en vez del real"
@@ -66,12 +69,12 @@ describe('TableService', () => {
       ],
     }).compile();
 
-    service = module.get(TableService);
+    service = module.get(TablesService);
     repository = module.get(getRepositoryToken(Table));
   });
 
   describe('create', () => {
-    it('lanza ConflictException si el número ya existe', async () => {
+    it('lanza BusinessRuleException si el número ya existe', async () => {
       // Simulamos que YA existe una mesa con ese número
       repository.findOne!.mockResolvedValue(baseTable);
 
@@ -79,7 +82,7 @@ describe('TableService', () => {
       // al ejecutarse, termine lanzando ese error específico
       await expect(
         service.create({ number: 5, capacity: 4, zone: TableZone.INTERIOR }),
-      ).rejects.toThrow(ConflictException);
+      ).rejects.toThrow(BusinessRuleException);
     });
 
     it('crea la mesa con status AVAILABLE si el número es único', async () => {
@@ -103,11 +106,11 @@ describe('TableService', () => {
   });
 
   describe('findOne', () => {
-    it('lanza NotFoundException si la mesa no existe', async () => {
+    it('lanza EntityNotFoundException si la mesa no existe', async () => {
       repository.findOne!.mockResolvedValue(null); // no se encontró nada
 
       await expect(service.findOne('id-inexistente')).rejects.toThrow(
-        NotFoundException,
+        EntityNotFoundException,
       );
     });
 
@@ -132,7 +135,7 @@ describe('TableService', () => {
         .mockResolvedValueOnce({ ...baseTable, id: 'otra-mesa' }); // segunda: choque
 
       await expect(service.update('uuid-1', { number: 99 })).rejects.toThrow(
-        ConflictException,
+        BusinessRuleException,
       );
     });
 
@@ -150,14 +153,14 @@ describe('TableService', () => {
   });
 
   describe('updateStatus', () => {
-    it('lanza NotFoundException si la mesa no existe', async () => {
+    it('lanza EntityNotFoundException si la mesa no existe', async () => {
       repository.findOne!.mockResolvedValue(null);
 
       await expect(
         service.updateStatus('id-inexistente', {
           status: TableStatus.OCCUPIED,
         }),
-      ).rejects.toThrow(NotFoundException);
+      ).rejects.toThrow(EntityNotFoundException);
     });
 
     it('actualiza el status si la mesa existe', async () => {

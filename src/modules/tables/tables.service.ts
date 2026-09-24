@@ -2,13 +2,13 @@
 // Los DTOs solo validan que los datos tengan la forma correcta;
 // aquí decidimos qué hacer con esos datos (crear, buscar, actualizar, rechazar).
 
-import {
-  Injectable,
-  ConflictException,
-  NotFoundException,
-} from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import {
+  BusinessRuleException,
+  EntityNotFoundException,
+} from '../../common/exceptions/index.js';
 import { Table } from './entities/table.entity.js';
 import { TableStatus } from './enums/index.js';
 import { CreateTableDto } from './dto/create-table.dto.js';
@@ -17,7 +17,7 @@ import { UpdateTableStatusDto } from './dto/update-table-status.dto.js';
 import { FilterTablesDto } from './dto/filter-tables.dto.js';
 
 @Injectable()
-export class TableService {
+export class TablesService {
   constructor(
     // @InjectRepository le pide a NestJS/TypeORM: "dame el repositorio
     // que sabe hablar con la tabla 'tables' de Postgres". El Repository
@@ -78,9 +78,9 @@ export class TableService {
     const table = await this.tableRepository.findOne({ where: { id } });
 
     if (!table) {
-      // NotFoundException es un error especial de NestJS que automáticamente
-      // se traduce en una respuesta HTTP 404 con este mensaje
-      throw new NotFoundException(`Mesa con id ${id} no encontrada`);
+      // EntityNotFoundException (src/common/exceptions) produce un 404 con el
+      // formato uniforme de errores que usa todo el proyecto
+      throw new EntityNotFoundException('Mesa', id);
     }
 
     return table;
@@ -129,9 +129,12 @@ export class TableService {
     });
 
     if (existing) {
-      // ConflictException se traduce automáticamente en HTTP 409,
-      // el código correcto para "esto ya existe, hay un conflicto"
-      throw new ConflictException(`Ya existe una mesa con el número ${number}`);
+      // BusinessRuleException sigue siendo un 409, pero agrega el campo "rule"
+      // para dejar trazada la regla de negocio incumplida
+      throw new BusinessRuleException(
+        `Ya existe una mesa con el número ${number}`,
+        'RN-016',
+      );
     }
   }
 }
