@@ -12,21 +12,28 @@
 import { describe, it, expect, beforeEach, vi, type Mock } from 'vitest';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
-import { ConflictException, NotFoundException } from '@nestjs/common';
 import { Repository } from 'typeorm';
+// Estas dos excepciones son propias del proyecto (no de NestJS), y son
+// las que TableService lanza ahora, igual que CategoriesService.
+import {
+  BusinessRuleException,
+  EntityNotFoundException,
+} from '../../common/exceptions/index.js';
 import { TableService } from './table.service.js';
 import { Table } from './entities/table.entity.js';
 import { TableStatus, TableZone } from './enums/index.js';
 
-// Esta función crea un repositorio de mentira: en vez de find/save reales
-// que hablan con Postgres, son funciones vi.fn() que solo "recuerdan"
-// si las llamaron y devuelven lo que nosotros configuremos en cada test.
+// Esta función crea un repositorio de mentira: en vez de find/save/merge
+// reales que hablan con Postgres, son funciones vi.fn() que solo
+// "recuerdan" si las llamaron y devuelven lo que nosotros configuremos
+// en cada test.
 // Piensa en vi.fn() como un actor de utilería: no hace nada de verdad,
 // pero nosotros le decimos exactamente qué "actuar" en cada escena (test).
 const mockRepository = () => ({
   create: vi.fn(),
   save: vi.fn(),
-  findOne: vi.fn(),
+  merge: vi.fn(), // usado por update() para copiar los campos del dto
+  findOneBy: vi.fn(), // el service usa findOneBy, no findOne({ where })
   createQueryBuilder: vi.fn(),
 });
 
@@ -71,19 +78,19 @@ describe('TableService', () => {
   });
 
   describe('create', () => {
-    it('lanza ConflictException si el número ya existe', async () => {
+    it('lanza BusinessRuleException si el número ya existe', async () => {
       // Simulamos que YA existe una mesa con ese número
-      repository.findOne!.mockResolvedValue(baseTable);
+      repository.findOneBy!.mockResolvedValue(baseTable);
 
       // expect(...).rejects.toThrow(...) verifica que la función,
       // al ejecutarse, termine lanzando ese error específico
       await expect(
         service.create({ number: 5, capacity: 4, zone: TableZone.INTERIOR }),
-      ).rejects.toThrow(ConflictException);
+      ).rejects.toThrow(BusinessRuleException);
     });
 
     it('crea la mesa con status AVAILABLE si el número es único', async () => {
-      repository.findOne!.mockResolvedValue(null); // no hay duplicado
+      repository.findOneBy!.mockResolvedValue(null); // no hay duplicado
       repository.create!.mockReturnValue(baseTable);
       repository.save!.mockResolvedValue(baseTable);
 
@@ -103,16 +110,16 @@ describe('TableService', () => {
   });
 
   describe('findOne', () => {
-    it('lanza NotFoundException si la mesa no existe', async () => {
-      repository.findOne!.mockResolvedValue(null); // no se encontró nada
+    it('lanza EntityNotFoundException si la mesa no existe', async () => {
+      repository.findOneBy!.mockResolvedValue(null); // no se encontró nada
 
       await expect(service.findOne('id-inexistente')).rejects.toThrow(
-        NotFoundException,
+        EntityNotFoundException,
       );
     });
 
     it('retorna la mesa si existe', async () => {
-      repository.findOne!.mockResolvedValue(baseTable);
+      repository.findOneBy!.mockResolvedValue(baseTable);
 
       const result = await service.findOne('uuid-1');
 
@@ -122,46 +129,67 @@ describe('TableService', () => {
 
   describe('update', () => {
     it('revalida unicidad si el number cambia y ya existe otra mesa con ese número', async () => {
-      // El service llama findOne DOS veces en este flujo:
-      // 1) para traer la mesa que se va a editar
-      // 2) para revisar si el nuevo número ya lo tiene otra mesa
+      // El service llama findOneBy DOS veces en este flujo:
+      // 1) dentro de findOne(), para traer la mesa que se va a editar
+      // 2) dentro de assertNumberAvailable(), para revisar si el nuevo
+      //    número ya lo tiene otra mesa
       // mockResolvedValueOnce nos deja responder distinto en cada llamada,
       // en el orden en que ocurren
       repository
-        .findOne!.mockResolvedValueOnce(baseTable) // primera llamada: la mesa a editar
-        .mockResolvedValueOnce({ ...baseTable, id: 'otra-mesa' }); // segunda: choque
+        .findOneBy!.mockResolvedValueOnce(baseTable) // 1) la mesa a editar
+        .mockResolvedValueOnce({ ...baseTable, id: 'otra-mesa' }); // 2) choque real
 
       await expect(service.update('uuid-1', { number: 99 })).rejects.toThrow(
-        ConflictException,
+        BusinessRuleException,
       );
     });
 
+    it('no marca como duplicado la propia mesa al no cambiar realmente el número', async () => {
+      // Si el número "duplicado" que encuentra es la MISMA mesa que se
+      // está editando (mismo id), no debe lanzar error — por eso
+      // assertNumberAvailable recibe excludeId y lo compara
+      repository
+        .findOneBy!.mockResolvedValueOnce(baseTable) // 1) la mesa a editar (findOne)
+        .mockResolvedValueOnce(baseTable); // 2) "duplicado" que en realidad es ella misma
+      repository.merge!.mockImplementation((table, dto) =>
+        Object.assign(table, dto),
+      );
+      repository.save!.mockImplementation((table) => Promise.resolve(table));
+
+      const result = await service.update('uuid-1', { number: 5 }); // mismo número
+
+      expect(result.number).toBe(5);
+    });
+
     it('no revalida unicidad si number no cambia', async () => {
-      repository.findOne!.mockResolvedValueOnce(baseTable);
-      repository.save!.mockResolvedValue({ ...baseTable, capacity: 6 });
+      repository.findOneBy!.mockResolvedValueOnce(baseTable);
+      repository.merge!.mockImplementation((table, dto) =>
+        Object.assign(table, dto),
+      );
+      repository.save!.mockImplementation((table) => Promise.resolve(table));
 
       const result = await service.update('uuid-1', { capacity: 6 });
 
-      // Si findOne solo se llamó UNA vez, confirma que NO se disparó
+      // Si findOneBy solo se llamó UNA vez, confirma que NO se disparó
       // la revalidación de número (porque no vino 'number' en el dto)
-      expect(repository.findOne).toHaveBeenCalledTimes(1);
+      expect(repository.findOneBy).toHaveBeenCalledTimes(1);
       expect(result.capacity).toBe(6);
     });
   });
 
   describe('updateStatus', () => {
-    it('lanza NotFoundException si la mesa no existe', async () => {
-      repository.findOne!.mockResolvedValue(null);
+    it('lanza EntityNotFoundException si la mesa no existe', async () => {
+      repository.findOneBy!.mockResolvedValue(null);
 
       await expect(
         service.updateStatus('id-inexistente', {
           status: TableStatus.OCCUPIED,
         }),
-      ).rejects.toThrow(NotFoundException);
+      ).rejects.toThrow(EntityNotFoundException);
     });
 
     it('actualiza el status si la mesa existe', async () => {
-      repository.findOne!.mockResolvedValue(baseTable);
+      repository.findOneBy!.mockResolvedValue(baseTable);
       repository.save!.mockResolvedValue({
         ...baseTable,
         status: TableStatus.OCCUPIED,
