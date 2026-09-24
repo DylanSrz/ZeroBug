@@ -1,4 +1,4 @@
-// Este archivo prueba TableService SIN tocar una base de datos real.
+// Este archivo prueba TablesService SIN tocar una base de datos real.
 // En vez de eso, "engañamos" al service dándole un repositorio falso
 // (mock) que responde lo que nosotros le digamos.
 
@@ -19,7 +19,7 @@ import {
   BusinessRuleException,
   EntityNotFoundException,
 } from '../../common/exceptions/index.js';
-import { TableService } from './table.service.js';
+import { TablesService } from './tables.service.js';
 import { Table } from './entities/table.entity.js';
 import { TableStatus, TableZone } from './enums/index.js';
 
@@ -41,8 +41,8 @@ const mockRepository = () => ({
 // cada método es en realidad un vi.fn() que podemos controlar"
 type MockRepo = Partial<Record<keyof Repository<Table>, Mock>>;
 
-describe('TableService', () => {
-  let service: TableService;
+describe('TablesService', () => {
+  let service: TablesService;
   let repository: MockRepo;
 
   // Una mesa de ejemplo que reutilizamos en varios tests,
@@ -63,7 +63,7 @@ describe('TableService', () => {
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
-        TableService,
+        TablesService,
         {
           // Le decimos a NestJS: "cuando alguien pida el repositorio
           // de Table, dale este mock en vez del real"
@@ -73,7 +73,7 @@ describe('TableService', () => {
       ],
     }).compile();
 
-    service = module.get(TableService);
+    service = module.get(TablesService);
     repository = module.get(getRepositoryToken(Table));
   });
 

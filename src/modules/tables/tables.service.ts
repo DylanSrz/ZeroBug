@@ -24,7 +24,7 @@ import { UpdateTableStatusDto } from './dto/update-table-status.dto.js';
 import { FilterTablesDto } from './dto/filter-tables.dto.js';
 
 @Injectable()
-export class TableService {
+export class TablesService {
   constructor(
     // @InjectRepository le pide a NestJS/TypeORM: "dame el repositorio
     // que sabe hablar con la tabla 'tables' de Postgres". El Repository

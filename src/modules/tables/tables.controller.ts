@@ -9,12 +9,13 @@ import {
   Patch,
   Body,
   Param,
+  ParseUUIDPipe,
   Query,
   HttpCode,
   HttpStatus,
 } from '@nestjs/common';
 import { ApiTags, ApiResponse, ApiOperation, ApiParam } from '@nestjs/swagger';
-import { TableService } from './table.service.js';
+import { TablesService } from './tables.service.js';
 import { Table } from './entities/table.entity.js';
 import { CreateTableDto } from './dto/create-table.dto.js';
 import { UpdateTableDto } from './dto/update-table.dto.js';
@@ -23,12 +24,12 @@ import { FilterTablesDto } from './dto/filter-tables.dto.js';
 
 // @ApiTags agrupa todos los endpoints de este controller bajo
 // una sola sección llamada "Tables" en la documentación de Swagger
-@ApiTags('Table')
-@Controller('v1/table')
-export class TableController {
+@ApiTags('Tables')
+@Controller('tables')
+export class TablesController {
   // Nest "inyecta" el service automáticamente: nosotros solo lo pedimos
   // en el constructor y Nest se encarga de dárnoslo ya armado
-  constructor(private readonly tableService: TableService) {}
+  constructor(private readonly tablesService: TablesService) {}
 
   // POST /api/v1/tables
   @Post()
@@ -52,10 +53,10 @@ export class TableController {
   create(@Body() dto: CreateTableDto): Promise<Table> {
     // @Body() toma el JSON que mandaron en la petición y lo convierte
     // automáticamente en un CreateTableDto ya validado
-    return this.tableService.create(dto);
+    return this.tablesService.create(dto);
   }
 
-  // GET v1/tables?status=&zone=&capacity=
+  // GET /api/v1/tables?status=&zone=&capacity=
   @Get()
   @ApiOperation({ summary: 'Listar mesas con filtros opcionales' })
   @ApiResponse({ status: 200, description: 'Listado de mesas', type: [Table] })
@@ -63,22 +64,22 @@ export class TableController {
     // @Query() toma lo que viene después del "?" en la URL
     // (?status=AVAILABLE&zone=BAR&capacity=4) y lo convierte
     // en un FilterTablesDto, con los strings ya transformados a número/enum
-    return this.tableService.findAll(filters);
+    return this.tablesService.findAll(filters);
   }
 
-  // GET v1/table/{id}
+  // GET /api/v1/tables/{id}
   @Get(':id')
   @ApiOperation({ summary: 'Consultar una mesa específica' })
   @ApiParam({ name: 'id', description: 'UUID de la mesa' })
   @ApiResponse({ status: 200, description: 'Mesa encontrada', type: Table })
   @ApiResponse({ status: 404, description: 'Mesa no encontrada' })
-  findOne(@Param('id') id: string): Promise<Table> {
+  findOne(@Param('id', ParseUUIDPipe) id: string): Promise<Table> {
     // @Param('id') toma el pedazo de la URL marcado como :id
     // (por ejemplo, en /tables/uuid-123, id sería "uuid-123")
-    return this.tableService.findOne(id);
+    return this.tablesService.findOne(id);
   }
 
-  // PATCH v1/tables/{id}
+  // PATCH /api/v1/tables/{id}
   @Patch(':id')
   @ApiOperation({ summary: 'Actualizar los datos de una mesa' })
   @ApiParam({ name: 'id', description: 'UUID de la mesa' })
@@ -86,11 +87,14 @@ export class TableController {
   @ApiResponse({ status: 400, description: 'Datos inválidos' })
   @ApiResponse({ status: 404, description: 'Mesa no encontrada' })
   @ApiResponse({ status: 409, description: 'El nuevo número ya está en uso' })
-  update(@Param('id') id: string, @Body() dto: UpdateTableDto): Promise<Table> {
-    return this.tableService.update(id, dto);
+  update(
+    @Param('id', ParseUUIDPipe) id: string,
+    @Body() dto: UpdateTableDto,
+  ): Promise<Table> {
+    return this.tablesService.update(id, dto);
   }
 
-  // PATCH v1/table/{id}/status
+  // PATCH /api/v1/tables/{id}/status
   @Patch(':id/status')
   @ApiOperation({ summary: 'Cambiar el estado de una mesa' })
   @ApiParam({ name: 'id', description: 'UUID de la mesa' })
@@ -98,9 +102,9 @@ export class TableController {
   @ApiResponse({ status: 400, description: 'Estado inválido' })
   @ApiResponse({ status: 404, description: 'Mesa no encontrada' })
   updateStatus(
-    @Param('id') id: string,
+    @Param('id', ParseUUIDPipe) id: string,
     @Body() dto: UpdateTableStatusDto,
   ): Promise<Table> {
-    return this.tableService.updateStatus(id, dto);
+    return this.tablesService.updateStatus(id, dto);
   }
 }
