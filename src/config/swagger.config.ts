@@ -39,6 +39,7 @@ export const swaggerConfiguration = (
     .addTag('Health', 'Estado del servicio')
     .addTag('Categories', 'Categorías del menú (HU-003)')
     .addTag('Products', 'Productos del menú (HU-004)')
+    .addTag('Menu', 'Menú público del restaurante (HU-005)')
     .addBearerAuth(
       {
         type: 'http',
