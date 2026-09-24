@@ -1,16 +1,6 @@
-import {
-  Controller,
-  Get,
-  Param,
-  ParseUUIDPipe,
-} from '@nestjs/common';
+import { Controller, Get, Param, ParseUUIDPipe } from '@nestjs/common';
 
-import {
-  ApiOperation,
-  ApiParam,
-  ApiResponse,
-  ApiTags,
-} from '@nestjs/swagger';
+import { ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 
 import { MenuService } from './menu.service.js';
 
@@ -28,8 +18,7 @@ export class MenuController {
   @Get()
   @ApiOperation({
     summary: 'Consultar menú completo',
-    description:
-      'Devuelve las categorías activas y sus productos activos.',
+    description: 'Devuelve las categorías activas y sus productos activos.',
   })
   @ApiResponse({
     status: 200,
@@ -93,7 +82,8 @@ export class MenuController {
   })
   @ApiResponse({
     status: 404,
-    description: 'El producto no existe, no está activo o su categoría no está activa.',
+    description:
+      'El producto no existe, no está activo o su categoría no está activa.',
   })
   async getProductDetail(
     @Param('id', new ParseUUIDPipe()) id: string,

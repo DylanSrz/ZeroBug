@@ -1,7 +1,4 @@
-import {
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -10,10 +7,8 @@ import { Category } from '../categories/entities/category.entity.js';
 import { Product } from '../products/entities/product.entity.js';
 
 import { CategoryStatus } from '../categories/enums/index.js';
-import {
-  ProductStatus,
-} from '../products/enums/index.js';
-
+import { ProductStatus } from '../products/enums/index.js';
+import { EntityNotFoundException } from '../../common/exceptions/index.js';
 import {
   MenuCategoryResponseDto,
   MenuProductResponseDto,
@@ -110,9 +105,7 @@ export class MenuService {
     });
 
     if (!category) {
-      throw new NotFoundException(
-        'La categoría no existe o no está activa',
-      );
+      throw new EntityNotFoundException('Categoría', categoryId);
     }
 
     const products = await this.productRepository.find({
@@ -134,9 +127,7 @@ export class MenuService {
    * Devuelve el detalle de un producto activo
    * perteneciente a una categoría activa.
    */
-  async getProductDetail(
-    productId: string,
-  ): Promise<MenuProductResponseDto> {
+  async getProductDetail(productId: string): Promise<MenuProductResponseDto> {
     const product = await this.productRepository.findOne({
       where: {
         id: productId,
@@ -148,17 +139,12 @@ export class MenuService {
     });
 
     if (!product) {
-      throw new NotFoundException(
-        'El producto no existe o no está activo',
-      );
+      throw new EntityNotFoundException('Producto', productId);
     }
 
     if (product.category.status !== CategoryStatus.ACTIVE) {
-      throw new NotFoundException(
-        'El producto pertenece a una categoría que no está activa',
-      );
+      throw new EntityNotFoundException('Categoría', product.category.id);
     }
-
     return this.mapProduct(product);
   }
 
@@ -170,9 +156,7 @@ export class MenuService {
       id: category.id,
       name: category.name,
       description: category.description,
-      products: products.map((product) =>
-        this.mapProduct(product),
-      ),
+      products: products.map((product) => this.mapProduct(product)),
     };
   }
 

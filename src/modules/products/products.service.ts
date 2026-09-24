@@ -15,11 +15,13 @@ import {
 } from './dto/index.js';
 import { Product } from './entities/product.entity.js';
 
+export class MenuModule {}
 @Injectable()
 export class ProductsService {
-  findByCategoryActive(id: any) {
+  findByCategoryActive(_id: any) {
     throw new Error('Method not implemented.');
   }
+
   constructor(
     @InjectRepository(Product)
     private readonly products: Repository<Product>,
