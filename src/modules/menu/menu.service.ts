@@ -11,6 +11,7 @@ import { ProductStatus } from '../products/enums/index.js';
 import { EntityNotFoundException } from '../../common/exceptions/index.js';
 import {
   MenuCategoryResponseDto,
+  MenuCategorySummaryDto,
   MenuProductResponseDto,
   MenuResponseDto,
 } from './dto/menu-response.dto.js';
@@ -71,7 +72,7 @@ export class MenuService {
    *
    * Devuelve solamente las categorías activas.
    */
-  async getActiveCategories(): Promise<MenuCategoryResponseDto[]> {
+  async getActiveCategories(): Promise<MenuCategorySummaryDto[]> {
     const categories = await this.categoryRepository.find({
       where: {
         status: CategoryStatus.ACTIVE,
@@ -85,7 +86,6 @@ export class MenuService {
       id: category.id,
       name: category.name,
       description: category.description,
-      products: [],
     }));
   }
 

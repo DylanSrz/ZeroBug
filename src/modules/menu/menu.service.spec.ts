@@ -167,7 +167,8 @@ describe('MenuService', () => {
 
       expect(result).toHaveLength(1);
       expect(result[0].id).toBe(CATEGORY_ID);
-      expect(result[0].products).toEqual([]);
+      // El listado de categorías no incluye productos: para eso está GET /menu
+      expect(result[0]).not.toHaveProperty('products');
     });
   });
 

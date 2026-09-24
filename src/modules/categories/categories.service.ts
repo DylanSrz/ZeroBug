@@ -15,9 +15,6 @@ import { CategoryStatus } from './enums/index.js';
 
 @Injectable()
 export class CategoriesService {
-  findAllActive() {
-    throw new Error('Method not implemented.');
-  }
   constructor(
     @InjectRepository(Category)
     private readonly categories: Repository<Category>,

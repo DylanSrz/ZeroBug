@@ -5,7 +5,7 @@ import { ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { MenuService } from './menu.service.js';
 
 import {
-  MenuCategoryResponseDto,
+  MenuCategorySummaryDto,
   MenuProductResponseDto,
   MenuResponseDto,
 } from './dto/menu-response.dto.js';
@@ -36,9 +36,9 @@ export class MenuController {
   @ApiResponse({
     status: 200,
     description: 'Categorías activas consultadas correctamente.',
-    type: [MenuCategoryResponseDto],
+    type: [MenuCategorySummaryDto],
   })
-  async getActiveCategories(): Promise<MenuCategoryResponseDto[]> {
+  async getActiveCategories(): Promise<MenuCategorySummaryDto[]> {
     return this.menuService.getActiveCategories();
   }
 

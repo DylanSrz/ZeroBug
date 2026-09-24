@@ -27,7 +27,8 @@ export class MenuProductResponseDto {
   availability: ProductAvailability;
 }
 
-export class MenuCategoryResponseDto {
+/** Categoría sin productos: respuesta de GET /menu/categories. */
+export class MenuCategorySummaryDto {
   @ApiProperty({ format: 'uuid' })
   id: string;
 
@@ -39,7 +40,10 @@ export class MenuCategoryResponseDto {
     nullable: true,
   })
   description: string | null;
+}
 
+/** Categoría con sus productos: se usa dentro de GET /menu. */
+export class MenuCategoryResponseDto extends MenuCategorySummaryDto {
   @ApiProperty({ type: [MenuProductResponseDto] })
   products: MenuProductResponseDto[];
 }
