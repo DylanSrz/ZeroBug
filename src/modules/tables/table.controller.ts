@@ -13,12 +13,7 @@ import {
   HttpCode,
   HttpStatus,
 } from '@nestjs/common';
-import {
-  ApiTags,
-  ApiResponse,
-  ApiOperation,
-  ApiParam,
-} from '@nestjs/swagger';
+import { ApiTags, ApiResponse, ApiOperation, ApiParam } from '@nestjs/swagger';
 import { TableService } from './table.service.js';
 import { Table } from './entities/table.entity.js';
 import { CreateTableDto } from './dto/create-table.dto.js';
@@ -41,9 +36,19 @@ export class TableController {
   // en vez del 200 que Nest pondría por defecto en un POST
   @HttpCode(HttpStatus.CREATED)
   @ApiOperation({ summary: 'Registrar una nueva mesa' })
-  @ApiResponse({ status: 201, description: 'Mesa creada correctamente', type: Table })
-  @ApiResponse({ status: 400, description: 'Datos inválidos (número/capacidad/zona)' })
-  @ApiResponse({ status: 409, description: 'Ya existe una mesa con ese número' })
+  @ApiResponse({
+    status: 201,
+    description: 'Mesa creada correctamente',
+    type: Table,
+  })
+  @ApiResponse({
+    status: 400,
+    description: 'Datos inválidos (número/capacidad/zona)',
+  })
+  @ApiResponse({
+    status: 409,
+    description: 'Ya existe una mesa con ese número',
+  })
   create(@Body() dto: CreateTableDto): Promise<Table> {
     // @Body() toma el JSON que mandaron en la petición y lo convierte
     // automáticamente en un CreateTableDto ya validado
@@ -81,10 +86,7 @@ export class TableController {
   @ApiResponse({ status: 400, description: 'Datos inválidos' })
   @ApiResponse({ status: 404, description: 'Mesa no encontrada' })
   @ApiResponse({ status: 409, description: 'El nuevo número ya está en uso' })
-  update(
-    @Param('id') id: string,
-    @Body() dto: UpdateTableDto,
-  ): Promise<Table> {
+  update(@Param('id') id: string, @Body() dto: UpdateTableDto): Promise<Table> {
     return this.tableService.update(id, dto);
   }
 
