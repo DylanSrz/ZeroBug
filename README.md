@@ -92,6 +92,7 @@ Nunca se versiona `.env`; los secretos no van en el código (RN-013).
 | `npm run migration:generate -- src/database/migrations/Nombre`  | Genera migración desde las entidades    |
 | `npm run migration:run` / `migration:revert` / `migration:show` | Aplica, deshace o lista migraciones     |
 | `npm run migration:create -- src/database/migrations/Nombre`    | Migración vacía                         |
+| `npm run seed`                                                  | Carga datos de desarrollo (idempotente) |
 
 ## Estructura del proyecto
 
@@ -203,6 +204,30 @@ npm run migration:create -- src/database/migrations/NombreDescriptivo   # migrac
 - **Reglas:** una migración commiteada nunca se edita; si hay que corregir algo, se crea otra.
   No uses `synchronize: true` ni cambies el esquema con SQL manual.
 
+## Datos de desarrollo (seeds)
+
+Para trabajar con datos realistas sin crearlos a mano:
+
+```bash
+docker compose up -d db
+npm run migration:run     # si aún no están aplicadas
+npm run seed
+```
+
+Carga 12 mesas en 4 zonas (una `OUT_OF_SERVICE`), 5 categorías (una `INACTIVE`) y
+16 productos (uno `INACTIVE` y dos `UNAVAILABLE`), pensados para poder ver las
+reglas del menú público en acción: la categoría y el producto inactivos no
+aparecen en `GET /api/v1/menu` (RN-031, RN-032) y los no disponibles sí aparecen,
+marcados (RN-033).
+
+El runner es **idempotente**: busca cada fila por su clave natural (número de
+mesa, nombre de categoría, nombre de producto dentro de su categoría) antes de
+insertarla, así que se puede ejecutar varias veces sin duplicar. Nunca actualiza
+ni borra lo existente, por lo que no pisa los cambios hechos al probar.
+
+Los datos viven en `src/database/seeds/seed-data.ts`; agregar filas allí es todo
+lo que hace falta para ampliarlos.
+
 ## Decisiones técnicas
 
 | Decisión                                                                                  | Motivo                                                                                                                                          |
@@ -228,6 +253,5 @@ SCRUM con sprints de 2 semanas; acuerdos de equipo y Definition of Done en [`doc
 | Dylan Suárez       | Scrum Master · Desarrollador | @DylanSrz              |
 | Jonathan Rodríguez | Desarrollador                | @rodriguezvjhona-droid |
 | Kerin Barranco     | Desarrollador                | @Kerin0011             |
-| Diego Gonzales     | Desarrollador                | @Gonza204658           |            
+| Diego Gonzales     | Desarrollador                | @Gonza204658           |
 | jorel Hernandez    | Desarrollador                | @jorel2610             |
-
