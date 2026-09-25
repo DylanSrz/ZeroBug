@@ -1,0 +1,1251 @@
+{
+  "generado": "2026-09-25T16:52:14.644Z",
+  "sprint": 1,
+  "ventana": {
+    "desde": null,
+    "hasta": "2026-09-24T12:27:17-05:00",
+    "tagAnterior": null,
+    "release": "v0.1.0",
+    "codigoMedidoEn": "v0.1.0"
+  },
+  "milestone": {
+    "numero": 1,
+    "titulo": "Sprint 1 — Infraestructura y Gestión Base",
+    "vence": "2026-09-24T00:00:00Z"
+  },
+  "totales": {
+    "prs": 33,
+    "revisiones": 33,
+    "historias": 5,
+    "historiasCerradas": 5,
+    "puntosComprometidos": 55,
+    "puntosCompletados": 55,
+    "tareas": 33,
+    "tareasCerradas": 33,
+    "adiciones": 7840,
+    "eliminaciones": 380
+  },
+  "historias": [
+    {
+      "numero": 9,
+      "titulo": "HU-001 — Configuración de la Plataforma Base",
+      "estado": "CLOSED",
+      "cerrada": "2026-09-18T16:14:48Z",
+      "puntos": 8,
+      "asignados": []
+    },
+    {
+      "numero": 10,
+      "titulo": "HU-002 — Administración de Mesas",
+      "estado": "CLOSED",
+      "cerrada": "2026-09-24T17:18:02Z",
+      "puntos": 13,
+      "asignados": [
+        "Gonza204658"
+      ]
+    },
+    {
+      "numero": 11,
+      "titulo": "HU-003 — Administración de Categorías del Menú",
+      "estado": "CLOSED",
+      "cerrada": "2026-09-24T17:18:04Z",
+      "puntos": 8,
+      "asignados": [
+        "Kerin0011"
+      ]
+    },
+    {
+      "numero": 12,
+      "titulo": "HU-004 — Administración de Productos del Menú",
+      "estado": "CLOSED",
+      "cerrada": "2026-09-24T17:18:06Z",
+      "puntos": 13,
+      "asignados": [
+        "DylanSrz"
+      ]
+    },
+    {
+      "numero": 13,
+      "titulo": "HU-005 — Consulta del Menú del Restaurante",
+      "estado": "CLOSED",
+      "cerrada": "2026-09-24T17:18:08Z",
+      "puntos": 13,
+      "asignados": [
+        "rodriguezvjhona-droid"
+      ]
+    }
+  ],
+  "tareas": [
+    {
+      "numero": 29,
+      "titulo": "Versionado /api/v1 y endpoint GET /api/v1/health",
+      "estado": "CLOSED",
+      "etiquetas": [
+        "tarea",
+        "epic:infraestructura",
+        "sprint-1"
+      ],
+      "historia": 9,
+      "asignados": [
+        "Kerin0011"
+      ],
+      "resueltaPor": "Kerin0011",
+      "pr": 120
+    },
+    {
+      "numero": 30,
+      "titulo": "ValidationPipe global, Helmet y CORS por entorno",
+      "estado": "CLOSED",
+      "etiquetas": [
+        "tarea",
+        "epic:infraestructura",
+        "sprint-1"
+      ],
+      "historia": 9,
+      "asignados": [
+        "DylanSrz"
+      ],
+      "resueltaPor": "DylanSrz",
+      "pr": 117
+    },
+    {
+      "numero": 31,
+      "titulo": "Migraciones TypeORM: DataSource CLI, scripts npm y primera migración",
+      "estado": "CLOSED",
+      "etiquetas": [
+        "tarea",
+        "epic:infraestructura",
+        "sprint-1"
+      ],
+      "historia": 9,
+      "asignados": [
+        "DylanSrz"
+      ],
+      "resueltaPor": "DylanSrz",
+      "pr": 114
+    },
+    {
+      "numero": 32,
+      "titulo": "Conectar validación zod del entorno y completar .env.example",
+      "estado": "CLOSED",
+      "etiquetas": [
+        "tarea",
+        "epic:infraestructura",
+        "sprint-1"
+      ],
+      "historia": 9,
+      "asignados": [
+        "DylanSrz"
+      ],
+      "resueltaPor": "DylanSrz",
+      "pr": 115
+    },
+    {
+      "numero": 33,
+      "titulo": "Filtro global de excepciones con formato de error uniforme",
+      "estado": "CLOSED",
+      "etiquetas": [
+        "tarea",
+        "epic:infraestructura",
+        "sprint-1"
+      ],
+      "historia": 9,
+      "asignados": [
+        "DylanSrz"
+      ],
+      "resueltaPor": "DylanSrz",
+      "pr": 122
+    },
+    {
+      "numero": 34,
+      "titulo": "Swagger con metadatos reales y README del proyecto",
+      "estado": "CLOSED",
+      "etiquetas": [
+        "tarea",
+        "epic:infraestructura",
+        "sprint-1"
+      ],
+      "historia": 9,
+      "asignados": [
+        "DylanSrz"
+      ],
+      "resueltaPor": "DylanSrz",
+      "pr": 125
+    },
+    {
+      "numero": 35,
+      "titulo": "docs: actualizar HU-001 al stack real (TypeORM, Vitest, oxlint, zod)",
+      "estado": "CLOSED",
+      "etiquetas": [
+        "tarea",
+        "docs",
+        "epic:infraestructura",
+        "sprint-1"
+      ],
+      "historia": 9,
+      "asignados": [
+        "DylanSrz"
+      ],
+      "resueltaPor": "DylanSrz",
+      "pr": 126
+    },
+    {
+      "numero": 36,
+      "titulo": "Entidad Table, enum TableStatus y migración",
+      "estado": "CLOSED",
+      "etiquetas": [
+        "tarea",
+        "epic:operativa",
+        "sprint-1"
+      ],
+      "historia": 10,
+      "asignados": [
+        "Gonza204658"
+      ],
+      "resueltaPor": "Gonza204658",
+      "pr": 144
+    },
+    {
+      "numero": 37,
+      "titulo": "DTOs y validaciones de mesas (crear, actualizar, cambiar estado, filtros)",
+      "estado": "CLOSED",
+      "etiquetas": [
+        "tarea",
+        "epic:operativa",
+        "sprint-1"
+      ],
+      "historia": 10,
+      "asignados": [
+        "Gonza204658"
+      ],
+      "resueltaPor": "Gonza204658",
+      "pr": 147
+    },
+    {
+      "numero": 38,
+      "titulo": "TablesService: crear, listar con filtros, consultar, actualizar y cambiar estado",
+      "estado": "CLOSED",
+      "etiquetas": [
+        "tarea",
+        "epic:operativa",
+        "sprint-1"
+      ],
+      "historia": 10,
+      "asignados": [
+        "Gonza204658"
+      ],
+      "resueltaPor": "Gonza204658",
+      "pr": 151
+    },
+    {
+      "numero": 39,
+      "titulo": "TablesController + Swagger (5 endpoints)",
+      "estado": "CLOSED",
+      "etiquetas": [
+        "tarea",
+        "epic:operativa",
+        "sprint-1"
+      ],
+      "historia": 10,
+      "asignados": [
+        "Gonza204658"
+      ],
+      "resueltaPor": "Gonza204658",
+      "pr": 153
+    },
+    {
+      "numero": 40,
+      "titulo": "Tests e2e de mesas",
+      "estado": "CLOSED",
+      "etiquetas": [
+        "tarea",
+        "epic:operativa",
+        "sprint-1"
+      ],
+      "historia": 10,
+      "asignados": [
+        "Gonza204658"
+      ],
+      "resueltaPor": "Gonza204658",
+      "pr": 154
+    },
+    {
+      "numero": 41,
+      "titulo": "Entidad Category, enum CategoryStatus y migración",
+      "estado": "CLOSED",
+      "etiquetas": [
+        "tarea",
+        "epic:menu",
+        "sprint-1"
+      ],
+      "historia": 11,
+      "asignados": [
+        "Kerin0011"
+      ],
+      "resueltaPor": "Kerin0011",
+      "pr": 134
+    },
+    {
+      "numero": 42,
+      "titulo": "DTOs y validaciones de categorías",
+      "estado": "CLOSED",
+      "etiquetas": [
+        "tarea",
+        "epic:menu",
+        "sprint-1"
+      ],
+      "historia": 11,
+      "asignados": [
+        "Kerin0011"
+      ],
+      "resueltaPor": "Kerin0011",
+      "pr": 135
+    },
+    {
+      "numero": 43,
+      "titulo": "CategoriesService + CategoriesController + Swagger",
+      "estado": "CLOSED",
+      "etiquetas": [
+        "tarea",
+        "epic:menu",
+        "sprint-1"
+      ],
+      "historia": 11,
+      "asignados": [
+        "Kerin0011"
+      ],
+      "resueltaPor": "Kerin0011",
+      "pr": 145
+    },
+    {
+      "numero": 44,
+      "titulo": "Tests e2e de categorías",
+      "estado": "CLOSED",
+      "etiquetas": [
+        "tarea",
+        "epic:menu",
+        "sprint-1"
+      ],
+      "historia": 11,
+      "asignados": [
+        "Kerin0011"
+      ],
+      "resueltaPor": "Kerin0011",
+      "pr": 148
+    },
+    {
+      "numero": 45,
+      "titulo": "Entidad Product (relación con Category), enums y migración",
+      "estado": "CLOSED",
+      "etiquetas": [
+        "tarea",
+        "epic:menu",
+        "sprint-1"
+      ],
+      "historia": 12,
+      "asignados": [
+        "DylanSrz"
+      ],
+      "resueltaPor": "DylanSrz",
+      "pr": 139
+    },
+    {
+      "numero": 46,
+      "titulo": "DTOs y validaciones de productos",
+      "estado": "CLOSED",
+      "etiquetas": [
+        "tarea",
+        "epic:menu",
+        "sprint-1"
+      ],
+      "historia": 12,
+      "asignados": [
+        "DylanSrz"
+      ],
+      "resueltaPor": "DylanSrz",
+      "pr": 131
+    },
+    {
+      "numero": 47,
+      "titulo": "ProductsService + ProductsController + Swagger (6 endpoints)",
+      "estado": "CLOSED",
+      "etiquetas": [
+        "tarea",
+        "epic:menu",
+        "sprint-1"
+      ],
+      "historia": 12,
+      "asignados": [
+        "DylanSrz"
+      ],
+      "resueltaPor": "DylanSrz",
+      "pr": 140
+    },
+    {
+      "numero": 48,
+      "titulo": "Tests e2e de productos",
+      "estado": "CLOSED",
+      "etiquetas": [
+        "tarea",
+        "epic:menu",
+        "sprint-1"
+      ],
+      "historia": 12,
+      "asignados": [
+        "DylanSrz"
+      ],
+      "resueltaPor": "DylanSrz",
+      "pr": 141
+    },
+    {
+      "numero": 49,
+      "titulo": "MenuService: consultas del menú público (solo activos)",
+      "estado": "CLOSED",
+      "etiquetas": [
+        "tarea",
+        "epic:menu",
+        "sprint-1"
+      ],
+      "historia": 13,
+      "asignados": [
+        "rodriguezvjhona-droid"
+      ],
+      "resueltaPor": "rodriguezvjhona-droid",
+      "pr": 149
+    },
+    {
+      "numero": 50,
+      "titulo": "MenuController, DTOs de respuesta y Swagger (4 endpoints)",
+      "estado": "CLOSED",
+      "etiquetas": [
+        "tarea",
+        "epic:menu",
+        "sprint-1"
+      ],
+      "historia": 13,
+      "asignados": [
+        "rodriguezvjhona-droid"
+      ],
+      "resueltaPor": null,
+      "pr": null
+    },
+    {
+      "numero": 51,
+      "titulo": "Tests e2e del menú público",
+      "estado": "CLOSED",
+      "etiquetas": [
+        "tarea",
+        "epic:menu",
+        "sprint-1"
+      ],
+      "historia": 13,
+      "asignados": [
+        "rodriguezvjhona-droid"
+      ],
+      "resueltaPor": "DylanSrz",
+      "pr": 157
+    },
+    {
+      "numero": 96,
+      "titulo": "CI con GitHub Actions: lint, build, test y e2e en cada PR",
+      "estado": "CLOSED",
+      "etiquetas": [
+        "técnica",
+        "epic:infraestructura",
+        "prioridad:alta",
+        "sprint-1"
+      ],
+      "historia": 2,
+      "asignados": [
+        "DylanSrz"
+      ],
+      "resueltaPor": "DylanSrz",
+      "pr": 127
+    },
+    {
+      "numero": 97,
+      "titulo": "Plantillas de PR e issues y CODEOWNERS en .github/",
+      "estado": "CLOSED",
+      "etiquetas": [
+        "docs",
+        "epic:infraestructura",
+        "prioridad:alta",
+        "sprint-1"
+      ],
+      "historia": 2,
+      "asignados": [
+        "DylanSrz"
+      ],
+      "resueltaPor": "DylanSrz",
+      "pr": 124
+    },
+    {
+      "numero": 98,
+      "titulo": "Working Agreement y Definition of Done del equipo",
+      "estado": "CLOSED",
+      "etiquetas": [
+        "docs",
+        "scrum",
+        "epic:infraestructura",
+        "prioridad:alta",
+        "sprint-1"
+      ],
+      "historia": 2,
+      "asignados": [
+        "DylanSrz"
+      ],
+      "resueltaPor": "DylanSrz",
+      "pr": 128
+    },
+    {
+      "numero": 99,
+      "titulo": "Seeds de datos de desarrollo (mesas, categorías, productos)",
+      "estado": "CLOSED",
+      "etiquetas": [
+        "técnica",
+        "epic:infraestructura",
+        "prioridad:media",
+        "sprint-1"
+      ],
+      "historia": 2,
+      "asignados": [
+        "Kerin0011"
+      ],
+      "resueltaPor": "DylanSrz",
+      "pr": 155
+    },
+    {
+      "numero": 101,
+      "titulo": "Ejercicio de iniciación GitFlow — @Gonza204658",
+      "estado": "CLOSED",
+      "etiquetas": [
+        "good first issue",
+        "docs",
+        "epic:infraestructura",
+        "sprint-1"
+      ],
+      "historia": 2,
+      "asignados": [
+        "Gonza204658"
+      ],
+      "resueltaPor": "Gonza204658",
+      "pr": 113
+    },
+    {
+      "numero": 102,
+      "titulo": "Ejercicio de iniciación GitFlow — @Kerin0011",
+      "estado": "CLOSED",
+      "etiquetas": [
+        "good first issue",
+        "docs",
+        "epic:infraestructura",
+        "sprint-1"
+      ],
+      "historia": 2,
+      "asignados": [
+        "Kerin0011"
+      ],
+      "resueltaPor": null,
+      "pr": null
+    },
+    {
+      "numero": 103,
+      "titulo": "Ejercicio de iniciación GitFlow — @rodriguezvjhona-droid",
+      "estado": "CLOSED",
+      "etiquetas": [
+        "good first issue",
+        "docs",
+        "epic:infraestructura",
+        "sprint-1"
+      ],
+      "historia": 2,
+      "asignados": [
+        "rodriguezvjhona-droid"
+      ],
+      "resueltaPor": "rodriguezvjhona-droid",
+      "pr": 112
+    },
+    {
+      "numero": 104,
+      "titulo": "Ejercicio de iniciación GitFlow — @jorel2610",
+      "estado": "CLOSED",
+      "etiquetas": [
+        "good first issue",
+        "docs",
+        "epic:infraestructura",
+        "sprint-1"
+      ],
+      "historia": 2,
+      "asignados": [
+        "jorel2610"
+      ],
+      "resueltaPor": "jorel2610",
+      "pr": 146
+    },
+    {
+      "numero": 105,
+      "titulo": "Ceremonias Sprint 1 — Planning, Dailies, Review y Retro",
+      "estado": "CLOSED",
+      "etiquetas": [
+        "scrum",
+        "sprint-1"
+      ],
+      "historia": null,
+      "asignados": [
+        "DylanSrz"
+      ],
+      "resueltaPor": null,
+      "pr": null
+    },
+    {
+      "numero": 136,
+      "titulo": "docs: README con @jorel2610, guía de git para 5 integrantes y .nvmrc",
+      "estado": "CLOSED",
+      "etiquetas": [
+        "docs",
+        "epic:infraestructura",
+        "sprint-1"
+      ],
+      "historia": null,
+      "asignados": [
+        "DylanSrz"
+      ],
+      "resueltaPor": "DylanSrz",
+      "pr": 138
+    }
+  ],
+  "prs": [
+    {
+      "numero": 112,
+      "titulo": "docs: agregar presentacion de Jonathan al readme",
+      "url": "https://github.com/DylanSrz/ZeroBug/pull/112",
+      "autor": "rodriguezvjhona-droid",
+      "mergedAt": "2026-09-18T01:44:44Z",
+      "adiciones": 6,
+      "eliminaciones": 0,
+      "tareas": [
+        103
+      ]
+    },
+    {
+      "numero": 115,
+      "titulo": "feat: validación de entorno con zod (HU-001)",
+      "url": "https://github.com/DylanSrz/ZeroBug/pull/115",
+      "autor": "DylanSrz",
+      "mergedAt": "2026-09-18T13:21:18Z",
+      "adiciones": 705,
+      "eliminaciones": 58,
+      "tareas": [
+        32
+      ]
+    },
+    {
+      "numero": 114,
+      "titulo": "feat: migraciones TypeORM (HU-001)",
+      "url": "https://github.com/DylanSrz/ZeroBug/pull/114",
+      "autor": "DylanSrz",
+      "mergedAt": "2026-09-18T13:21:19Z",
+      "adiciones": 652,
+      "eliminaciones": 23,
+      "tareas": [
+        31
+      ]
+    },
+    {
+      "numero": 113,
+      "titulo": "Agrege mi nombre en el Readme y agrege el equipo",
+      "url": "https://github.com/DylanSrz/ZeroBug/pull/113",
+      "autor": "Gonza204658",
+      "mergedAt": "2026-09-18T13:26:36Z",
+      "adiciones": 4,
+      "eliminaciones": 0,
+      "tareas": [
+        101
+      ]
+    },
+    {
+      "numero": 121,
+      "titulo": "feat: add presentation",
+      "url": "https://github.com/DylanSrz/ZeroBug/pull/121",
+      "autor": "Kerin0011",
+      "mergedAt": "2026-09-18T15:04:21Z",
+      "adiciones": 3,
+      "eliminaciones": 3,
+      "tareas": []
+    },
+    {
+      "numero": 117,
+      "titulo": "feat: ValidationPipe global, Helmet y CORS (HU-001)",
+      "url": "https://github.com/DylanSrz/ZeroBug/pull/117",
+      "autor": "DylanSrz",
+      "mergedAt": "2026-09-18T15:21:44Z",
+      "adiciones": 298,
+      "eliminaciones": 23,
+      "tareas": [
+        30
+      ]
+    },
+    {
+      "numero": 122,
+      "titulo": "feat: filtro global de excepciones y excepciones de dominio (HU-001)",
+      "url": "https://github.com/DylanSrz/ZeroBug/pull/122",
+      "autor": "DylanSrz",
+      "mergedAt": "2026-09-18T15:22:10Z",
+      "adiciones": 721,
+      "eliminaciones": 23,
+      "tareas": [
+        33
+      ]
+    },
+    {
+      "numero": 124,
+      "titulo": "docs: plantillas de PR e issues (.github) → dev",
+      "url": "https://github.com/DylanSrz/ZeroBug/pull/124",
+      "autor": "DylanSrz",
+      "mergedAt": "2026-09-18T15:30:50Z",
+      "adiciones": 218,
+      "eliminaciones": 0,
+      "tareas": [
+        97
+      ]
+    },
+    {
+      "numero": 120,
+      "titulo": "Feature/hu 001 health versionado",
+      "url": "https://github.com/DylanSrz/ZeroBug/pull/120",
+      "autor": "Kerin0011",
+      "mergedAt": "2026-09-18T15:39:06Z",
+      "adiciones": 54,
+      "eliminaciones": 25,
+      "tareas": [
+        29
+      ]
+    },
+    {
+      "numero": 125,
+      "titulo": "docs: README del proyecto y Swagger con metadatos reales (HU-001)",
+      "url": "https://github.com/DylanSrz/ZeroBug/pull/125",
+      "autor": "DylanSrz",
+      "mergedAt": "2026-09-18T15:51:47Z",
+      "adiciones": 195,
+      "eliminaciones": 102,
+      "tareas": [
+        34
+      ]
+    },
+    {
+      "numero": 126,
+      "titulo": "docs: actualizar hu-001 al stack real (typeorm, vitest, oxlint, zod)",
+      "url": "https://github.com/DylanSrz/ZeroBug/pull/126",
+      "autor": "DylanSrz",
+      "mergedAt": "2026-09-18T16:05:22Z",
+      "adiciones": 99,
+      "eliminaciones": 88,
+      "tareas": [
+        35
+      ]
+    },
+    {
+      "numero": 127,
+      "titulo": "chore: CI con GitHub Actions (lint, format, build, unit, e2e)",
+      "url": "https://github.com/DylanSrz/ZeroBug/pull/127",
+      "autor": "DylanSrz",
+      "mergedAt": "2026-09-18T16:13:16Z",
+      "adiciones": 93,
+      "eliminaciones": 1,
+      "tareas": [
+        96
+      ]
+    },
+    {
+      "numero": 128,
+      "titulo": "docs: Working Agreement y Definition of Done del equipo",
+      "url": "https://github.com/DylanSrz/ZeroBug/pull/128",
+      "autor": "DylanSrz",
+      "mergedAt": "2026-09-18T16:26:28Z",
+      "adiciones": 166,
+      "eliminaciones": 1,
+      "tareas": [
+        98
+      ]
+    },
+    {
+      "numero": 129,
+      "titulo": "docs: Working Agreement y Definition of Done del equipo",
+      "url": "https://github.com/DylanSrz/ZeroBug/pull/129",
+      "autor": "DylanSrz",
+      "mergedAt": "2026-09-18T16:46:57Z",
+      "adiciones": 8,
+      "eliminaciones": 8,
+      "tareas": []
+    },
+    {
+      "numero": 131,
+      "titulo": "feat: DTOs y validaciones de productos (HU-004)",
+      "url": "https://github.com/DylanSrz/ZeroBug/pull/131",
+      "autor": "DylanSrz",
+      "mergedAt": "2026-09-20T15:29:32Z",
+      "adiciones": 238,
+      "eliminaciones": 2,
+      "tareas": [
+        46
+      ]
+    },
+    {
+      "numero": 138,
+      "titulo": "docs: README con @jorel2610, guía de git para 5 integrantes y .nvmrc",
+      "url": "https://github.com/DylanSrz/ZeroBug/pull/138",
+      "autor": "DylanSrz",
+      "mergedAt": "2026-09-21T00:38:11Z",
+      "adiciones": 9,
+      "eliminaciones": 7,
+      "tareas": [
+        136
+      ]
+    },
+    {
+      "numero": 134,
+      "titulo": "Feature/hu 003 entidad categorias",
+      "url": "https://github.com/DylanSrz/ZeroBug/pull/134",
+      "autor": "Kerin0011",
+      "mergedAt": "2026-09-21T00:55:53Z",
+      "adiciones": 81,
+      "eliminaciones": 0,
+      "tareas": [
+        41
+      ]
+    },
+    {
+      "numero": 135,
+      "titulo": "feat: add category DTOs",
+      "url": "https://github.com/DylanSrz/ZeroBug/pull/135",
+      "autor": "Kerin0011",
+      "mergedAt": "2026-09-21T01:04:34Z",
+      "adiciones": 112,
+      "eliminaciones": 0,
+      "tareas": [
+        42
+      ]
+    },
+    {
+      "numero": 139,
+      "titulo": "feat: entidad Product, relación con Category y migración (HU-004)",
+      "url": "https://github.com/DylanSrz/ZeroBug/pull/139",
+      "autor": "DylanSrz",
+      "mergedAt": "2026-09-21T01:20:01Z",
+      "adiciones": 140,
+      "eliminaciones": 0,
+      "tareas": [
+        45
+      ]
+    },
+    {
+      "numero": 140,
+      "titulo": "feat: ProductsService + ProductsController + Swagger (HU-004)",
+      "url": "https://github.com/DylanSrz/ZeroBug/pull/140",
+      "autor": "DylanSrz",
+      "mergedAt": "2026-09-21T01:49:09Z",
+      "adiciones": 516,
+      "eliminaciones": 2,
+      "tareas": [
+        47
+      ]
+    },
+    {
+      "numero": 141,
+      "titulo": "test: e2e de productos (HU-004)",
+      "url": "https://github.com/DylanSrz/ZeroBug/pull/141",
+      "autor": "DylanSrz",
+      "mergedAt": "2026-09-21T02:15:06Z",
+      "adiciones": 253,
+      "eliminaciones": 0,
+      "tareas": [
+        48
+      ]
+    },
+    {
+      "numero": 144,
+      "titulo": "Creado la Entidad Table, enum TableStatus y migración #36",
+      "url": "https://github.com/DylanSrz/ZeroBug/pull/144",
+      "autor": "Gonza204658",
+      "mergedAt": "2026-09-22T17:41:10Z",
+      "adiciones": 98,
+      "eliminaciones": 0,
+      "tareas": [
+        36
+      ]
+    },
+    {
+      "numero": 146,
+      "titulo": "docs: agregar presentacion de Jorel Hernandez al readme",
+      "url": "https://github.com/DylanSrz/ZeroBug/pull/146",
+      "autor": "jorel2610",
+      "mergedAt": "2026-09-22T19:21:03Z",
+      "adiciones": 3,
+      "eliminaciones": 2,
+      "tareas": [
+        104
+      ]
+    },
+    {
+      "numero": 145,
+      "titulo": "feat: implement categories",
+      "url": "https://github.com/DylanSrz/ZeroBug/pull/145",
+      "autor": "Kerin0011",
+      "mergedAt": "2026-09-22T19:28:06Z",
+      "adiciones": 563,
+      "eliminaciones": 1,
+      "tareas": [
+        43
+      ]
+    },
+    {
+      "numero": 147,
+      "titulo": "DTOs y validaciones de mesas (crear, actualizar, cambiar estado, filt…",
+      "url": "https://github.com/DylanSrz/ZeroBug/pull/147",
+      "autor": "Gonza204658",
+      "mergedAt": "2026-09-23T14:04:37Z",
+      "adiciones": 226,
+      "eliminaciones": 0,
+      "tareas": [
+        37
+      ]
+    },
+    {
+      "numero": 148,
+      "titulo": "Feature/hu 003 e2e categoria",
+      "url": "https://github.com/DylanSrz/ZeroBug/pull/148",
+      "autor": "Kerin0011",
+      "mergedAt": "2026-09-23T14:29:47Z",
+      "adiciones": 342,
+      "eliminaciones": 0,
+      "tareas": [
+        44
+      ]
+    },
+    {
+      "numero": 149,
+      "titulo": "Entrega de tarea",
+      "url": "https://github.com/DylanSrz/ZeroBug/pull/149",
+      "autor": "rodriguezvjhona-droid",
+      "mergedAt": "2026-09-24T03:13:22Z",
+      "adiciones": 614,
+      "eliminaciones": 0,
+      "tareas": [
+        49
+      ]
+    },
+    {
+      "numero": 151,
+      "titulo": "Feature/hu 002 service mesa",
+      "url": "https://github.com/DylanSrz/ZeroBug/pull/151",
+      "autor": "Gonza204658",
+      "mergedAt": "2026-09-24T03:22:41Z",
+      "adiciones": 364,
+      "eliminaciones": 1,
+      "tareas": [
+        38
+      ]
+    },
+    {
+      "numero": 153,
+      "titulo": "Feature/hu 002 controller table",
+      "url": "https://github.com/DylanSrz/ZeroBug/pull/153",
+      "autor": "Gonza204658",
+      "mergedAt": "2026-09-24T03:38:15Z",
+      "adiciones": 113,
+      "eliminaciones": 0,
+      "tareas": [
+        39
+      ]
+    },
+    {
+      "numero": 154,
+      "titulo": "Feature/hu 002 e2e mesa",
+      "url": "https://github.com/DylanSrz/ZeroBug/pull/154",
+      "autor": "Gonza204658",
+      "mergedAt": "2026-09-24T16:14:07Z",
+      "adiciones": 409,
+      "eliminaciones": 0,
+      "tareas": [
+        40
+      ]
+    },
+    {
+      "numero": 155,
+      "titulo": "chore: seeds de datos de desarrollo (#99)",
+      "url": "https://github.com/DylanSrz/ZeroBug/pull/155",
+      "autor": "DylanSrz",
+      "mergedAt": "2026-09-24T17:16:39Z",
+      "adiciones": 191,
+      "eliminaciones": 3,
+      "tareas": [
+        99
+      ]
+    },
+    {
+      "numero": 156,
+      "titulo": "docs: acta de retrospectiva del Sprint 1 y cadencia semanal",
+      "url": "https://github.com/DylanSrz/ZeroBug/pull/156",
+      "autor": "DylanSrz",
+      "mergedAt": "2026-09-24T17:16:57Z",
+      "adiciones": 64,
+      "eliminaciones": 7,
+      "tareas": []
+    },
+    {
+      "numero": 157,
+      "titulo": "test: e2e del menú público (HU-005)",
+      "url": "https://github.com/DylanSrz/ZeroBug/pull/157",
+      "autor": "DylanSrz",
+      "mergedAt": "2026-09-24T17:17:08Z",
+      "adiciones": 282,
+      "eliminaciones": 0,
+      "tareas": [
+        51
+      ]
+    }
+  ],
+  "revisiones": {
+    "DylanSrz": {
+      "total": 30,
+      "aprobadas": 17,
+      "cambios": 10,
+      "comentarios": 3,
+      "prs": [
+        112,
+        120,
+        121,
+        134,
+        135,
+        144,
+        145,
+        146,
+        147,
+        148,
+        149,
+        151,
+        153,
+        154
+      ]
+    },
+    "Kerin0011": {
+      "total": 2,
+      "aprobadas": 2,
+      "cambios": 0,
+      "comentarios": 0,
+      "prs": [
+        113,
+        115
+      ]
+    },
+    "Gonza204658": {
+      "total": 1,
+      "aprobadas": 1,
+      "cambios": 0,
+      "comentarios": 0,
+      "prs": [
+        131
+      ]
+    }
+  },
+  "porIntegrante": {
+    "DylanSrz": {
+      "prs": [
+        115,
+        114,
+        117,
+        122,
+        124,
+        125,
+        126,
+        127,
+        128,
+        129,
+        131,
+        138,
+        139,
+        140,
+        141,
+        155,
+        156,
+        157
+      ],
+      "tareas": [
+        30,
+        31,
+        32,
+        33,
+        34,
+        35,
+        45,
+        46,
+        47,
+        48,
+        51,
+        96,
+        97,
+        98,
+        99,
+        136
+      ],
+      "revisiones": {
+        "total": 30,
+        "aprobadas": 17,
+        "cambios": 10,
+        "comentarios": 3,
+        "prs": [
+          112,
+          120,
+          121,
+          134,
+          135,
+          144,
+          145,
+          146,
+          147,
+          148,
+          149,
+          151,
+          153,
+          154
+        ]
+      },
+      "historias": [
+        12
+      ]
+    },
+    "Gonza204658": {
+      "prs": [
+        113,
+        144,
+        147,
+        151,
+        153,
+        154
+      ],
+      "tareas": [
+        36,
+        37,
+        38,
+        39,
+        40,
+        101
+      ],
+      "revisiones": {
+        "total": 1,
+        "aprobadas": 1,
+        "cambios": 0,
+        "comentarios": 0,
+        "prs": [
+          131
+        ]
+      },
+      "historias": [
+        10
+      ]
+    },
+    "Kerin0011": {
+      "prs": [
+        121,
+        120,
+        134,
+        135,
+        145,
+        148
+      ],
+      "tareas": [
+        29,
+        41,
+        42,
+        43,
+        44
+      ],
+      "revisiones": {
+        "total": 2,
+        "aprobadas": 2,
+        "cambios": 0,
+        "comentarios": 0,
+        "prs": [
+          113,
+          115
+        ]
+      },
+      "historias": [
+        11
+      ]
+    },
+    "rodriguezvjhona-droid": {
+      "prs": [
+        112,
+        149
+      ],
+      "tareas": [
+        49,
+        103
+      ],
+      "revisiones": {
+        "total": 0,
+        "aprobadas": 0,
+        "cambios": 0,
+        "comentarios": 0,
+        "prs": []
+      },
+      "historias": [
+        13
+      ]
+    },
+    "jorel2610": {
+      "prs": [
+        146
+      ],
+      "tareas": [
+        104
+      ],
+      "revisiones": {
+        "total": 0,
+        "aprobadas": 0,
+        "cambios": 0,
+        "comentarios": 0,
+        "prs": []
+      },
+      "historias": []
+    }
+  },
+  "tests": {
+    "unit": 109,
+    "e2e": 107,
+    "porModulo": {
+      "tables": {
+        "unit": 29,
+        "e2e": 31
+      },
+      "products": {
+        "unit": 32,
+        "e2e": 20
+      },
+      "plataforma": {
+        "unit": 10,
+        "e2e": 13
+      },
+      "categories": {
+        "unit": 28,
+        "e2e": 27
+      },
+      "menu": {
+        "unit": 10,
+        "e2e": 16
+      }
+    }
+  },
+  "endpoints": {
+    "total": 21,
+    "porModulo": {
+      "categories": 5,
+      "health": 1,
+      "menu": 4,
+      "products": 6,
+      "tables": 5
+    }
+  }
+}

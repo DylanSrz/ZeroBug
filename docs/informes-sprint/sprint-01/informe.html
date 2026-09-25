@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Informe del Sprint 1 — ZeroBug</title>
+<meta name="author" content="Dylan Suárez">
+<style>
+/* Documento PDF del informe de sprint — A4 vertical, tono formal.
+   El pie de página con la numeración lo añade generar.mjs (@page), porque
+   incluye el número de sprint. */
+
+:root {
+  --ink: #0f172a;
+  --ink-2: #334155;
+  --ink-3: #64748b;
+  --navy: #1e3a5f;
+  --ambar: #a16207;
+  --ok: #15803d;
+  --borde: #dbe2ea;
+  --suave: #f5f7fa;
+  --sans: "Noto Sans", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --mono: "JetBrains Mono", "JetBrainsMono NFM", Menlo, Consolas, monospace;
+}
+
+* { box-sizing: border-box; }
+html { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+body {
+  margin: 0; color: var(--ink); font-family: var(--sans);
+  font-size: 10pt; line-height: 1.5; background: #fff;
+}
+/* en pantalla se ve como una hoja */
+@media screen {
+  body { background: #e9edf2; padding: 24px 0; }
+  .hoja { width: 210mm; margin: 0 auto; background: #fff; padding: 18mm 16mm; box-shadow: 0 4px 24px rgba(15, 23, 42, .12); }
+}
+code { font-family: var(--mono); font-size: .88em; background: var(--suave); padding: 0 3px; border-radius: 3px; }
+a { color: var(--navy); text-decoration: none; }
+strong { color: var(--ink); }
+
+/* ── portada ───────────────────────────────────────────────────────────── */
+.cabecera {
+  display: flex; justify-content: space-between; align-items: flex-end; gap: 16px;
+  border-bottom: 3px solid var(--ambar); padding-bottom: 12px; margin-bottom: 14px;
+}
+.cabecera .marca { font-weight: 800; font-size: 13pt; letter-spacing: -0.02em; color: var(--navy); }
+.cabecera .marca span { color: var(--ambar); }
+.cabecera h1 { margin: 4px 0 0; font-size: 22pt; line-height: 1.1; color: var(--ink); letter-spacing: -0.02em; }
+.cabecera .sprint { text-align: right; color: var(--ink-3); font-size: 9pt; }
+.cabecera .sprint b { display: block; font-size: 26pt; line-height: 1; color: var(--navy); }
+
+table.ficha { width: 100%; border-collapse: collapse; margin-bottom: 16px; font-size: 9.5pt; }
+table.ficha th { text-align: left; width: 24%; color: var(--ink-3); font-weight: 600; padding: 4px 8px 4px 0; vertical-align: top; }
+table.ficha td { padding: 4px 0; color: var(--ink); }
+
+.estado-sprint {
+  display: flex; gap: 10px; align-items: flex-start; background: #ecfdf3; border: 1px solid #b7ebcb;
+  border-radius: 6px; padding: 10px 12px; margin-bottom: 14px;
+}
+.estado-sprint .icono { flex: none; width: 20px; height: 20px; border-radius: 50%; background: var(--ok); color: #fff; font-weight: 800; font-size: 11pt; display: grid; place-items: center; line-height: 1; }
+.estado-sprint p { margin: 0; }
+.estado-sprint .objetivo { color: var(--ink-3); font-size: 9pt; }
+
+.kpis { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; margin: 0 0 16px; }
+.kpis div { border: 1px solid var(--borde); border-radius: 6px; padding: 8px 10px; background: var(--suave); }
+.kpis b { display: block; font-size: 17pt; line-height: 1.1; color: var(--navy); font-variant-numeric: tabular-nums; }
+.kpis span { font-size: 8.5pt; color: var(--ink-3); }
+
+/* ── secciones ─────────────────────────────────────────────────────────── */
+h2 {
+  font-size: 13pt; color: var(--navy); margin: 20px 0 8px; padding-bottom: 4px;
+  border-bottom: 1px solid var(--borde); break-after: avoid;
+}
+h2 .n { color: var(--ambar); margin-right: 6px; }
+h3 { font-size: 11pt; margin: 0; color: var(--ink); break-after: avoid; }
+p { margin: 0 0 8px; }
+ul { margin: 0 0 8px; padding-left: 18px; }
+li { margin-bottom: 3px; }
+.nota { color: var(--ink-3); font-size: 8.5pt; }
+
+table.t { width: 100%; border-collapse: collapse; font-size: 9pt; margin-bottom: 10px; }
+table.t th { background: #eef2f7; color: var(--ink-2); text-align: left; font-weight: 600; padding: 5px 7px; border: 1px solid var(--borde); }
+table.t td { padding: 5px 7px; border: 1px solid var(--borde); vertical-align: top; }
+table.t td.num, table.t th.num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+table.t td.mono { font-family: var(--mono); font-size: 8.5pt; white-space: nowrap; color: var(--navy); }
+table.t tr { break-inside: avoid; }
+table.t tfoot td { font-weight: 700; background: var(--suave); }
+/* el total no se repite en cada página cuando la tabla se parte */
+table.t tfoot { display: table-row-group; }
+/* tablas cortas: nunca partidas entre páginas */
+table.t.junta { break-inside: avoid; }
+.ok { color: var(--ok); font-weight: 700; white-space: nowrap; }
+
+/* ── integrantes ───────────────────────────────────────────────────────── */
+.integrante { border: 1px solid var(--borde); border-radius: 8px; padding: 12px 14px; margin-bottom: 12px; }
+.integrante .cab { display: flex; gap: 12px; align-items: center; margin-bottom: 8px; break-after: avoid; }
+.avatar {
+  --c: #94a3b8; flex: none; width: 34px; height: 34px; border-radius: 9px; display: grid; place-items: center;
+  font-weight: 800; font-size: 11pt; color: #0b1220; background: var(--c);
+}
+.integrante .rol { color: var(--ink-3); font-size: 8.5pt; }
+.integrante .cifras { margin-left: auto; display: flex; gap: 14px; text-align: right; }
+.integrante .cifras b { display: block; font-size: 13pt; line-height: 1.1; color: var(--navy); font-variant-numeric: tabular-nums; }
+.integrante .cifras span { font-size: 8pt; color: var(--ink-3); }
+.integrante ul { margin-bottom: 8px; }
+.integrante table.t { margin-bottom: 0; }
+
+.dos { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.caja { border: 1px solid var(--borde); border-radius: 6px; padding: 10px 12px; break-inside: avoid; }
+.caja h3 { font-size: 10pt; margin-bottom: 6px; }
+
+.firma { margin-top: 22px; padding-top: 10px; border-top: 1px solid var(--borde); color: var(--ink-3); font-size: 8.5pt; }
+
+/* ── impresión ─────────────────────────────────────────────────────────── */
+@media print {
+  .hoja { padding: 0; }
+  .salto { break-before: page; }
+  .integrante, .caja { break-inside: avoid; }
+  .integrante.largo { break-inside: auto; }
+}
+
+@page {
+  size: A4; margin: 16mm 15mm 18mm;
+  @bottom-left { content: "ZeroBug · Informe del Sprint 1 · 18 – 24 sep 2026"; font-family: "Noto Sans", sans-serif; font-size: 8pt; color: #64748b; }
+  @bottom-right { content: "Página " counter(page) " de " counter(pages); font-family: "Noto Sans", sans-serif; font-size: 8pt; color: #64748b; }
+}
+</style>
+</head>
+<body><div class="hoja">
+
+<div class="cabecera">
+  <div><div class="marca">Zero<span>Bug</span> — Restaurant API</div><h1>Informe del Sprint 1</h1><div style="color:var(--ink-2);font-size:11pt">Infraestructura y Gestión Base</div></div>
+  <div class="sprint">Sprint<b>01</b>18 – 24 sep 2026</div>
+</div>
+
+<table class="ficha">
+  <tr><th>Para</th><td>Abrahan Villa — Team Leader</td></tr>
+  <tr><th>De</th><td>Dylan Suárez — Scrum Master, en nombre del equipo</td></tr>
+  <tr><th>Fecha del informe</th><td>viernes 25 de septiembre de 2026</td></tr>
+  <tr><th>Periodo del sprint</th><td>18 – 24 sep 2026</td></tr>
+  <tr><th>Release</th><td><strong>v0.1.0</strong> · <a href="https://github.com/DylanSrz/ZeroBug/tree/v0.1.0">github.com/DylanSrz/ZeroBug</a></td></tr>
+  <tr><th>Equipo</th><td>Dylan Suárez · Diego Gonzales · Kerin Barranco · Jonathan Rodríguez · Jorel Hernández</td></tr>
+</table>
+
+<div class="estado-sprint">
+  <span class="icono">✓</span>
+  <div><p><strong>Objetivo cumplido: 5 de 5 historias y release v0.1.0.</strong> Las cinco historias comprometidas se entregaron, se verificaron en la Sprint Review del 25 de septiembre y se publicaron en el release <strong>v0.1.0</strong>.</p><p class="objetivo"><strong>Objetivo del sprint:</strong> Dejar lista la plataforma base de la API y la administración de mesas, categorías, productos y el menú público del restaurante.</p></div>
+</div>
+
+<div class="kpis">
+  <div><b>55/55</b><span>puntos completados</span></div>
+  <div><b>5/5</b><span>historias entregadas</span></div>
+  <div><b>33</b><span>pull requests integrados</span></div>
+  <div><b>216</b><span>pruebas automáticas</span></div>
+  <div><b>21</b><span>endpoints en la API</span></div>
+</div>
+
+<h2><span class="n">1.</span>Resumen ejecutivo</h2>
+<ul><li>Se entregaron las <strong>5 historias</strong> comprometidas (<strong>55 de 55 puntos</strong>) y se publicó el primer release, <strong>v0.1.0</strong>.</li><li>La API expone <strong>21 endpoints</strong> documentados en Swagger: mesas, categorías, productos, menú público y estado del servicio.</li><li><strong>216 pruebas automáticas</strong> (109 unitarias y 107 e2e contra PostgreSQL real) se ejecutan en cada pull request; sin CI en verde no se puede integrar.</li><li>Quedó definido el marco de trabajo del equipo: Working Agreement, Definition of Done, guía de Git, plantillas y tablero con épicas, historias y tareas.</li><li>Al cierre, el equipo acordó pasar a <strong>sprints de una semana</strong> (lunes a viernes) y replanificó el resto del proyecto en consecuencia.</li></ul>
+
+<h2><span class="n">2.</span>Historias entregadas</h2>
+<table class="t junta">
+  <thead><tr><th>Historia</th><th>Qué se entregó</th><th>Responsable</th><th class="num">Puntos</th><th>Estado</th></tr></thead>
+  <tbody><tr>
+    <td><strong>HU-001</strong><br>Plataforma base</td>
+    <td>NestJS 12 + TypeORM + PostgreSQL con migraciones versionadas, validación de variables de entorno, seguridad HTTP, formato uniforme de errores, Swagger y CI obligatorio.</td>
+    <td>Dylan Suárez<br>Kerin Barranco</td>
+    <td class="num">8</td>
+    <td><span class="ok">✓ Cerrada</span></td></tr><tr>
+    <td><strong>HU-002</strong><br>Mesas</td>
+    <td>Registro y administración de mesas con número único, capacidad mayor que cero, zonas y estados; filtros combinables por estado, zona y capacidad mínima.</td>
+    <td>Diego Gonzales</td>
+    <td class="num">13</td>
+    <td><span class="ok">✓ Cerrada</span></td></tr><tr>
+    <td><strong>HU-003</strong><br>Categorías</td>
+    <td>Categorías del menú con nombre único y activación o desactivación; una categoría inactiva se conserva pero deja de mostrarse al cliente.</td>
+    <td>Kerin Barranco</td>
+    <td class="num">8</td>
+    <td><span class="ok">✓ Cerrada</span></td></tr><tr>
+    <td><strong>HU-004</strong><br>Productos</td>
+    <td>Productos asociados a una categoría existente, con precio mayor que cero, estado y disponibilidad independientes.</td>
+    <td>Dylan Suárez</td>
+    <td class="num">13</td>
+    <td><span class="ok">✓ Cerrada</span></td></tr><tr>
+    <td><strong>HU-005</strong><br>Menú público</td>
+    <td>Consulta del menú para clientes: solo categorías y productos activos, con los no disponibles visibles pero marcados; refleja al instante los cambios de administración.</td>
+    <td>Jonathan Rodríguez</td>
+    <td class="num">13</td>
+    <td><span class="ok">✓ Cerrada</span></td></tr></tbody>
+  <tfoot><tr><td colspan="3">Total</td><td class="num">55 / 55</td><td>5 de 5</td></tr></tfoot>
+</table>
+<p class="nota">Cada historia se cierra cuando todas sus tareas están integradas y alguien distinto a su autor verificó sus criterios de aceptación en la Sprint Review.</p>
+
+<h2><span class="n">3.</span>Trabajo por integrante</h2>
+<p class="nota" style="margin-bottom:10px">PRs: pull requests integrados en <code>dev</code> durante el sprint. Tareas: tareas del tablero cerradas por un PR del integrante. Revisiones: revisiones de código hechas a PRs de otros compañeros.</p>
+<table class="t junta" style="margin-bottom:14px">
+  <thead><tr><th>Integrante</th><th>Rol</th><th>Historias a cargo</th><th class="num">PRs</th><th class="num">Tareas</th><th class="num">Revisiones</th></tr></thead>
+  <tbody><tr><td><strong>Dylan Suárez</strong></td><td>Scrum Master · Desarrollador</td><td>HU-001 (8 pts), HU-004 (13 pts)</td><td class="num">18</td><td class="num">17</td><td class="num">30</td></tr><tr><td><strong>Diego Gonzales</strong></td><td>Desarrollador</td><td>HU-002 (13 pts)</td><td class="num">6</td><td class="num">6</td><td class="num">1</td></tr><tr><td><strong>Kerin Barranco</strong></td><td>Desarrollador</td><td>HU-001 (8 pts), HU-003 (8 pts)</td><td class="num">6</td><td class="num">6</td><td class="num">2</td></tr><tr><td><strong>Jonathan Rodríguez</strong></td><td>Desarrollador</td><td>HU-005 (13 pts)</td><td class="num">2</td><td class="num">3</td><td class="num">0</td></tr><tr><td><strong>Jorel Hernández</strong></td><td>Desarrollador</td><td>—</td><td class="num">1</td><td class="num">1</td><td class="num">0</td></tr></tbody>
+  <tfoot><tr><td colspan="3">Total del equipo</td><td class="num">33</td><td class="num">33</td><td class="num">33</td></tr></tfoot>
+</table>
+
+<div class="integrante largo">
+  <div class="cab">
+    <span class="avatar" style="--c:#f5b942">DS</span>
+    <div><h3>Dylan Suárez</h3><div class="rol">Scrum Master · Desarrollador · responsable de HU-001 Plataforma base, HU-004 Productos</div></div>
+    <div class="cifras">
+      <div><b>18</b><span>PRs</span></div>
+      <div><b>17</b><span>tareas</span></div>
+      <div><b>30</b><span>revisiones</span></div>
+    </div>
+  </div>
+  <ul><li>Puesta en marcha del proceso SCRUM: tablero con épicas, historias y tareas, milestones por sprint, Working Agreement, Definition of Done, guía de Git y plantillas de PR e issues.</li><li><strong>HU-001 Plataforma base</strong>: migraciones TypeORM, validación del entorno con zod, <code>ValidationPipe</code>, Helmet y CORS, filtro global de errores, Swagger, README y pipeline de CI.</li><li><strong>HU-004 Productos</strong> completa: entidad y migración, DTOs, servicio y controlador con 6 endpoints, 32 pruebas unitarias y 20 e2e.</li><li>Cierre del sprint: pruebas e2e del menú público, datos semilla de desarrollo, acta de la retrospectiva y release <strong>v0.1.0</strong>.</li><li>Revisión de código de los PRs del equipo, con correcciones aplicadas en las ramas cuando bloqueaban la integración.</li></ul>
+  <table class="t"><thead><tr><th style="width:52px">PR</th><th>Cambio integrado</th><th class="num" style="width:90px">Fecha</th></tr></thead><tbody><tr><td class="mono">#115</td><td>Conectar validación zod del entorno y completar .env.example</td><td class="num">18 sep 2026</td></tr><tr><td class="mono">#114</td><td>Migraciones TypeORM: DataSource CLI, scripts npm y primera migración</td><td class="num">18 sep 2026</td></tr><tr><td class="mono">#117</td><td>ValidationPipe global, Helmet y CORS por entorno</td><td class="num">18 sep 2026</td></tr><tr><td class="mono">#122</td><td>Filtro global de excepciones con formato de error uniforme</td><td class="num">18 sep 2026</td></tr><tr><td class="mono">#124</td><td>Plantillas de PR e issues y CODEOWNERS en .github/</td><td class="num">18 sep 2026</td></tr><tr><td class="mono">#125</td><td>Swagger con metadatos reales y README del proyecto</td><td class="num">18 sep 2026</td></tr><tr><td class="mono">#126</td><td>Actualizar HU-001 al stack real (TypeORM, Vitest, oxlint, zod)</td><td class="num">18 sep 2026</td></tr><tr><td class="mono">#127</td><td>CI con GitHub Actions: lint, build, test y e2e en cada PR</td><td class="num">18 sep 2026</td></tr><tr><td class="mono">#128</td><td>Working Agreement y Definition of Done del equipo</td><td class="num">18 sep 2026</td></tr><tr><td class="mono">#129</td><td>Working Agreement y Definition of Done del equipo</td><td class="num">18 sep 2026</td></tr><tr><td class="mono">#131</td><td>DTOs y validaciones de productos</td><td class="num">20 sep 2026</td></tr><tr><td class="mono">#138</td><td>README con @jorel2610, guía de git para 5 integrantes y .nvmrc</td><td class="num">20 sep 2026</td></tr><tr><td class="mono">#139</td><td>Entidad Product (relación con Category), enums y migración</td><td class="num">20 sep 2026</td></tr><tr><td class="mono">#140</td><td>ProductsService + ProductsController + Swagger (6 endpoints)</td><td class="num">20 sep 2026</td></tr><tr><td class="mono">#141</td><td>Tests e2e de productos</td><td class="num">20 sep 2026</td></tr><tr><td class="mono">#155</td><td>Seeds de datos de desarrollo (mesas, categorías, productos)</td><td class="num">24 sep 2026</td></tr><tr><td class="mono">#156</td><td>Acta de retrospectiva del Sprint 1 y cadencia semanal</td><td class="num">24 sep 2026</td></tr><tr><td class="mono">#157</td><td>Tests e2e del menú público</td><td class="num">24 sep 2026</td></tr></tbody></table>
+  <p class="nota" style="margin:6px 0 0">Revisiones: 17 aprobadas · 10 con cambios solicitados · 3 comentarios.</p>
+</div>
+<div class="integrante">
+  <div class="cab">
+    <span class="avatar" style="--c:#6ea8fe">DG</span>
+    <div><h3>Diego Gonzales</h3><div class="rol">Desarrollador · responsable de HU-002 Mesas</div></div>
+    <div class="cifras">
+      <div><b>6</b><span>PRs</span></div>
+      <div><b>6</b><span>tareas</span></div>
+      <div><b>1</b><span>revisiones</span></div>
+    </div>
+  </div>
+  <ul><li><strong>HU-002 Mesas</strong> completa, sus 5 tareas: entidad <code>Table</code> y migración, DTOs con validaciones, servicio con filtros combinables, controlador con 5 endpoints documentados en Swagger.</li><li>Suite e2e de mesas con <strong>31 pruebas</strong> contra PostgreSQL, y 10 pruebas unitarias del servicio.</li><li>Ejercicio de iniciación GitFlow y revisión de los DTOs de productos.</li></ul>
+  <table class="t"><thead><tr><th style="width:52px">PR</th><th>Cambio integrado</th><th class="num" style="width:90px">Fecha</th></tr></thead><tbody><tr><td class="mono">#113</td><td>Ejercicio de iniciación GitFlow — @Gonza204658</td><td class="num">18 sep 2026</td></tr><tr><td class="mono">#144</td><td>Entidad Table, enum TableStatus y migración</td><td class="num">22 sep 2026</td></tr><tr><td class="mono">#147</td><td>DTOs y validaciones de mesas (crear, actualizar, cambiar estado, filtros)</td><td class="num">23 sep 2026</td></tr><tr><td class="mono">#151</td><td>Crear, listar con filtros, consultar, actualizar y cambiar estado</td><td class="num">23 sep 2026</td></tr><tr><td class="mono">#153</td><td>TablesController + Swagger (5 endpoints)</td><td class="num">23 sep 2026</td></tr><tr><td class="mono">#154</td><td>Tests e2e de mesas</td><td class="num">24 sep 2026</td></tr></tbody></table>
+  <p class="nota" style="margin:6px 0 0">Revisiones: 1 aprobadas · 0 con cambios solicitados · 0 comentarios.</p>
+</div>
+<div class="integrante">
+  <div class="cab">
+    <span class="avatar" style="--c:#36c7b8">KB</span>
+    <div><h3>Kerin Barranco</h3><div class="rol">Desarrollador · responsable de HU-001 Plataforma base, HU-003 Categorías</div></div>
+    <div class="cifras">
+      <div><b>6</b><span>PRs</span></div>
+      <div><b>6</b><span>tareas</span></div>
+      <div><b>2</b><span>revisiones</span></div>
+    </div>
+  </div>
+  <ul><li><strong>HU-001</strong>: versionado de la API bajo <code>/api/v1</code> y endpoint de estado del servicio.</li><li><strong>HU-003 Categorías</strong> completa: entidad y migración, DTOs, servicio y controlador con 5 endpoints, <strong>28 pruebas unitarias y 27 e2e</strong>.</li><li>Ejercicio de iniciación GitFlow y revisiones aprobadas a compañeros.</li></ul>
+  <table class="t"><thead><tr><th style="width:52px">PR</th><th>Cambio integrado</th><th class="num" style="width:90px">Fecha</th></tr></thead><tbody><tr><td class="mono">#121</td><td>Ejercicio de iniciación GitFlow — @Kerin0011</td><td class="num">18 sep 2026</td></tr><tr><td class="mono">#120</td><td>Versionado /api/v1 y endpoint GET /api/v1/health</td><td class="num">18 sep 2026</td></tr><tr><td class="mono">#134</td><td>Entidad Category, enum CategoryStatus y migración</td><td class="num">20 sep 2026</td></tr><tr><td class="mono">#135</td><td>DTOs y validaciones de categorías</td><td class="num">20 sep 2026</td></tr><tr><td class="mono">#145</td><td>CategoriesService + CategoriesController + Swagger</td><td class="num">22 sep 2026</td></tr><tr><td class="mono">#148</td><td>Tests e2e de categorías</td><td class="num">23 sep 2026</td></tr></tbody></table>
+  <p class="nota" style="margin:6px 0 0">Revisiones: 2 aprobadas · 0 con cambios solicitados · 0 comentarios.</p>
+</div>
+<div class="integrante">
+  <div class="cab">
+    <span class="avatar" style="--c:#3ddc97">JR</span>
+    <div><h3>Jonathan Rodríguez</h3><div class="rol">Desarrollador · responsable de HU-005 Menú público</div></div>
+    <div class="cifras">
+      <div><b>2</b><span>PRs</span></div>
+      <div><b>3</b><span>tareas</span></div>
+      <div><b>0</b><span>revisiones</span></div>
+    </div>
+  </div>
+  <ul><li><strong>HU-005 Menú público</strong>: servicio y controlador con los 4 endpoints del menú y las reglas de visibilidad RN-031 a RN-035.</li><li>10 pruebas unitarias del servicio del menú.</li><li>Ejercicio de iniciación GitFlow.</li></ul>
+  <table class="t"><thead><tr><th style="width:52px">PR</th><th>Cambio integrado</th><th class="num" style="width:90px">Fecha</th></tr></thead><tbody><tr><td class="mono">#112</td><td>Ejercicio de iniciación GitFlow — @rodriguezvjhona-droid</td><td class="num">17 sep 2026</td></tr><tr><td class="mono">#149</td><td>Consultas del menú público (solo activos) · MenuController, DTOs de respuesta y Swagger (4 endpoints)</td><td class="num">23 sep 2026</td></tr></tbody></table>
+  
+</div>
+<div class="integrante">
+  <div class="cab">
+    <span class="avatar" style="--c:#c9a0ff">JH</span>
+    <div><h3>Jorel Hernández</h3><div class="rol">Desarrollador</div></div>
+    <div class="cifras">
+      <div><b>1</b><span>PRs</span></div>
+      <div><b>1</b><span>tareas</span></div>
+      <div><b>0</b><span>revisiones</span></div>
+    </div>
+  </div>
+  <ul><li>Incorporación al equipo durante el sprint: acceso al repositorio y al tablero.</li><li>Ejercicio de iniciación GitFlow completado.</li></ul>
+  <table class="t"><thead><tr><th style="width:52px">PR</th><th>Cambio integrado</th><th class="num" style="width:90px">Fecha</th></tr></thead><tbody><tr><td class="mono">#146</td><td>Ejercicio de iniciación GitFlow — @jorel2610</td><td class="num">22 sep 2026</td></tr></tbody></table>
+  
+</div>
+
+<h2><span class="n">4.</span>Calidad</h2>
+<table class="t junta">
+  <thead><tr><th>Módulo</th><th class="num">Pruebas unitarias</th><th class="num">Pruebas e2e</th><th class="num">Total</th><th class="num">Endpoints</th></tr></thead>
+  <tbody><tr><td>Mesas</td><td class="num">29</td><td class="num">31</td><td class="num">60</td><td class="num">5</td></tr><tr><td>Categorías</td><td class="num">28</td><td class="num">27</td><td class="num">55</td><td class="num">5</td></tr><tr><td>Productos</td><td class="num">32</td><td class="num">20</td><td class="num">52</td><td class="num">6</td></tr><tr><td>Menú público</td><td class="num">10</td><td class="num">16</td><td class="num">26</td><td class="num">4</td></tr><tr><td>Plataforma</td><td class="num">10</td><td class="num">13</td><td class="num">23</td><td class="num">1</td></tr></tbody>
+  <tfoot><tr><td>Total</td><td class="num">109</td><td class="num">107</td><td class="num">216</td><td class="num">21</td></tr></tfoot>
+</table>
+<ul><li><strong>CI obligatorio</strong> en cada pull request: lint sin warnings, Prettier, build, pruebas unitarias y e2e con PostgreSQL efímero.</li><li>Las <strong>pruebas e2e corren contra PostgreSQL real</strong>, no contra simulaciones, y se pueden repetir sin dejar datos residuales.</li><li><strong>Formato uniforme de errores</strong> con trazabilidad a la regla de negocio incumplida (<code>rule: &quot;RN-016&quot;</code>), lo que permite verificar los criterios de aceptación mirando la respuesta.</li><li><strong>Verificación cruzada</strong>: en la Sprint Review, cada historia la prueba alguien distinto a su autor contra sus criterios de aceptación.</li></ul>
+
+<h2><span class="n">5.</span>Retrospectiva</h2>
+<div class="dos">
+  <div class="caja"><h3>Mantener</h3><ul><li>CI obligatorio desde el primer día.</li><li>Working Agreement y Definition of Done escritos antes de programar.</li><li>Pruebas desde el principio, e2e contra PostgreSQL real.</li><li>Errores con trazabilidad a las reglas de negocio.</li><li>Tablero con jerarquía épica → historia → tarea.</li></ul></div>
+  <div class="caja"><h3>Mejorar</h3><ul><li>Revisar la rama destino antes de abrir un PR (GitHub propone <code>main</code> por defecto).</li><li>Que el checklist del PR refleje lo que realmente se ejecutó.</li><li>Evitar cambios accidentales en archivos de otros compañeros.</li><li>Actualizar la rama con <code>dev</code> antes de pedir revisión.</li><li>Repartir más las revisiones: se concentraron en el Scrum Master.</li><li>Difundir antes las convenciones del proyecto (rutas, nombres, excepciones).</li><li>Anticipar el efecto de los cambios de configuración del repositorio antes de aplicarlos.</li></ul></div>
+</div>
+<table class="t junta" style="margin-top:10px"><thead><tr><th>Acción acordada</th><th>Responsable</th></tr></thead>
+  <tbody><tr><td>Antes de cada push, revisar <code>git diff origin/dev...HEAD</code> en busca de archivos ajenos</td><td>Todo el equipo</td></tr><tr><td>Antes de pedir revisión, actualizar la rama con <code>dev</code> y levantar la aplicación</td><td>Todo el equipo</td></tr><tr><td>Documentar en el README las convenciones que más se olvidan</td><td>Dylan Suárez</td></tr><tr><td>Que cada PR lo revise alguien distinto al Scrum Master siempre que sea posible</td><td>Todo el equipo</td></tr><tr><td>Tras cada release, comprobar que <code>dev</code> sigue existiendo y sincronizarla con <code>main</code></td><td>Dylan Suárez</td></tr></tbody></table>
+
+<h2><span class="n">6.</span>Decisiones del sprint</h2>
+<ul><li><strong>Sprints de una semana.</strong> Desde el Sprint 2 los sprints duran una semana, de lunes a viernes. El Sprint 2 va del jueves 24 de septiembre al viernes 2 de octubre; desde el Sprint 3 la cadencia queda alineada al lunes.</li><li><strong>Replanificación del proyecto.</strong> Con media capacidad por sprint, el alcance se redistribuyó en cinco sprints: reservas en los Sprints 2 y 3, usuarios y seguridad en el 4, y pedidos en el 5 (cierre el 23 de octubre).</li><li><strong>Alcance acotado por sprint.</strong> El Sprint 2 compromete 34 puntos en lugar de los 79 planificados originalmente para las dos semanas de reservas.</li></ul>
+<table class="t junta"><thead><tr><th>Sprint</th><th>Fechas</th><th>Meta</th><th>Estado</th></tr></thead>
+  <tbody><tr><td>Sprint 1</td><td style="white-space:nowrap">18 – 24 sep</td><td>Plataforma, mesas, categorías, productos y menú</td><td><span class="ok">✓ Hecho</span></td></tr><tr><td>Sprint 2</td><td style="white-space:nowrap">24 sep – 2 oct</td><td>Reservas: disponibilidad, registro y consulta</td><td><strong>En curso</strong></td></tr><tr><td>Sprint 3</td><td style="white-space:nowrap">5 – 9 oct</td><td>Reservas: modificación, cancelación, confirmación, check-in y no-show</td><td>Planificado</td></tr><tr><td>Sprint 4</td><td style="white-space:nowrap">12 – 16 oct</td><td>Usuarios, autenticación JWT, roles y perfil</td><td>Planificado</td></tr><tr><td>Sprint 5</td><td style="white-space:nowrap">19 – 23 oct</td><td>Pedidos por mesa</td><td>Planificado</td></tr></tbody></table>
+
+<h2><span class="n">7.</span>Incidencias</h2>
+<div class="caja" style="margin-bottom:10px"><h3>Rama <code>dev</code> eliminada al publicar el release — <span class="ok">Resuelta</span></h3>
+  <p><strong>Qué pasó:</strong> Al mergear el release <strong>v0.1.0</strong> a <code>main</code>, el borrado automático de ramas —activado ese mismo día para limpiar ramas viejas— eliminó también la rama <code>dev</code> del repositorio remoto, porque era la rama de origen del PR de release.</p>
+  <p><strong>Impacto:</strong> No se perdió trabajo: todo el contenido estaba en <code>main</code>. Durante un día no se pudieron abrir PRs hacia <code>dev</code>.</p>
+  <p style="margin:0"><strong>Solución:</strong> Se restauró <code>dev</code> el 25 de septiembre desde el release, se desactivó el borrado automático y se añadió al cierre de cada sprint la comprobación de que <code>dev</code> sigue existiendo.</p></div>
+
+<h2><span class="n">8.</span>Plan del Sprint 2 (24 sep – 2 oct 2026)</h2>
+<p><strong>Objetivo:</strong> Que un cliente pueda consultar la disponibilidad de mesas, registrar una reserva y consultarla después.</p>
+<table class="t junta"><thead><tr><th>Historia</th><th class="num">Puntos</th></tr></thead>
+  <tbody><tr><td><strong>HU-006</strong> Consulta de disponibilidad de mesas</td><td class="num">13</td></tr><tr><td><strong>HU-007</strong> Registro de reserva</td><td class="num">13</td></tr><tr><td><strong>HU-008</strong> Consulta de reserva</td><td class="num">8</td></tr></tbody>
+  <tfoot><tr><td>Total comprometido</td><td class="num">34</td></tr></tfoot></table>
+<p>Antes de las historias: la entidad <code>Reservation</code> con su migración (#52) y la definición de la regla de conflicto horario (#53).</p>
+<p><strong>Riesgos que vigilamos:</strong></p>
+<ul><li>La regla de conflicto horario (duración de una reserva, margen entre reservas, horario de servicio) debe quedar definida al inicio: disponibilidad y registro dependen de ella.</li><li>Las tres historias son secuenciales (registro depende de disponibilidad y consulta de registro); un retraso en HU-006 se arrastra al resto.</li><li>Con sprints de una semana el margen es menor; lo que no quepa pasa al Sprint 3 en lugar de alargar el sprint.</li></ul>
+
+<h2 class="salto"><span class="n">Anexo.</span>Tareas del sprint</h2>
+<table class="t">
+  <thead><tr><th style="width:44px">#</th><th>Tarea</th><th style="width:70px">Historia</th><th>Resuelta por</th><th style="width:52px">PR</th></tr></thead>
+  <tbody><tr><td class="mono">#29</td><td>Versionado /api/v1 y endpoint GET /api/v1/health</td><td>HU-001</td><td>Kerin Barranco</td><td class="mono">#120</td></tr><tr><td class="mono">#30</td><td>ValidationPipe global, Helmet y CORS por entorno</td><td>HU-001</td><td>Dylan Suárez</td><td class="mono">#117</td></tr><tr><td class="mono">#31</td><td>Migraciones TypeORM: DataSource CLI, scripts npm y primera migración</td><td>HU-001</td><td>Dylan Suárez</td><td class="mono">#114</td></tr><tr><td class="mono">#32</td><td>Conectar validación zod del entorno y completar .env.example</td><td>HU-001</td><td>Dylan Suárez</td><td class="mono">#115</td></tr><tr><td class="mono">#33</td><td>Filtro global de excepciones con formato de error uniforme</td><td>HU-001</td><td>Dylan Suárez</td><td class="mono">#122</td></tr><tr><td class="mono">#34</td><td>Swagger con metadatos reales y README del proyecto</td><td>HU-001</td><td>Dylan Suárez</td><td class="mono">#125</td></tr><tr><td class="mono">#35</td><td>docs: actualizar HU-001 al stack real (TypeORM, Vitest, oxlint, zod)</td><td>HU-001</td><td>Dylan Suárez</td><td class="mono">#126</td></tr><tr><td class="mono">#36</td><td>Entidad Table, enum TableStatus y migración</td><td>HU-002</td><td>Diego Gonzales</td><td class="mono">#144</td></tr><tr><td class="mono">#37</td><td>DTOs y validaciones de mesas (crear, actualizar, cambiar estado, filtros)</td><td>HU-002</td><td>Diego Gonzales</td><td class="mono">#147</td></tr><tr><td class="mono">#38</td><td>TablesService: crear, listar con filtros, consultar, actualizar y cambiar estado</td><td>HU-002</td><td>Diego Gonzales</td><td class="mono">#151</td></tr><tr><td class="mono">#39</td><td>TablesController + Swagger (5 endpoints)</td><td>HU-002</td><td>Diego Gonzales</td><td class="mono">#153</td></tr><tr><td class="mono">#40</td><td>Tests e2e de mesas</td><td>HU-002</td><td>Diego Gonzales</td><td class="mono">#154</td></tr><tr><td class="mono">#41</td><td>Entidad Category, enum CategoryStatus y migración</td><td>HU-003</td><td>Kerin Barranco</td><td class="mono">#134</td></tr><tr><td class="mono">#42</td><td>DTOs y validaciones de categorías</td><td>HU-003</td><td>Kerin Barranco</td><td class="mono">#135</td></tr><tr><td class="mono">#43</td><td>CategoriesService + CategoriesController + Swagger</td><td>HU-003</td><td>Kerin Barranco</td><td class="mono">#145</td></tr><tr><td class="mono">#44</td><td>Tests e2e de categorías</td><td>HU-003</td><td>Kerin Barranco</td><td class="mono">#148</td></tr><tr><td class="mono">#45</td><td>Entidad Product (relación con Category), enums y migración</td><td>HU-004</td><td>Dylan Suárez</td><td class="mono">#139</td></tr><tr><td class="mono">#46</td><td>DTOs y validaciones de productos</td><td>HU-004</td><td>Dylan Suárez</td><td class="mono">#131</td></tr><tr><td class="mono">#47</td><td>ProductsService + ProductsController + Swagger (6 endpoints)</td><td>HU-004</td><td>Dylan Suárez</td><td class="mono">#140</td></tr><tr><td class="mono">#48</td><td>Tests e2e de productos</td><td>HU-004</td><td>Dylan Suárez</td><td class="mono">#141</td></tr><tr><td class="mono">#49</td><td>MenuService: consultas del menú público (solo activos)</td><td>HU-005</td><td>Jonathan Rodríguez</td><td class="mono">#149</td></tr><tr><td class="mono">#50</td><td>MenuController, DTOs de respuesta y Swagger (4 endpoints)</td><td>HU-005</td><td>Jonathan Rodríguez</td><td class="mono">#149</td></tr><tr><td class="mono">#51</td><td>Tests e2e del menú público</td><td>HU-005</td><td>Dylan Suárez</td><td class="mono">#157</td></tr><tr><td class="mono">#96</td><td>CI con GitHub Actions: lint, build, test y e2e en cada PR</td><td>Proceso</td><td>Dylan Suárez</td><td class="mono">#127</td></tr><tr><td class="mono">#97</td><td>Plantillas de PR e issues y CODEOWNERS en .github/</td><td>Proceso</td><td>Dylan Suárez</td><td class="mono">#124</td></tr><tr><td class="mono">#98</td><td>Working Agreement y Definition of Done del equipo</td><td>Proceso</td><td>Dylan Suárez</td><td class="mono">#128</td></tr><tr><td class="mono">#99</td><td>Seeds de datos de desarrollo (mesas, categorías, productos)</td><td>Proceso</td><td>Dylan Suárez</td><td class="mono">#155</td></tr><tr><td class="mono">#101</td><td>Ejercicio de iniciación GitFlow — @Gonza204658</td><td>Proceso</td><td>Diego Gonzales</td><td class="mono">#113</td></tr><tr><td class="mono">#102</td><td>Ejercicio de iniciación GitFlow — @Kerin0011</td><td>Proceso</td><td>Kerin Barranco</td><td class="mono">#121</td></tr><tr><td class="mono">#103</td><td>Ejercicio de iniciación GitFlow — @rodriguezvjhona-droid</td><td>Proceso</td><td>Jonathan Rodríguez</td><td class="mono">#112</td></tr><tr><td class="mono">#104</td><td>Ejercicio de iniciación GitFlow — @jorel2610</td><td>Proceso</td><td>Jorel Hernández</td><td class="mono">#146</td></tr><tr><td class="mono">#105</td><td>Ceremonias Sprint 1 — Planning, Dailies, Review y Retro</td><td>Proceso</td><td>Dylan Suárez</td><td class="mono">—</td></tr><tr><td class="mono">#136</td><td>docs: README con @jorel2610, guía de git para 5 integrantes y .nvmrc</td><td>Proceso</td><td>Dylan Suárez</td><td class="mono">#138</td></tr></tbody>
+</table>
+
+<div class="firma">
+  Informe preparado por Dylan Suárez (Scrum Master) con datos obtenidos de GitHub el viernes 25 de septiembre de 2026: pull requests, revisiones y tablero del proyecto.
+  Las cifras de pruebas y endpoints se midieron sobre el código del release <strong>v0.1.0</strong>.
+</div>
+
+</div></body></html>
