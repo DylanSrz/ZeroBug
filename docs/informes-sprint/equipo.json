@@ -1,0 +1,46 @@
+{
+  "proyecto": "ZeroBug — Restaurant API",
+  "repositorio": "DylanSrz/ZeroBug",
+  "tablero": "https://github.com/users/DylanSrz/projects/7",
+  "zonaHoraria": "America/Bogota",
+  "destinatario": { "nombre": "Abrahan Villa", "rol": "Team Leader" },
+  "integrantes": [
+    {
+      "login": "DylanSrz",
+      "nombre": "Dylan Suárez",
+      "rol": "Scrum Master · Desarrollador",
+      "iniciales": "DS",
+      "color": "#f5b942"
+    },
+    {
+      "login": "Gonza204658",
+      "nombre": "Diego Gonzales",
+      "rol": "Desarrollador",
+      "iniciales": "DG",
+      "color": "#6ea8fe",
+      "alias": ["luyss264", "Luyss264", "diego22"]
+    },
+    {
+      "login": "Kerin0011",
+      "nombre": "Kerin Barranco",
+      "rol": "Desarrollador",
+      "iniciales": "KB",
+      "color": "#36c7b8",
+      "alias": ["kerin0011"]
+    },
+    {
+      "login": "rodriguezvjhona-droid",
+      "nombre": "Jonathan Rodríguez",
+      "rol": "Desarrollador",
+      "iniciales": "JR",
+      "color": "#3ddc97"
+    },
+    {
+      "login": "jorel2610",
+      "nombre": "Jorel Hernández",
+      "rol": "Desarrollador",
+      "iniciales": "JH",
+      "color": "#c9a0ff"
+    }
+  ]
+}

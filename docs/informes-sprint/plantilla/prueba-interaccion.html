@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<!--
+  Prueba automática de la interacción de la presentación (teclado, vista general,
+  ayuda, tarjetas, saltos y filtro de la línea de tiempo).
+
+  Uso (sustituir 01 por el sprint):
+    chromium --headless=new --allow-file-access-from-files --virtual-time-budget=6000 \
+      --dump-dom "file://$PWD/docs/informes-sprint/plantilla/prueba-interaccion.html?sprint=01" \
+      | sed -n '/<pre id="r">/,/<\/pre>/p' | sed 's/<[^>]*>//g'
+
+  Cada línea termina en OK o FALLA. Hace falta revisarla solo si cambió plantilla/presentacion.js.
+-->
+<html lang="es"><head><meta charset="utf-8"><title>Prueba de interacción</title></head>
+<body><pre id="r">cargando…</pre>
+<script>
+const nn = new URLSearchParams(location.search).get('sprint') || '01';
+const f = document.createElement('iframe');
+f.style.cssText = 'width:1440px;height:900px';
+f.src = `../sprint-${nn}/presentacion.html?static#1`;
+document.body.appendChild(f);
+const out = [];
+const check = (nombre, ok, valor) => out.push(`${ok ? 'OK   ' : 'FALLA'} ${nombre}${valor !== undefined ? ` → ${JSON.stringify(valor)}` : ''}`);
+f.onload = () => setTimeout(() => {
+  try {
+    const w = f.contentWindow, d = w.document;
+    const slides = [...d.querySelectorAll('.slide')];
+    const activa = () => slides.findIndex((s) => s.classList.contains('activa')) + 1;
+    const tecla = (key) => d.dispatchEvent(new w.KeyboardEvent('keydown', { key, bubbles: true }));
+    check('hay diapositivas', slides.length > 5, slides.length);
+    tecla('ArrowRight'); tecla('ArrowRight'); check('→ → avanza dos', activa() === 3, activa());
+    tecla('ArrowLeft'); check('← retrocede', activa() === 2, activa());
+    tecla('End'); check('Fin va a la última', activa() === slides.length, activa());
+    tecla('Home'); check('Inicio va a la primera', activa() === 1, activa());
+    check('contador', d.getElementById('contador').textContent === `1 / ${slides.length}`);
+    tecla('o'); check('O abre la vista general', d.getElementById('vista-general').classList.contains('abierta'));
+    const minis = d.querySelectorAll('.miniaturas button');
+    check('una miniatura por diapositiva', minis.length === slides.length, minis.length);
+    minis[3].click(); check('clic en miniatura salta y cierra', activa() === 4 && !d.getElementById('vista-general').classList.contains('abierta'), activa());
+    tecla('?'); check('? abre la ayuda', d.getElementById('ayuda').classList.contains('abierta'));
+    tecla('Escape'); check('Esc la cierra', !d.getElementById('ayuda').classList.contains('abierta'));
+    const hu = d.querySelector('.hu');
+    if (hu) { hu.click(); check('tarjeta de historia se despliega', hu.getAttribute('aria-expanded') === 'true'); }
+    const fila = d.querySelector('.fila-barra[data-ir]');
+    if (fila) { fila.click(); check('gráfico del equipo salta a la ficha', activa() === Number(fila.dataset.ir), activa()); }
+    const ley = d.querySelector('.tl-leyenda button');
+    if (ley) {
+      ley.click();
+      const tl = d.querySelector('.timeline');
+      const visibles = tl.querySelectorAll('.pr-pill.visible').length;
+      const suyos = tl.querySelectorAll(`.pr-pill[data-autor="${ley.dataset.autor}"]`).length;
+      check('filtro de la línea de tiempo', tl.classList.contains('filtrada') && visibles === suyos, visibles);
+      ley.click(); check('segundo clic quita el filtro', !tl.classList.contains('filtrada'));
+    }
+    check('tooltips presentes', d.querySelectorAll('[data-tip]').length > 0, d.querySelectorAll('[data-tip]').length);
+  } catch (e) { out.push('FALLA error: ' + e); }
+  document.getElementById('r').textContent = out.join('\n');
+}, 800);
+</script></body></html>
