@@ -1,34 +1,15 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
-import { ReservationsService } from './reservations.service';
-import { CreateReservationDto } from './dto/create-reservation.dto';
-import { UpdateReservationDto } from './dto/update-reservation.dto';
+import { Controller, Get, Query } from '@nestjs/common';
+import { ReservationsService } from './reservations.service.js';
+import { CheckAvailabilityDto } from './dto/check-availability.dto.js';
 
 @Controller('reservations')
 export class ReservationsController {
-  constructor(private readonly reservationsService: ReservationsService) {}
+  constructor(private readonly reservationsService: ReservationsService) { }
 
-  @Post()
-  create(@Body() createReservationDto: CreateReservationDto) {
-    return this.reservationsService.create(createReservationDto);
-  }
-
-  @Get()
-  findAll() {
-    return this.reservationsService.findAll();
-  }
-
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.reservationsService.findOne(+id);
-  }
-
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateReservationDto: UpdateReservationDto) {
-    return this.reservationsService.update(+id, updateReservationDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.reservationsService.remove(+id);
+  // GET /api/v1/reservations/availability?date=2026-09-20&time=19:00&guests=4
+  // HU-006: Consulta de disponibilidad de mesas
+  @Get('availability')
+  checkAvailability(@Query() dto: CheckAvailabilityDto) {
+    return this.reservationsService.checkAvailability(dto);
   }
 }
