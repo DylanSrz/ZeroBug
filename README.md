@@ -255,3 +255,5 @@ SCRUM con sprints de 2 semanas; acuerdos de equipo y Definition of Done en [`doc
 | Kerin Barranco     | Desarrollador                | @Kerin0011             |
 | Diego Gonzales     | Desarrollador                | @Gonza204658           |
 | jorel Hernandez    | Desarrollador                | @jorel2610             |
+| Leonardo Ayala | Desarrollador                    | 
+@leonardo-200224 |
