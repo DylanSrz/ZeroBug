@@ -18,6 +18,22 @@ export const envValidationSchema = z.object({
   // Orígenes permitidos por CORS, separados por coma. "*" solo fuera de producción.
   CORS_ORIGIN: z.string().min(1).default('*'),
 
+  // Reglas de reservas (decisión D-001 en docs/decisiones.md).
+  // Duración que ocupa una reserva en la mesa: define el conflicto horario (RN-040, RN-045).
+  RESERVATION_DURATION_MINUTES: z.coerce
+    .number()
+    .int()
+    .min(15)
+    .max(720)
+    .default(120),
+  // Minutos tras la hora reservada antes de poder marcarla como NO_SHOW (RN-078).
+  RESERVATION_NO_SHOW_TOLERANCE_MINUTES: z.coerce
+    .number()
+    .int()
+    .min(0)
+    .max(120)
+    .default(15),
+
   OBSERVE_APP_KEY: z.string().optional(),
   OBSERVE_APP_SECRET: z.string().optional(),
   OBSERVE_SERVICE_ID: z.string().optional(),
