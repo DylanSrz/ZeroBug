@@ -74,6 +74,8 @@ Todas están documentadas en [`.env.example`](.env.example). Si falta una obliga
 | `APP_PORT`                              | Puerto HTTP                                                            | `3000`        |
 | `DATABASE_HOST/PORT/USER/PASSWORD/NAME` | Conexión a PostgreSQL                                                  | puerto `5432` |
 | `CORS_ORIGIN`                           | Orígenes permitidos separados por coma. En producción no se admite `*` | `*`           |
+| `RESERVATION_DURATION_MINUTES`          | Minutos que una reserva ocupa la mesa (conflicto horario, RN-040)      | `120`         |
+| `RESERVATION_NO_SHOW_TOLERANCE_MINUTES` | Minutos de espera antes de poder marcar `NO_SHOW` (RN-078)             | `15`          |
 | `OBSERVE_*`                             | NestJS Observe (opcional)                                              | —             |
 
 Nunca se versiona `.env`; los secretos no van en el código (RN-013).
