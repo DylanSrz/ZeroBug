@@ -1,7 +1,6 @@
 import { Column, CreateDateColumn, Entity, Index, JoinColumn, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm'
 import { Table } from '../../tables/entities/table.entity.js'
 import { ReservationStatus } from '../enums/reservation-status.enum.js'
-import { UpdateCategoryDto } from '../../categories/dto/update-category.dto.js';
 
 
 
