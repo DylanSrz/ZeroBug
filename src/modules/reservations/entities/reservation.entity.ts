@@ -20,7 +20,7 @@ export class Reservation {
   @Column({ type: 'varchar', length: 150 })
   customerName: string;
 
-  @Column({ type: 'varchar', length: '30' })
+  @Column({ type: 'varchar', length: 30 })
   phone: string;
 
   @Column({ type: 'varchar', length: 255 })
@@ -47,14 +47,17 @@ export class Reservation {
   tableId: string | null;
 
   @ManyToOne(() => Table, { nullable: true, onDelete: 'SET NULL' })
-  @JoinColumn({ name: 'tableId' })
+  @JoinColumn({
+    name: 'tableId',
+    foreignKeyConstraintName: 'FK_reservations_table',
+  })
   table: Table | null;
 
   @Column({ type: 'timestamptz', nullable: true })
   confirmedAt?: Date | null;
 
   @Column({ type: 'timestamptz', nullable: true })
-  checkedInAt: Date | null;
+  checkedInAt?: Date | null;
 
   @Column({ type: 'timestamptz', nullable: true })
   cancelledAt?: Date | null;
