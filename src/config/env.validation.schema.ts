@@ -44,6 +44,15 @@ export const envValidationSchema = z.object({
     .regex(/^\d+[smhd]?$/, 'JWT_EXPIRES_IN debe ser segundos o 15m, 1h, 7d…')
     .default('1h'),
 
+  // Recuperación de contraseña (HU-018): vida del token y enlace que se envía
+  PASSWORD_RESET_TTL_MINUTES: z.coerce
+    .number()
+    .int()
+    .min(5)
+    .max(1440)
+    .default(30),
+  PASSWORD_RESET_URL: z.url().default('http://localhost:3000/reset-password'),
+
   OBSERVE_APP_KEY: z.string().optional(),
   OBSERVE_APP_SECRET: z.string().optional(),
   OBSERVE_SERVICE_ID: z.string().optional(),

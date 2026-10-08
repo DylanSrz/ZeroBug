@@ -10,6 +10,23 @@ const base = {
   JWT_SECRET: 'x'.repeat(32),
 };
 
+describe('validateEnv — recuperación de contraseña (HU-018)', () => {
+  it('usa 30 minutos y una URL local por defecto', () => {
+    const env = validateEnv(base);
+
+    expect(env.PASSWORD_RESET_TTL_MINUTES).toBe(30);
+    expect(env.PASSWORD_RESET_URL).toBe('http://localhost:3000/reset-password');
+  });
+
+  it.each([
+    ['PASSWORD_RESET_TTL_MINUTES', '2'],
+    ['PASSWORD_RESET_TTL_MINUTES', '1441'],
+    ['PASSWORD_RESET_URL', 'no-es-una-url'],
+  ])('rechaza %s=%s y detiene el arranque', (name, value) => {
+    expect(() => validateEnv({ ...base, [name]: value })).toThrow(name);
+  });
+});
+
 describe('validateEnv — parámetros de reservas (D-001)', () => {
   it('usa 120 min de duración y 15 min de tolerancia por defecto', () => {
     const env = validateEnv(base);
