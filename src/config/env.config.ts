@@ -20,6 +20,15 @@ export const EnvConfig = () => ({
       process.env.RESERVATION_NO_SHOW_TOLERANCE_MINUTES ?? 15,
     ),
   },
+  jwt: {
+    secret: process.env.JWT_SECRET,
+    expiresIn: process.env.JWT_EXPIRES_IN ?? '1h',
+  },
+  passwordReset: {
+    ttlMinutes: Number(process.env.PASSWORD_RESET_TTL_MINUTES ?? 30),
+    url:
+      process.env.PASSWORD_RESET_URL ?? 'http://localhost:3000/reset-password',
+  },
   observe: {
     appKey: process.env.OBSERVE_APP_KEY,
     appSecret: process.env.OBSERVE_APP_SECRET,

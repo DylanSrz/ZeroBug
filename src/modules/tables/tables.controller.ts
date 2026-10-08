@@ -14,7 +14,13 @@ import {
   HttpCode,
   HttpStatus,
 } from '@nestjs/common';
-import { ApiTags, ApiResponse, ApiOperation, ApiParam } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiTags,
+  ApiResponse,
+  ApiOperation,
+  ApiParam,
+} from '@nestjs/swagger';
 import { TablesService } from './tables.service.js';
 import { Table } from './entities/table.entity.js';
 import { CreateTableDto } from './dto/create-table.dto.js';
@@ -25,6 +31,8 @@ import { FilterTablesDto } from './dto/filter-tables.dto.js';
 // @ApiTags agrupa todos los endpoints de este controller bajo
 // una sola sección llamada "Tables" en la documentación de Swagger
 @ApiTags('Tables')
+// Requiere access token (RN-094); los permisos por rol llegan con HU-017
+@ApiBearerAuth('bearer')
 @Controller('tables')
 export class TablesController {
   // Nest "inyecta" el service automáticamente: nosotros solo lo pedimos

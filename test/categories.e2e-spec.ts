@@ -1,10 +1,10 @@
 import { INestApplication } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
-import request from 'supertest';
 import { App } from 'supertest/types';
 import { DataSource } from 'typeorm';
 import { AppModule } from '../src/app.module.js';
 import { setupApp } from '../src/app.setup.js';
+import { authenticate } from './utils/auth.js';
 import { Category } from '../src/modules/categories/entities/category.entity.js';
 import { CategoryStatus } from '../src/modules/categories/enums/index.js';
 
@@ -20,7 +20,9 @@ describe('Categories (e2e)', () => {
   let dataSource: DataSource;
 
   const base = '/api/v1/categories';
-  const http = () => request(app.getHttpServer());
+  // Endpoints protegidos (RN-094): cada petición lleva el token de un ADMIN de prueba
+  let auth: Awaited<ReturnType<typeof authenticate>>;
+  const http = () => auth.http();
 
   const runId = Date.now();
   const testName = (suffix: string) => `e2e-cat-${runId}-${suffix}`;
@@ -39,6 +41,7 @@ describe('Categories (e2e)', () => {
     });
     setupApp(app, { corsOrigins: ['*'] });
     await app.init();
+    auth = await authenticate(app);
 
     dataSource = app.get(DataSource);
   });
@@ -50,6 +53,7 @@ describe('Categories (e2e)', () => {
         await repo.delete({ id }).catch(() => undefined);
       }
     }
+    await auth?.cleanup();
     await app?.close();
   });
 
