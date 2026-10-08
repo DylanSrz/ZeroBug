@@ -3,7 +3,7 @@
 [![CI](https://github.com/DylanSrz/ZeroBug/actions/workflows/ci.yml/badge.svg?branch=dev)](https://github.com/DylanSrz/ZeroBug/actions/workflows/ci.yml)
 
 API REST para la gestión operativa de un restaurante: **mesas, menú, reservas, usuarios/roles y pedidos**.
-Backend en NestJS + TypeScript sobre PostgreSQL, desarrollado con metodología SCRUM en 4 sprints.
+Backend en NestJS + TypeScript sobre PostgreSQL, desarrollado con metodología SCRUM en 3 sprints (18 sep – 16 oct 2026).
 
 - 📋 Tablero: <https://github.com/users/DylanSrz/projects/7>
 - 📘 Historias de usuario y reglas de negocio (RN-xxx): [`docs/`](docs/)
@@ -246,14 +246,15 @@ lo que hace falta para ampliarlos.
 
 Cada PR ejecuta el workflow **CI** (`.github/workflows/ci.yml`): `quality` (lint sin warnings, Prettier, build, unit) y `e2e` (PostgreSQL efímero, migraciones, tests e2e). Ambos checks son obligatorios para mergear en `dev` y `main`.
 
-SCRUM con sprints de 2 semanas; acuerdos de equipo y Definition of Done en [`docs/working-agreement.md`](docs/working-agreement.md). Cada tarea del tablero es una rama corta + un PR pequeño hacia `dev` con `Closes #N`, revisado por un compañero. `main` solo recibe merges de `dev` al cierre de cada sprint. Detalles en [`docs/guia-git.md`](docs/guia-git.md).
+SCRUM con sprints de una semana (lunes a viernes); acuerdos de equipo y Definition of Done en [`docs/working-agreement.md`](docs/working-agreement.md). Cada tarea del tablero es una rama corta + un PR pequeño hacia `dev` con `Closes #N`, revisado por un compañero. `main` solo recibe merges de `dev` al cierre de cada sprint. Detalles en [`docs/guia-git.md`](docs/guia-git.md).
 
 ## Equipo
 
-| Nombre             | Rol                          | Usuario de GitHub      |
-| ------------------ | ---------------------------- | ---------------------- |
-| Dylan Suárez       | Scrum Master · Desarrollador | @DylanSrz              |
-| Jonathan Rodríguez | Desarrollador                | @rodriguezvjhona-droid |
-| Kerin Barranco     | Desarrollador                | @Kerin0011             |
-| Diego Gonzales     | Desarrollador                | @Gonza204658           |
-| jorel Hernandez    | Desarrollador                | @jorel2610             |
+| Nombre         | Rol                          | Usuario de GitHub |
+| -------------- | ---------------------------- | ----------------- |
+| Dylan Suárez   | Scrum Master · Desarrollador | @DylanSrz         |
+| César Vega     | Desarrollador                | @cesarvega1       |
+| Dilant Murillo | Desarrollador                | @MrDilant         |
+| Leonardo Ayala | Desarrollador                | @leonardo-200224  |
+
+Desde el Sprint 2. En el Sprint 1 el equipo lo formaban, además de Dylan, Diego Gonzales (@Gonza204658), Kerin Barranco (@Kerin0011), Jonathan Rodríguez (@rodriguezvjhona-droid) y Jorel Hernández (@jorel2610); su trabajo está en [`docs/retros/sprint-1.md`](docs/retros/sprint-1.md) y en el [informe del Sprint 1](docs/informes-sprint/sprint-01/).
