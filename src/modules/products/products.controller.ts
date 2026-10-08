@@ -9,6 +9,7 @@ import {
   Query,
 } from '@nestjs/common';
 import {
+  ApiBearerAuth,
   ApiBadRequestResponse,
   ApiConflictResponse,
   ApiCreatedResponse,
@@ -29,6 +30,8 @@ import { Product } from './entities/product.entity.js';
 import { ProductsService } from './products.service.js';
 
 @ApiTags('Products')
+// Requiere access token (RN-094); los permisos por rol llegan con HU-017
+@ApiBearerAuth('bearer')
 @ApiBadRequestResponse({ description: 'Datos inválidos o campo no permitido' })
 @Controller('products')
 export class ProductsController {

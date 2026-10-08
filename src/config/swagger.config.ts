@@ -41,12 +41,13 @@ export const swaggerConfiguration = (
     .addTag('Products', 'Productos del menú (HU-004)')
     .addTag('Tables', 'Mesas del restaurante (HU-002)')
     .addTag('Menu', 'Menú público del restaurante (HU-005)')
+    .addTag('Auth', 'Registro e inicio de sesión (HU-014, HU-015)')
     .addBearerAuth(
       {
         type: 'http',
         scheme: 'bearer',
         bearerFormat: 'JWT',
-        description: 'Access token (Sprint 3, HU-015)',
+        description: 'Access token de POST /auth/login (HU-015)',
       },
       'bearer',
     )
