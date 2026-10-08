@@ -78,6 +78,8 @@ Todas están documentadas en [`.env.example`](.env.example). Si falta una obliga
 | `RESERVATION_NO_SHOW_TOLERANCE_MINUTES` | Minutos de espera antes de poder marcar `NO_SHOW` (RN-078)             | `15`          |
 | `JWT_SECRET`                            | Firma de los access tokens. **Obligatorio**, mínimo 32 caracteres      | —             |
 | `JWT_EXPIRES_IN`                        | Vida del access token: segundos o `15m`, `1h`, `7d` (RN-092)           | `1h`          |
+| `PASSWORD_RESET_TTL_MINUTES`            | Minutos que vive el token de recuperación de contraseña (RN-103)       | `30`          |
+| `PASSWORD_RESET_URL`                    | Enlace del correo de recuperación; se le añade `?token=…`              | `http://localhost:3000/reset-password` |
 | `OBSERVE_*`                             | NestJS Observe (opcional)                                              | —             |
 
 Nunca se versiona `.env`; los secretos no van en el código (RN-013).

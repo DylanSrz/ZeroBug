@@ -4,7 +4,7 @@
 
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { QueryFailedError, Repository } from 'typeorm';
+import { EntityManager, QueryFailedError, Repository } from 'typeorm';
 import { BusinessRuleException } from '../../common/exceptions/index.js';
 import { User } from './entities/user.entity.js';
 import { UserRole, UserStatus } from './enums/index.js';
@@ -62,6 +62,24 @@ export class UsersService {
       }
       throw error;
     }
+  }
+
+  findByEmail(email: string): Promise<User | null> {
+    return this.userRepository.findOneBy({ email: this.normalizeEmail(email) });
+  }
+
+  // Cambia la contraseña guardando solo su hash (RN-106). Acepta el manager de
+  // una transacción para que el cambio y lo que lo acompañe sean atómicos.
+  async setPassword(
+    userId: string,
+    password: string,
+    manager?: EntityManager,
+  ): Promise<void> {
+    const repository = manager?.getRepository(User) ?? this.userRepository;
+    await repository.update(
+      { id: userId },
+      { passwordHash: await this.passwordService.hash(password) },
+    );
   }
 
   findById(id: string): Promise<User | null> {
