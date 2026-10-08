@@ -2,18 +2,19 @@ import { ApiPropertyOptional } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 import {
   IsDateString,
+  IsEnum,
   IsInt,
   IsOptional,
   IsUUID,
   Max,
   Min,
 } from 'class-validator';
+import { ReservationStatus } from '../enums/index.js';
 
 /**
  * Filtros opcionales del listado GET /reservations (HU-008).
  * Todo llega como texto en la URL (?page=2), por eso los campos numéricos
  * llevan @Type(() => Number) para convertirse antes de validarse.
- * El filtro por status se agrega cuando exista el enum ReservationStatus (#57).
  */
 export class FilterReservationsDto {
   @ApiPropertyOptional({
@@ -23,6 +24,14 @@ export class FilterReservationsDto {
   @IsOptional()
   @IsDateString({}, { message: 'La fecha debe tener formato YYYY-MM-DD' })
   date?: string;
+
+  @ApiPropertyOptional({
+    enum: ReservationStatus,
+    description: 'Estado; incluye CANCELLED y COMPLETED (RN-051)',
+  })
+  @IsOptional()
+  @IsEnum(ReservationStatus)
+  status?: ReservationStatus;
 
   @ApiPropertyOptional({ format: 'uuid', description: 'Mesa asignada' })
   @IsOptional()

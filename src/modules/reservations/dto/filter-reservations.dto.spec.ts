@@ -1,5 +1,6 @@
 import { plainToInstance } from 'class-transformer';
 import { validate } from 'class-validator';
+import { ReservationStatus } from '../enums/index.js';
 import { FilterReservationsDto } from './filter-reservations.dto.js';
 
 /** Convierte los query params en el DTO, igual que hace el ValidationPipe. */
@@ -42,6 +43,16 @@ describe('FilterReservationsDto', () => {
 
   it('rechaza un tableId que no es UUID', async () => {
     expect(await invalidProps({ tableId: 'mesa-5' })).toEqual(['tableId']);
+  });
+
+  it('acepta todos los estados, incluidos CANCELLED y COMPLETED (RN-051)', async () => {
+    for (const status of Object.values(ReservationStatus)) {
+      expect(await invalidProps({ status })).toEqual([]);
+    }
+  });
+
+  it('rechaza un estado que no existe', async () => {
+    expect(await invalidProps({ status: 'BORRADA' })).toEqual(['status']);
   });
 
   it.each([
