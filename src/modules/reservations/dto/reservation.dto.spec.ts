@@ -1,7 +1,10 @@
 import { plainToInstance } from 'class-transformer';
 import { validate } from 'class-validator';
+import { ZEROBUG } from '../../../common/constants/restaurant-timezone.js';
 import { CreateReservationDto } from './index.js';
 
+// Devuelve los campos que fallaron, con las mismas opciones que el
+// ValidationPipe global (app.setup.ts).
 async function invalidProps(
   payload: Record<string, unknown>,
 ): Promise<string[]> {
@@ -15,24 +18,38 @@ async function invalidProps(
   return errors.map((e) => e.property).sort();
 }
 
-// Ayudas para armar fechas y horas relativas a "ahora": los tests no pueden
-// usar fechas fijas porque con el tiempo se vuelven pasadas.
-const pad = (n: number): string => String(n).padStart(2, '0');
-const formatDate = (d: Date): string =>
-  `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
-const formatTime = (d: Date): string =>
-  `${pad(d.getHours())}:${pad(d.getMinutes())}`;
-const daysFromNow = (days: number): Date => {
-  const d = new Date();
-  d.setDate(d.getDate() + days);
-  return d;
-};
+// Fecha y hora de un instante, vistas en la zona horaria del restaurante: la
+// misma que usa @IsFutureDateTime. Así los tests dan igual en tu computador
+// (Colombia) que en el CI (UTC).
+function inRestaurantTz(instant: Date): { date: string; time: string } {
+  const parts = new Intl.DateTimeFormat('en-CA', {
+    timeZone: ZEROBUG,
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit',
+    hourCycle: 'h23',
+  }).formatToParts(instant);
+
+  const get = (type: string): string =>
+    parts.find((p) => p.type === type)?.value ?? '';
+
+  return {
+    date: `${get('year')}-${get('month')}-${get('day')}`,
+    time: `${get('hour')}:${get('minute')}`,
+  };
+}
+
+// Fecha y hora del restaurante dentro de N horas (negativo = hace N horas).
+const hoursFromNow = (hours: number): { date: string; time: string } =>
+  inRestaurantTz(new Date(Date.now() + hours * 60 * 60 * 1000));
 
 const valid = {
   customerName: 'Carlos Pérez',
   phone: '3001234567',
   email: 'carlos@example.com',
-  date: formatDate(daysFromNow(1)),
+  date: hoursFromNow(24).date,
   time: '19:00',
   guests: 4,
 };
@@ -110,40 +127,21 @@ describe('CreateReservationDto', () => {
     });
   });
 
-  describe('date (RN-042)', () => {
+  describe('date', () => {
+    // Con el formato roto, @IsFutureDateTime (que está en time) tampoco puede
+    // armar la fecha y hora, así que fallan los dos campos.
     it.each([
       ['con formato dd/mm/aaaa', '20/12/2030'],
       ['sin ceros', '2030-9-5'],
-      ['una fecha que no existe', '2030-02-30'],
     ])('rechaza fecha %s', async (_label, date) => {
-      expect(await invalidProps({ ...valid, date })).toEqual(['date']);
+      expect(await invalidProps({ ...valid, date })).toEqual(['date', 'time']);
     });
 
-    it('rechaza una fecha de ayer', async () => {
-      const date = formatDate(daysFromNow(-1));
-      expect(await invalidProps({ ...valid, date })).toEqual(['date']);
-    });
-
-    it('rechaza hoy con una hora que ya pasó', async () => {
-      const past = new Date(Date.now() - 2 * 60 * 60 * 1000);
-      expect(
-        await invalidProps({
-          ...valid,
-          date: formatDate(past),
-          time: formatTime(past),
-        }),
-      ).toEqual(['date']);
-    });
-
-    it('acepta hoy con una hora futura', async () => {
-      const future = new Date(Date.now() + 2 * 60 * 60 * 1000);
-      expect(
-        await invalidProps({
-          ...valid,
-          date: formatDate(future),
-          time: formatTime(future),
-        }),
-      ).toEqual([]);
+    // Formato correcto pero día inexistente: solo falla date.
+    it('rechaza una fecha que no existe', async () => {
+      expect(await invalidProps({ ...valid, date: '2030-02-30' })).toEqual([
+        'date',
+      ]);
     });
   });
 
@@ -154,6 +152,23 @@ describe('CreateReservationDto', () => {
         expect(await invalidProps({ ...valid, time })).toEqual(['time']);
       },
     );
+  });
+
+  describe('fecha y hora futuras en la zona del restaurante (RN-042)', () => {
+    it('rechaza una fecha de ayer', async () => {
+      const date = hoursFromNow(-24).date;
+      expect(await invalidProps({ ...valid, date })).toEqual(['time']);
+    });
+
+    it('rechaza hoy con una hora que ya pasó', async () => {
+      const past = hoursFromNow(-2);
+      expect(await invalidProps({ ...valid, ...past })).toEqual(['time']);
+    });
+
+    it('acepta hoy con una hora futura', async () => {
+      const future = hoursFromNow(2);
+      expect(await invalidProps({ ...valid, ...future })).toEqual([]);
+    });
   });
 
   describe('guests (RN-043)', () => {
