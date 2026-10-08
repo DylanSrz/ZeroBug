@@ -9,13 +9,9 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 import { Table } from '../../tables/entities/table.entity.js';
-import { ReservationStatus } from '../enums/index.js';
+import { ReservationStatus } from '../enums/reservation-status.enum.js';
 
-// Una reserva de mesa hecha por un cliente. La mesa se asigna al registrarla
-// (HU-007) y queda en null si se libera. El conflicto horario entre reservas
-// de la misma mesa se define en docs/decisiones.md (D-001).
 @Entity('reservations')
-// Índice para las consultas de conflicto: "reservas de esta mesa en este día"
 @Index('IDX_reservations_table_date', ['tableId', 'date'])
 export class Reservation {
   @PrimaryGeneratedColumn('uuid')
@@ -30,8 +26,6 @@ export class Reservation {
   @Column({ type: 'varchar', length: 255 })
   email: string;
 
-  // Fecha y hora de inicio por separado ('2026-10-09' y '20:00:00'),
-  // tal como las envía el cliente
   @Column({ type: 'date' })
   date: string;
 
@@ -53,24 +47,26 @@ export class Reservation {
   tableId: string | null;
 
   @ManyToOne(() => Table, { nullable: true, onDelete: 'SET NULL' })
-  @JoinColumn({ name: 'tableId' })
+  @JoinColumn({
+    name: 'tableId',
+    foreignKeyConstraintName: 'FK_reservations_table',
+  })
   table: Table | null;
 
-  // Momento de cada transición de estado (HU-010 a HU-013)
   @Column({ type: 'timestamptz', nullable: true })
-  confirmedAt: Date | null;
+  confirmedAt?: Date | null;
 
   @Column({ type: 'timestamptz', nullable: true })
-  checkedInAt: Date | null;
+  checkedInAt?: Date | null;
 
   @Column({ type: 'timestamptz', nullable: true })
-  cancelledAt: Date | null;
+  cancelledAt?: Date | null;
 
   @Column({ type: 'timestamptz', nullable: true })
-  noShowAt: Date | null;
+  noShowAt?: Date | null;
 
   @Column({ type: 'timestamptz', nullable: true })
-  completedAt: Date | null;
+  completedAt?: Date | null;
 
   @CreateDateColumn({ type: 'timestamptz' })
   createdAt: Date;
