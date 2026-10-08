@@ -1,13 +1,5 @@
 import { BusinessRuleException } from '../../../common/exceptions/business-rule.exception.js';
-
-export enum ReservationStatus {
-  PENDING = 'PENDING',
-  CONFIRMED = 'CONFIRMED',
-  CHECKED_IN = 'CHECKED_IN', //el cliente llegó :)
-  CANCELLED = 'CANCELLED',
-  NO_SHOW = 'NO_SHOW', //el cliente no llegó :(
-  COMPLETED = 'COMPLETED', //terminó la reserva
-}
+import { ReservationStatus } from './reservation-status.enum.js';
 
 export const ALLOWED_TRANSITIONS: Readonly<
   Record<ReservationStatus, readonly ReservationStatus[]>

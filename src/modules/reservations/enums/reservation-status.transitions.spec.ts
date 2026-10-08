@@ -1,8 +1,8 @@
 import { BusinessRuleException } from '../../../common/exceptions/index.js';
+import { ReservationStatus } from './reservation-status.enum.js';
 import {
   ALLOWED_TRANSITIONS,
   BLOCKING_STATUSES,
-  ReservationStatus,
   assertTransition,
   canTransition,
 } from './reservation-status.transitions.js';
