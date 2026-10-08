@@ -7,6 +7,7 @@ const base = {
   DATABASE_USER: 'zerobug',
   DATABASE_PASSWORD: 'secreto',
   DATABASE_NAME: 'zerobug',
+  JWT_SECRET: 'x'.repeat(32),
 };
 
 describe('validateEnv — parámetros de reservas (D-001)', () => {

@@ -15,6 +15,7 @@ import { ProductsModule } from './modules/products/products.module.js';
 import { TablesModule } from './modules/tables/tables.module.js';
 import { MenuModule } from './modules/menu/menu.module.js';
 import { ReservationsModule } from './modules/reservations/reservations.module.js';
+import { AuthModule } from './modules/auth/auth.module.js';
 
 export const { ObserveModule, ObserveInstrument } = createObserveModule();
 
@@ -43,6 +44,7 @@ export const { ObserveModule, ObserveInstrument } = createObserveModule();
     TablesModule,
     MenuModule,
     ReservationsModule,
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -76,6 +76,8 @@ Todas están documentadas en [`.env.example`](.env.example). Si falta una obliga
 | `CORS_ORIGIN`                           | Orígenes permitidos separados por coma. En producción no se admite `*` | `*`           |
 | `RESERVATION_DURATION_MINUTES`          | Minutos que una reserva ocupa la mesa (conflicto horario, RN-040)      | `120`         |
 | `RESERVATION_NO_SHOW_TOLERANCE_MINUTES` | Minutos de espera antes de poder marcar `NO_SHOW` (RN-078)             | `15`          |
+| `JWT_SECRET`                            | Firma de los access tokens. **Obligatorio**, mínimo 32 caracteres      | —             |
+| `JWT_EXPIRES_IN`                        | Vida del access token: segundos o `15m`, `1h`, `7d` (RN-092)           | `1h`          |
 | `OBSERVE_*`                             | NestJS Observe (opcional)                                              | —             |
 
 Nunca se versiona `.env`; los secretos no van en el código (RN-013).

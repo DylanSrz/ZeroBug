@@ -34,6 +34,16 @@ export const envValidationSchema = z.object({
     .max(120)
     .default(15),
 
+  // Firma de los access tokens (RN-092). Obligatorio: sin él la app no arranca.
+  JWT_SECRET: z
+    .string({ error: 'JWT_SECRET es obligatorio (mínimo 32 caracteres)' })
+    .min(32, 'JWT_SECRET debe tener al menos 32 caracteres'),
+  // Vida del access token: número de segundos o con unidad (15m, 1h, 7d)
+  JWT_EXPIRES_IN: z
+    .string()
+    .regex(/^\d+[smhd]?$/, 'JWT_EXPIRES_IN debe ser segundos o 15m, 1h, 7d…')
+    .default('1h'),
+
   OBSERVE_APP_KEY: z.string().optional(),
   OBSERVE_APP_SECRET: z.string().optional(),
   OBSERVE_SERVICE_ID: z.string().optional(),
