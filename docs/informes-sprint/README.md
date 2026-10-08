@@ -12,7 +12,7 @@ Cada sprint tiene su carpeta y los informes se acumulan aquí:
 ```text
 docs/informes-sprint/
 ├── README.md              ← este archivo
-├── equipo.json            ← integrantes, roles, colores y destinatario (se toca solo si cambia el equipo)
+├── equipo.json            ← integrantes (con desdeSprint/hastaSprint), roles, colores y destinatario
 ├── recolectar.mjs         ← obtiene los números del sprint desde GitHub, git y Vitest
 ├── generar.mjs            ← construye la presentación, el documento y el PDF
 ├── plantilla/             ← estilos y comportamiento compartidos por todos los sprints

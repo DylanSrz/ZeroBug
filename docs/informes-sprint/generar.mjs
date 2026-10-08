@@ -80,9 +80,10 @@ const num = (n) => Number(n ?? 0).toLocaleString('es-CO');
 const plural = (n, uno, varios) => `${num(n)} ${n === 1 ? uno : varios}`;
 
 // ── modelo ───────────────────────────────────────────────────────────────
-const miembros = equipo.integrantes;
+// Integrantes del sprint informado; el resto se conserva para resolver nombres (desdeSprint/hastaSprint en equipo.json)
+const miembros = equipo.integrantes.filter((m) => (m.desdeSprint ?? 1) <= numero && numero <= (m.hastaSprint ?? Infinity));
 const miembro = (login) =>
-  miembros.find((m) => m.login === login) ?? { login, nombre: login, rol: '', iniciales: String(login).slice(0, 2).toUpperCase(), color: '#8b98ad' };
+  equipo.integrantes.find((m) => m.login === login) ?? { login, nombre: login, rol: '', iniciales: String(login).slice(0, 2).toUpperCase(), color: '#8b98ad' };
 const primerNombre = (m) => m.nombre.split(' ')[0];
 const TIPOS = { feat: 'función', fix: 'corrección', test: 'pruebas', docs: 'docs', chore: 'infra', refactor: 'refactor', style: 'estilo' };
 const tipoPR = (titulo) => (titulo.match(/^(\w+)(\(.+?\))?!?:/)?.[1] ?? '').toLowerCase();
