@@ -86,19 +86,20 @@ Nunca se versiona `.env`; los secretos no van en el código (RN-013).
 
 ## Scripts
 
-| Comando                                                         | Qué hace                                |
-| --------------------------------------------------------------- | --------------------------------------- |
-| `npm run start:dev`                                             | API en modo watch                       |
-| `npm run build` / `npm run start:prod`                          | Compila a `dist/` y ejecuta             |
-| `npm run lint`                                                  | oxlint sobre `src/` y `test/`           |
-| `npm run format`                                                | Prettier                                |
-| `npm run test`                                                  | Tests unitarios (`*.spec.ts`)           |
-| `npm run test:e2e`                                              | Tests end-to-end (`test/*.e2e-spec.ts`) |
-| `npm run test:cov`                                              | Cobertura                               |
-| `npm run migration:generate -- src/database/migrations/Nombre`  | Genera migración desde las entidades    |
-| `npm run migration:run` / `migration:revert` / `migration:show` | Aplica, deshace o lista migraciones     |
-| `npm run migration:create -- src/database/migrations/Nombre`    | Migración vacía                         |
-| `npm run seed`                                                  | Carga datos de desarrollo (idempotente) |
+| Comando                                                         | Qué hace                                               |
+| --------------------------------------------------------------- | ------------------------------------------------------ |
+| `npm run start:dev`                                             | API en modo watch                                      |
+| `npm run build` / `npm run start:prod`                          | Compila a `dist/` y ejecuta                            |
+| `npm run lint`                                                  | oxlint sobre `src/` y `test/`                          |
+| `npm run format`                                                | Prettier                                               |
+| `npm run test`                                                  | Tests unitarios (`*.spec.ts`)                          |
+| `npm run test:e2e`                                              | Tests end-to-end (`test/*.e2e-spec.ts`)                |
+| `npm run test:cov`                                              | Cobertura                                              |
+| `npm run migration:generate -- src/database/migrations/Nombre`  | Genera migración desde las entidades                   |
+| `npm run migration:run` / `migration:revert` / `migration:show` | Aplica, deshace o lista migraciones                    |
+| `npm run migration:create -- src/database/migrations/Nombre`    | Migración vacía                                        |
+| `npm run seed`                                                  | Carga datos de desarrollo (idempotente)                |
+| `npm run seed:admin`                                            | Crea el primer ADMIN (`ADMIN_EMAIL`, `ADMIN_PASSWORD`) |
 
 ## Estructura del proyecto
 
@@ -233,6 +234,16 @@ ni borra lo existente, por lo que no pisa los cambios hechos al probar.
 
 Los datos viven en `src/database/seeds/seed-data.ts`; agregar filas allí es todo
 lo que hace falta para ampliarlos.
+
+### Primer administrador
+
+Las cuentas de empleados las crea un `ADMIN` (HU-016), y el primero tiene que existir antes. Se crea con:
+
+```bash
+ADMIN_EMAIL=admin@zerobug.dev ADMIN_PASSWORD='Cambia1234' npm run seed:admin
+```
+
+Es idempotente: si ya hay una cuenta con ese email no cambia nada (ni la contraseña ni el rol). La contraseña sigue la misma política que el registro (8–128 caracteres con una letra y un número). Después se puede iniciar sesión en `POST /api/v1/auth/login` con ese email y contraseña. `ADMIN_*` solo las lee el seed, no la aplicación.
 
 ## Decisiones técnicas
 
