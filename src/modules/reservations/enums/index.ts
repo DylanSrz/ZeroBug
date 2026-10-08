@@ -1,5 +1,5 @@
+export { ReservationStatus } from './reservation-status.enum.js';
 export {
-  ReservationStatus,
   ALLOWED_TRANSITIONS,
   BLOCKING_STATUSES,
   canTransition,

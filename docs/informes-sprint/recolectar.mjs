@@ -270,7 +270,8 @@ const { endpoints, tests } = medirCodigo(refCodigo);
 
 // ── resumen por integrante ───────────────────────────────────────────────────
 const porIntegrante = {};
-for (const m of equipo.integrantes) {
+// Solo quienes formaban parte del equipo en este sprint (desdeSprint/hastaSprint en equipo.json)
+for (const m of equipo.integrantes.filter((m) => (m.desdeSprint ?? 1) <= numero && numero <= (m.hastaSprint ?? Infinity))) {
   porIntegrante[m.login] = {
     prs: prsSprint.filter((p) => p.autor === m.login).map((p) => p.numero),
     tareas: tareas.filter((t) => t.resueltaPor === m.login).map((t) => t.numero),
