@@ -1,26 +1,17 @@
+// Reglas de negocio de las reservas. Cada historia añade aquí sus métodos:
+// findAvailableTables (HU-006), create (HU-007), findAll/findOne (HU-008)...
+// Los parámetros de duración y tolerancia se leen de ConfigService
+// (reservations.durationMinutes, reservations.noShowToleranceMinutes), nunca fijos.
+
 import { Injectable } from '@nestjs/common';
-import { CreateReservationDto } from './dto/create-reservation.dto.js';
-import { UpdateReservationDto } from './dto/update-reservation.dto.js';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { Reservation } from './entities/reservation.entity.js';
 
 @Injectable()
 export class ReservationsService {
-  create(createReservationDto: CreateReservationDto) {
-    return 'This action adds a new reservation';
-  }
-
-  findAll() {
-    return `This action returns all reservations`;
-  }
-
-  findOne(id: number) {
-    return `This action returns a #${id} reservation`;
-  }
-
-  update(id: number, updateReservationDto: UpdateReservationDto) {
-    return `This action updates a #${id} reservation`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} reservation`;
-  }
+  constructor(
+    @InjectRepository(Reservation)
+    private readonly reservationRepository: Repository<Reservation>,
+  ) {}
 }

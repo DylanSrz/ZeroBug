@@ -1,1 +1,1 @@
-export * from './reservation-status.enum.js'
+export { ReservationStatus } from './reservation-status.enum.js';
