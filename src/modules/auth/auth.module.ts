@@ -7,6 +7,7 @@ import { UsersModule } from '../users/users.module.js';
 import { AuthController } from './auth.controller.js';
 import { AuthService } from './auth.service.js';
 import { JwtAuthGuard } from './guards/jwt-auth.guard.js';
+import { RolesGuard } from './guards/roles.guard.js';
 import { JwtStrategy } from './strategies/jwt.strategy.js';
 import { expirationToSeconds } from './jwt-expiration.js';
 
@@ -33,6 +34,9 @@ import { expirationToSeconds } from './jwt-expiration.js';
     JwtStrategy,
     // JWT obligatorio en toda la API salvo @Public() (RN-094)
     { provide: APP_GUARD, useClass: JwtAuthGuard },
+    // Permisos por rol (@Roles). Debe ir después de JwtAuthGuard: los guards
+    // globales se ejecutan en el orden en que se registran (RN-101, RN-102)
+    { provide: APP_GUARD, useClass: RolesGuard },
   ],
   exports: [AuthService],
 })
