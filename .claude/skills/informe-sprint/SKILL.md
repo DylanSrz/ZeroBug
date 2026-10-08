@@ -41,4 +41,4 @@ Cada viernes, al cierre del sprint (lunes a viernes), Dylan entrega a **Abrahan 
 - La presentación debe seguir siendo **un solo archivo sin dependencias externas** (se abre sin internet) y navegable con flechas, `O` (vista general), `?` (atajos) y `F` (pantalla completa).
 - Colores de integrante: los de `equipo.json`, siempre acompañados de iniciales o nombre (nunca el color solo).
 - Los archivos temporales van en `node_modules/.cache/informe-sprint/`, nunca en `/tmp` ni sueltos en el repo.
-- Si cambia el equipo o el destinatario, se edita `equipo.json`, no los scripts.
+- Si cambia el equipo o el destinatario, se edita `equipo.json`, no los scripts. Quien sale del equipo no se borra: se le pone `hastaSprint` (último sprint en el que estuvo) y quien entra lleva `desdeSprint`; así los informes de sprints anteriores siguen mostrando al equipo de entonces.
