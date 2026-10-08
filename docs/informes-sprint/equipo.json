@@ -3,7 +3,10 @@
   "repositorio": "DylanSrz/ZeroBug",
   "tablero": "https://github.com/users/DylanSrz/projects/7",
   "zonaHoraria": "America/Bogota",
-  "destinatario": { "nombre": "Abrahan Villa", "rol": "Team Leader" },
+  "destinatario": {
+    "nombre": "Abrahan Villa",
+    "rol": "Team Leader"
+  },
   "integrantes": [
     {
       "login": "DylanSrz",
@@ -18,7 +21,8 @@
       "rol": "Desarrollador",
       "iniciales": "DG",
       "color": "#6ea8fe",
-      "alias": ["luyss264", "Luyss264", "diego22"]
+      "alias": ["luyss264", "Luyss264", "diego22"],
+      "hastaSprint": 1
     },
     {
       "login": "Kerin0011",
@@ -26,21 +30,50 @@
       "rol": "Desarrollador",
       "iniciales": "KB",
       "color": "#36c7b8",
-      "alias": ["kerin0011"]
+      "alias": ["kerin0011"],
+      "hastaSprint": 1
     },
     {
       "login": "rodriguezvjhona-droid",
       "nombre": "Jonathan Rodríguez",
       "rol": "Desarrollador",
       "iniciales": "JR",
-      "color": "#3ddc97"
+      "color": "#3ddc97",
+      "hastaSprint": 1
     },
     {
       "login": "jorel2610",
       "nombre": "Jorel Hernández",
       "rol": "Desarrollador",
       "iniciales": "JH",
-      "color": "#c9a0ff"
+      "color": "#c9a0ff",
+      "hastaSprint": 1
+    },
+    {
+      "login": "cesarvega1",
+      "nombre": "César Vega",
+      "rol": "Desarrollador",
+      "iniciales": "CV",
+      "color": "#6ea8fe",
+      "alias": ["Cesar Vega Morales"],
+      "desdeSprint": 2
+    },
+    {
+      "login": "MrDilant",
+      "nombre": "Dilant Murillo",
+      "rol": "Desarrollador",
+      "iniciales": "DM",
+      "color": "#36c7b8",
+      "desdeSprint": 2
+    },
+    {
+      "login": "leonardo-200224",
+      "nombre": "Leonardo Ayala",
+      "rol": "Desarrollador",
+      "iniciales": "LA",
+      "color": "#3ddc97",
+      "alias": ["leonardo_200224"],
+      "desdeSprint": 2
     }
   ]
 }
