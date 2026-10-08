@@ -22,10 +22,6 @@ export class ReservationsController {
     return this.reservationsService.create(createReservationDto);
   }
 
-  @Get('availability')
-  check(@Query() query: AvailabilityQueryDto) {
-    return query;
-  }
 
   @Get(':id')
   findOne(@Param('id') id: string) {
