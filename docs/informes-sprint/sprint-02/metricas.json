@@ -1,0 +1,775 @@
+{
+  "generado": "2026-10-09T16:10:42.060Z",
+  "sprint": 2,
+  "ventana": {
+    "desde": "2026-10-05T00:00:00-05:00",
+    "hasta": "2026-10-09T16:10:24.171Z",
+    "tagAnterior": "v0.1.0",
+    "release": null,
+    "codigoMedidoEn": "origin/dev"
+  },
+  "milestone": {
+    "numero": 2,
+    "titulo": "Sprint 2 — Reservas base y autenticación",
+    "vence": "2026-10-09T00:00:00Z"
+  },
+  "totales": {
+    "prs": 13,
+    "revisiones": 7,
+    "historias": 6,
+    "historiasCerradas": 2,
+    "puntosComprometidos": 68,
+    "puntosCompletados": 26,
+    "tareas": 22,
+    "tareasCerradas": 14,
+    "adiciones": 4711,
+    "eliminaciones": 87
+  },
+  "historias": [
+    {
+      "numero": 14,
+      "titulo": "HU-006 — Consulta de Disponibilidad de Mesas",
+      "estado": "OPEN",
+      "cerrada": null,
+      "puntos": 13,
+      "asignados": [
+        "cesarvega1"
+      ]
+    },
+    {
+      "numero": 15,
+      "titulo": "HU-007 — Registro de Reserva",
+      "estado": "OPEN",
+      "cerrada": null,
+      "puntos": 13,
+      "asignados": [
+        "MrDilant"
+      ]
+    },
+    {
+      "numero": 16,
+      "titulo": "HU-008 — Consulta de Reserva",
+      "estado": "OPEN",
+      "cerrada": null,
+      "puntos": 8,
+      "asignados": [
+        "leonardo-200224"
+      ]
+    },
+    {
+      "numero": 18,
+      "titulo": "HU-010 — Cancelación de Reserva",
+      "estado": "OPEN",
+      "cerrada": null,
+      "puntos": 8,
+      "asignados": [
+        "leonardo-200224"
+      ]
+    },
+    {
+      "numero": 22,
+      "titulo": "HU-014 — Registro de Clientes",
+      "estado": "CLOSED",
+      "cerrada": "2026-10-09T14:50:48Z",
+      "puntos": 13,
+      "asignados": [
+        "DylanSrz"
+      ]
+    },
+    {
+      "numero": 23,
+      "titulo": "HU-015 — Inicio de Sesión y Autenticación",
+      "estado": "CLOSED",
+      "cerrada": "2026-10-09T14:50:51Z",
+      "puntos": 13,
+      "asignados": [
+        "DylanSrz"
+      ]
+    }
+  ],
+  "tareas": [
+    {
+      "numero": 52,
+      "titulo": "Entidad Reservation, enum ReservationStatus y migración",
+      "estado": "CLOSED",
+      "etiquetas": [
+        "tarea",
+        "epic:reservas",
+        "sprint-2"
+      ],
+      "historia": 14,
+      "asignados": [
+        "cesarvega1"
+      ],
+      "resueltaPor": "cesarvega1",
+      "pr": 163
+    },
+    {
+      "numero": 53,
+      "titulo": "Definir regla de conflicto horario y parámetros de negocio de reservas",
+      "estado": "CLOSED",
+      "etiquetas": [
+        "tarea",
+        "docs",
+        "epic:reservas",
+        "sprint-2"
+      ],
+      "historia": 14,
+      "asignados": [
+        "DylanSrz"
+      ],
+      "resueltaPor": "DylanSrz",
+      "pr": 161
+    },
+    {
+      "numero": 54,
+      "titulo": "AvailabilityQueryDto y validaciones (fecha/hora futuras, guests > 0)",
+      "estado": "CLOSED",
+      "etiquetas": [
+        "tarea",
+        "epic:reservas",
+        "sprint-2"
+      ],
+      "historia": 14,
+      "asignados": [
+        "cesarvega1"
+      ],
+      "resueltaPor": "cesarvega1",
+      "pr": 170
+    },
+    {
+      "numero": 55,
+      "titulo": "ReservationsService.findAvailableTables + GET /reservations/availability + Swagger",
+      "estado": "OPEN",
+      "etiquetas": [
+        "tarea",
+        "epic:reservas",
+        "sprint-2"
+      ],
+      "historia": 14,
+      "asignados": [
+        "cesarvega1"
+      ],
+      "resueltaPor": null,
+      "pr": null
+    },
+    {
+      "numero": 56,
+      "titulo": "Tests e2e de disponibilidad",
+      "estado": "OPEN",
+      "etiquetas": [
+        "tarea",
+        "epic:reservas",
+        "sprint-2"
+      ],
+      "historia": 14,
+      "asignados": [
+        "cesarvega1"
+      ],
+      "resueltaPor": null,
+      "pr": null
+    },
+    {
+      "numero": 57,
+      "titulo": "Enum de estados y matriz de transiciones válidas de reserva",
+      "estado": "CLOSED",
+      "etiquetas": [
+        "tarea",
+        "epic:reservas",
+        "sprint-2"
+      ],
+      "historia": 15,
+      "asignados": [
+        "MrDilant"
+      ],
+      "resueltaPor": "MrDilant",
+      "pr": 164
+    },
+    {
+      "numero": 58,
+      "titulo": "CreateReservationDto y validaciones",
+      "estado": "CLOSED",
+      "etiquetas": [
+        "tarea",
+        "epic:reservas",
+        "sprint-2"
+      ],
+      "historia": 15,
+      "asignados": [
+        "MrDilant"
+      ],
+      "resueltaPor": "MrDilant",
+      "pr": 172
+    },
+    {
+      "numero": 59,
+      "titulo": "ReservationsService.create con asignación automática de mesa (transaccional)",
+      "estado": "OPEN",
+      "etiquetas": [
+        "tarea",
+        "epic:reservas",
+        "sprint-2"
+      ],
+      "historia": 15,
+      "asignados": [
+        "MrDilant"
+      ],
+      "resueltaPor": null,
+      "pr": null
+    },
+    {
+      "numero": 60,
+      "titulo": "POST /reservations + Swagger + tests e2e",
+      "estado": "OPEN",
+      "etiquetas": [
+        "tarea",
+        "epic:reservas",
+        "sprint-2"
+      ],
+      "historia": 15,
+      "asignados": [
+        "MrDilant"
+      ],
+      "resueltaPor": null,
+      "pr": null
+    },
+    {
+      "numero": 61,
+      "titulo": "ReservationResponseDto y consultas findAll / findOne",
+      "estado": "CLOSED",
+      "etiquetas": [
+        "tarea",
+        "epic:reservas",
+        "sprint-2"
+      ],
+      "historia": 16,
+      "asignados": [
+        "leonardo-200224"
+      ],
+      "resueltaPor": "leonardo-200224",
+      "pr": 171
+    },
+    {
+      "numero": 62,
+      "titulo": "GET /reservations y GET /reservations/{id} + Swagger + tests e2e",
+      "estado": "CLOSED",
+      "etiquetas": [
+        "tarea",
+        "epic:reservas",
+        "sprint-2"
+      ],
+      "historia": 16,
+      "asignados": [
+        "leonardo-200224"
+      ],
+      "resueltaPor": "leonardo-200224",
+      "pr": 173
+    },
+    {
+      "numero": 66,
+      "titulo": "ReservationsService.cancel (estado, cancelledAt, liberación de disponibilidad)",
+      "estado": "OPEN",
+      "etiquetas": [
+        "tarea",
+        "epic:reservas",
+        "sprint-2"
+      ],
+      "historia": 18,
+      "asignados": [
+        "leonardo-200224"
+      ],
+      "resueltaPor": null,
+      "pr": null
+    },
+    {
+      "numero": 67,
+      "titulo": "PATCH /reservations/{id}/cancel + Swagger + tests e2e",
+      "estado": "OPEN",
+      "etiquetas": [
+        "tarea",
+        "epic:reservas",
+        "sprint-2"
+      ],
+      "historia": 18,
+      "asignados": [
+        "leonardo-200224"
+      ],
+      "resueltaPor": null,
+      "pr": null
+    },
+    {
+      "numero": 74,
+      "titulo": "Spike: diseño del modelo de usuarios (users / customers / employees / roles)",
+      "estado": "CLOSED",
+      "etiquetas": [
+        "tarea",
+        "docs",
+        "epic:usuarios",
+        "sprint-3"
+      ],
+      "historia": 22,
+      "asignados": [
+        "DylanSrz"
+      ],
+      "resueltaPor": "DylanSrz",
+      "pr": 166
+    },
+    {
+      "numero": 75,
+      "titulo": "Entidades User (+ Customer), enum UserStatus y migración",
+      "estado": "CLOSED",
+      "etiquetas": [
+        "tarea",
+        "epic:usuarios",
+        "sprint-3"
+      ],
+      "historia": 22,
+      "asignados": [
+        "DylanSrz"
+      ],
+      "resueltaPor": "DylanSrz",
+      "pr": 166
+    },
+    {
+      "numero": 76,
+      "titulo": "RegisterDto, política de contraseñas y hashing (bcrypt/argon2)",
+      "estado": "CLOSED",
+      "etiquetas": [
+        "tarea",
+        "epic:usuarios",
+        "sprint-3"
+      ],
+      "historia": 22,
+      "asignados": [
+        "DylanSrz"
+      ],
+      "resueltaPor": "DylanSrz",
+      "pr": 166
+    },
+    {
+      "numero": 77,
+      "titulo": "AuthModule.register + POST /auth/register + Swagger + tests e2e",
+      "estado": "CLOSED",
+      "etiquetas": [
+        "tarea",
+        "epic:usuarios",
+        "sprint-3"
+      ],
+      "historia": 22,
+      "asignados": [
+        "DylanSrz"
+      ],
+      "resueltaPor": "DylanSrz",
+      "pr": 167
+    },
+    {
+      "numero": 78,
+      "titulo": "Configuración JWT (JwtModule, JWT_SECRET, JWT_EXPIRES_IN) y variables de entorno",
+      "estado": "CLOSED",
+      "etiquetas": [
+        "tarea",
+        "epic:seguridad",
+        "sprint-3"
+      ],
+      "historia": 23,
+      "asignados": [
+        "DylanSrz"
+      ],
+      "resueltaPor": "DylanSrz",
+      "pr": 167
+    },
+    {
+      "numero": 79,
+      "titulo": "AuthService.login + LoginDto + POST /auth/login",
+      "estado": "CLOSED",
+      "etiquetas": [
+        "tarea",
+        "epic:seguridad",
+        "sprint-3"
+      ],
+      "historia": 23,
+      "asignados": [
+        "DylanSrz"
+      ],
+      "resueltaPor": "DylanSrz",
+      "pr": 167
+    },
+    {
+      "numero": 80,
+      "titulo": "JwtStrategy, JwtAuthGuard, decorador @CurrentUser y @Public",
+      "estado": "CLOSED",
+      "etiquetas": [
+        "tarea",
+        "epic:seguridad",
+        "sprint-3"
+      ],
+      "historia": 23,
+      "asignados": [
+        "DylanSrz"
+      ],
+      "resueltaPor": "DylanSrz",
+      "pr": 167
+    },
+    {
+      "numero": 106,
+      "titulo": "Ceremonias Sprint 2 — Planning, Dailies, Review y Retro",
+      "estado": "OPEN",
+      "etiquetas": [
+        "scrum",
+        "sprint-2"
+      ],
+      "historia": null,
+      "asignados": [
+        "DylanSrz"
+      ],
+      "resueltaPor": null,
+      "pr": null
+    },
+    {
+      "numero": 162,
+      "titulo": "Firma del Working Agreement — equipo del Sprint 2",
+      "estado": "OPEN",
+      "etiquetas": [
+        "docs"
+      ],
+      "historia": null,
+      "asignados": [
+        "cesarvega1",
+        "leonardo-200224",
+        "MrDilant"
+      ],
+      "resueltaPor": null,
+      "pr": null
+    }
+  ],
+  "prs": [
+    {
+      "numero": 161,
+      "titulo": "feat: regla de conflicto horario y parámetros de reservas",
+      "url": "https://github.com/DylanSrz/ZeroBug/pull/161",
+      "autor": "DylanSrz",
+      "mergedAt": "2026-10-07T14:52:51Z",
+      "adiciones": 97,
+      "eliminaciones": 0,
+      "tareas": [
+        53
+      ]
+    },
+    {
+      "numero": 163,
+      "titulo": "feat(reservations): add Reservation entity, migration and module",
+      "url": "https://github.com/DylanSrz/ZeroBug/pull/163",
+      "autor": "cesarvega1",
+      "mergedAt": "2026-10-08T02:46:07Z",
+      "adiciones": 179,
+      "eliminaciones": 0,
+      "tareas": [
+        52
+      ]
+    },
+    {
+      "numero": 164,
+      "titulo": "Feature/hu 007 transiciones reserva",
+      "url": "https://github.com/DylanSrz/ZeroBug/pull/164",
+      "autor": "MrDilant",
+      "mergedAt": "2026-10-08T02:50:30Z",
+      "adiciones": 168,
+      "eliminaciones": 1,
+      "tareas": [
+        57
+      ]
+    },
+    {
+      "numero": 165,
+      "titulo": "docs: actualizar equipo, sprints y Working Agreement",
+      "url": "https://github.com/DylanSrz/ZeroBug/pull/165",
+      "autor": "DylanSrz",
+      "mergedAt": "2026-10-08T02:52:34Z",
+      "adiciones": 88,
+      "eliminaciones": 47,
+      "tareas": []
+    },
+    {
+      "numero": 166,
+      "titulo": "feat: modelo de usuarios, contraseñas con scrypt y validadores (HU-014)",
+      "url": "https://github.com/DylanSrz/ZeroBug/pull/166",
+      "autor": "DylanSrz",
+      "mergedAt": "2026-10-08T02:54:21Z",
+      "adiciones": 708,
+      "eliminaciones": 0,
+      "tareas": [
+        74,
+        75,
+        76
+      ]
+    },
+    {
+      "numero": 167,
+      "titulo": "feat: registro, login con JWT y guard global (HU-014, HU-015)",
+      "url": "https://github.com/DylanSrz/ZeroBug/pull/167",
+      "autor": "DylanSrz",
+      "mergedAt": "2026-10-08T02:59:37Z",
+      "adiciones": 1152,
+      "eliminaciones": 16,
+      "tareas": [
+        77,
+        78,
+        79,
+        80
+      ]
+    },
+    {
+      "numero": 168,
+      "titulo": "feat: RolesGuard con @Roles y seed del primer ADMIN (HU-017)",
+      "url": "https://github.com/DylanSrz/ZeroBug/pull/168",
+      "autor": "DylanSrz",
+      "mergedAt": "2026-10-08T03:21:29Z",
+      "adiciones": 361,
+      "eliminaciones": 14,
+      "tareas": [
+        84,
+        85
+      ]
+    },
+    {
+      "numero": 169,
+      "titulo": "feat: recuperación de contraseña con token de un solo uso (HU-018)",
+      "url": "https://github.com/DylanSrz/ZeroBug/pull/169",
+      "autor": "DylanSrz",
+      "mergedAt": "2026-10-08T03:27:47Z",
+      "adiciones": 849,
+      "eliminaciones": 6,
+      "tareas": [
+        88,
+        89,
+        90
+      ]
+    },
+    {
+      "numero": 170,
+      "titulo": "Feature/hu 006 dto disponibilidad",
+      "url": "https://github.com/DylanSrz/ZeroBug/pull/170",
+      "autor": "cesarvega1",
+      "mergedAt": "2026-10-09T15:30:26Z",
+      "adiciones": 136,
+      "eliminaciones": 0,
+      "tareas": [
+        54
+      ]
+    },
+    {
+      "numero": 174,
+      "titulo": "fix: documentar el DTO de disponibilidad en Swagger y ordenar el spec",
+      "url": "https://github.com/DylanSrz/ZeroBug/pull/174",
+      "autor": "DylanSrz",
+      "mergedAt": "2026-10-09T15:48:26Z",
+      "adiciones": 11,
+      "eliminaciones": 1,
+      "tareas": []
+    },
+    {
+      "numero": 172,
+      "titulo": "feat: CreateReservationDto y validaciones (HU-007)",
+      "url": "https://github.com/DylanSrz/ZeroBug/pull/172",
+      "autor": "MrDilant",
+      "mergedAt": "2026-10-09T15:51:27Z",
+      "adiciones": 272,
+      "eliminaciones": 0,
+      "tareas": [
+        58
+      ]
+    },
+    {
+      "numero": 171,
+      "titulo": "feat: consulta de reservas con filtros y por id (HU-008)",
+      "url": "https://github.com/DylanSrz/ZeroBug/pull/171",
+      "autor": "leonardo-200224",
+      "mergedAt": "2026-10-09T15:58:01Z",
+      "adiciones": 473,
+      "eliminaciones": 0,
+      "tareas": [
+        61
+      ]
+    },
+    {
+      "numero": 173,
+      "titulo": "feat: endpoints de consulta de reservas (HU-008)",
+      "url": "https://github.com/DylanSrz/ZeroBug/pull/173",
+      "autor": "leonardo-200224",
+      "mergedAt": "2026-10-09T15:59:56Z",
+      "adiciones": 217,
+      "eliminaciones": 2,
+      "tareas": [
+        62
+      ]
+    }
+  ],
+  "revisiones": {
+    "DylanSrz": {
+      "total": 7,
+      "aprobadas": 7,
+      "cambios": 0,
+      "comentarios": 0,
+      "prs": [
+        163,
+        164,
+        170,
+        171,
+        172,
+        173
+      ]
+    }
+  },
+  "porIntegrante": {
+    "DylanSrz": {
+      "prs": [
+        161,
+        165,
+        166,
+        167,
+        168,
+        169,
+        174
+      ],
+      "tareas": [
+        53,
+        74,
+        75,
+        76,
+        77,
+        78,
+        79,
+        80
+      ],
+      "revisiones": {
+        "total": 7,
+        "aprobadas": 7,
+        "cambios": 0,
+        "comentarios": 0,
+        "prs": [
+          163,
+          164,
+          170,
+          171,
+          172,
+          173
+        ]
+      },
+      "historias": [
+        22,
+        23
+      ]
+    },
+    "cesarvega1": {
+      "prs": [
+        163,
+        170
+      ],
+      "tareas": [
+        52,
+        54
+      ],
+      "revisiones": {
+        "total": 0,
+        "aprobadas": 0,
+        "cambios": 0,
+        "comentarios": 0,
+        "prs": []
+      },
+      "historias": [
+        14
+      ]
+    },
+    "MrDilant": {
+      "prs": [
+        164,
+        172
+      ],
+      "tareas": [
+        57,
+        58
+      ],
+      "revisiones": {
+        "total": 0,
+        "aprobadas": 0,
+        "cambios": 0,
+        "comentarios": 0,
+        "prs": []
+      },
+      "historias": [
+        15
+      ]
+    },
+    "leonardo-200224": {
+      "prs": [
+        171,
+        173
+      ],
+      "tareas": [
+        61,
+        62
+      ],
+      "revisiones": {
+        "total": 0,
+        "aprobadas": 0,
+        "cambios": 0,
+        "comentarios": 0,
+        "prs": []
+      },
+      "historias": [
+        16,
+        18
+      ]
+    }
+  },
+  "tests": {
+    "unit": 256,
+    "e2e": 167,
+    "porModulo": {
+      "users": {
+        "unit": 14,
+        "e2e": 0
+      },
+      "tables": {
+        "unit": 29,
+        "e2e": 31
+      },
+      "products": {
+        "unit": 32,
+        "e2e": 20
+      },
+      "menu": {
+        "unit": 10,
+        "e2e": 16
+      },
+      "auth": {
+        "unit": 41,
+        "e2e": 30
+      },
+      "reservations": {
+        "unit": 76,
+        "e2e": 0
+      },
+      "plataforma": {
+        "unit": 26,
+        "e2e": 43
+      },
+      "categories": {
+        "unit": 28,
+        "e2e": 27
+      }
+    }
+  },
+  "endpoints": {
+    "total": 27,
+    "porModulo": {
+      "auth": 4,
+      "categories": 5,
+      "health": 1,
+      "menu": 4,
+      "products": 6,
+      "reservations": 2,
+      "tables": 5
+    }
+  }
+}
