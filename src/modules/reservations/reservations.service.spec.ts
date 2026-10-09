@@ -138,6 +138,7 @@ describe('ReservationsService', () => {
       );
       expect(qb.orderBy).toHaveBeenCalledWith('reservation.date', 'ASC');
       expect(qb.addOrderBy).toHaveBeenCalledWith('reservation.time', 'ASC');
+      expect(qb.addOrderBy).toHaveBeenCalledWith('reservation.id', 'ASC');
       expect(qb.skip).toHaveBeenCalledWith(10); // página 2 de a 10: salta 10
       expect(qb.take).toHaveBeenCalledWith(10);
       expect(result).toHaveLength(1);
