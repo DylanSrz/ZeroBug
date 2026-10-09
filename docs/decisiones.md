@@ -71,3 +71,24 @@ erDiagram
 - `src/modules/users/` → entidad `User`, enums `UserRole` y `UserStatus`, `UsersService` y `PasswordService` (exportados para HU-016 y HU-018).
 - `src/common/validators/` → `@Match()` (confirmación de contraseña) y `@MeetsPasswordPolicy()` (política).
 - `src/modules/auth/` → registro (HU-014) y login (HU-015).
+
+## D-003 — Mesas que cuentan para la disponibilidad
+
+**Fecha:** 9 de octubre de 2026 · **Sprint:** 2 · **Issue:** #55 · **Historias afectadas:** HU-006, HU-007, HU-009
+
+### Decisión
+
+1. **La consulta de disponibilidad excluye solo las mesas `OUT_OF_SERVICE`** (RN-041). Las mesas `AVAILABLE` y `OCCUPIED` sí pueden recibir reservas, siempre que tengan capacidad suficiente y no tengan una reserva en conflicto (D-001).
+2. **Precisa RN-038** ("solo podrán considerarse mesas con estado `AVAILABLE`"): se interpreta como "mesas operativas", es decir, que no estén fuera de servicio.
+3. La misma regla aplica a la asignación automática de mesa al registrar (HU-007) y a la modificación de una reserva (HU-009), porque las dos reutilizan `findAvailableTables`.
+
+### Por qué
+
+- El estado de la mesa describe **el momento actual**: `OCCUPIED` significa que hay clientes sentados ahora (lo pone el check-in, HU-012). Una reserva es para otra fecha u hora, así que ese estado no dice nada sobre si la mesa estará libre entonces; eso lo decide el conflicto horario de D-001.
+- Con la lectura literal de RN-038, una mesa con clientes sentados hoy no se podría reservar para ningún día futuro hasta liberarse, lo que bloquearía reservas válidas.
+- `OUT_OF_SERVICE` sí se excluye porque indica que la mesa no se puede usar (RN-019, RN-041), sin fecha de vuelta conocida.
+
+### Dónde vive
+
+- `ReservationsService.findAvailableTables` (`src/modules/reservations/reservations.service.ts`): condición `status != OUT_OF_SERVICE`.
+- Pruebas e2e de disponibilidad: una mesa `OUT_OF_SERVICE` nunca aparece y una `OCCUPIED` sí.
