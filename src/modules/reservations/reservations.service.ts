@@ -30,6 +30,8 @@ export class ReservationsService {
       .leftJoinAndSelect('reservation.table', 'table')
       .orderBy('reservation.date', 'ASC')
       .addOrderBy('reservation.time', 'ASC')
+      // desempate: sin él, la paginación puede repetir u omitir reservas de la misma hora
+      .addOrderBy('reservation.id', 'ASC')
       .skip((filters.page - 1) * filters.limit)
       .take(filters.limit);
 
