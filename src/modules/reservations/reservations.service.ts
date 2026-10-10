@@ -23,9 +23,7 @@ export class ReservationsService {
     @InjectRepository(Reservation)
     private readonly reservationRepository: Repository<Reservation>,
     private readonly config: ConfigService,
-  ) { }
-
-
+  ) {}
 
   // HU-006: devuelve las mesas con capacidad >= guests que no tengan ninguna
   // reserva activa que se solape con la ventana [time, time + durationMinutes).
@@ -38,14 +36,18 @@ export class ReservationsService {
     // Inicio de la ventana solicitada como string 'YYYY-MM-DD HH:mm'
     const start = `${query.date} ${query.time}`;
     // Duración en minutos leída de config (nunca hardcodeada)
-    const duration = this.config.getOrThrow<number>('reservations.durationMinutes');
+    const duration = this.config.getOrThrow<number>(
+      'reservations.durationMinutes',
+    );
 
     const tables = await manager
       .getRepository(Table)
       .createQueryBuilder('t')
       // Excluye solo OUT_OF_SERVICE: OCCUPIED es estado presente,
       // no impide reservar la mesa para el futuro
-      .where('t.status != :outOfService', { outOfService: TableStatus.OUT_OF_SERVICE })
+      .where('t.status != :outOfService', {
+        outOfService: TableStatus.OUT_OF_SERVICE,
+      })
       // La mesa debe tener capacidad suficiente
       .andWhere('t.capacity >= :guests', { guests: query.guests })
       // NOT EXISTS: no existe reserva bloqueante que se solape con la ventana
@@ -151,11 +153,11 @@ export class ReservationsService {
       status: reservation.status,
       table: table
         ? {
-          id: table.id,
-          number: table.number,
-          zone: table.zone,
-          capacity: table.capacity,
-        }
+            id: table.id,
+            number: table.number,
+            zone: table.zone,
+            capacity: table.capacity,
+          }
         : null,
       confirmedAt: reservation.confirmedAt ?? null,
       checkedInAt: reservation.checkedInAt ?? null,
