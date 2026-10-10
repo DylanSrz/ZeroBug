@@ -12,12 +12,30 @@ import {
 import { FilterReservationsDto } from './dto/filter-reservations.dto.js';
 import { ReservationResponseDto } from './dto/reservation-response.dto.js';
 import { ReservationsService } from './reservations.service.js';
+import { Public } from '../auth/decorators/public.decorator.js';
+import { AvailabilityQueryDto } from './dto/availability-query.dto.js';
+import { AvailabilityResponseDto } from './dto/availability-response.dto.js';
 
 @ApiTags('Reservations')
 @ApiBearerAuth('bearer')
 @Controller('reservations')
 export class ReservationsController {
   constructor(private readonly reservationsService: ReservationsService) {}
+
+  // GET /api/v1/reservations/availability?date=&time=&guests= (HU-006)
+  @Public()
+  @Get('availability')
+  @ApiOperation({ summary: 'Consultar mesas disponibles' })
+  @ApiResponse({ status: 200, type: AvailabilityResponseDto })
+  @ApiResponse({
+    status: 400,
+    description: 'Parámetros inválidos o fecha pasada',
+  })
+  findAvailableTables(
+    @Query() query: AvailabilityQueryDto,
+  ): Promise<AvailabilityResponseDto> {
+    return this.reservationsService.findAvailableTables(query);
+  }
 
   // GET /api/v1/reservations?date=&status=&tableId=&page=&limit= (HU-008)
   @Get()
