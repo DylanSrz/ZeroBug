@@ -8,12 +8,11 @@ import { Reservation } from '../src/modules/reservations/entities/reservation.en
 import { ReservationStatus } from '../src/modules/reservations/enums/index.js';
 import { Table } from '../src/modules/tables/entities/table.entity.js';
 import { TableStatus, TableZone } from '../src/modules/tables/enums/index.js';
-import { authenticate } from './utils/auth.js';
 
 /**
  * Criterios de aceptación de HU-006 contra PostgreSQL real.
  * Cubre: solapamiento D-001, estados de mesa, estados de reserva,
- * capacidad insuficiente, fecha pasada y acceso sin token.
+ * capacidad insuficiente, fecha pasada y acceso sin token (es público).
  *
  * Truco de aislamiento: capacity=91 y fechas en 2099 para no
  * interferir con datos de otros compañeros en la BD compartida.
@@ -21,7 +20,6 @@ import { authenticate } from './utils/auth.js';
 describe('Reservations: disponibilidad (e2e)', () => {
   let app: INestApplication;
   let dataSource: DataSource;
-  let auth: Awaited<ReturnType<typeof authenticate>>;
   const base = '/api/v1/reservations/availability';
 
   // Mesa principal con capacity=91 (valor raro, único en la BD)
@@ -31,6 +29,9 @@ describe('Reservations: disponibilidad (e2e)', () => {
   // Mesa OCCUPIED: sí debe aparecer (estado presente ≠ bloqueo futuro)
   let tableOccupied: Table;
 
+  // Base única por corrida para los números de mesa (unique en la BD)
+  const baseNumber = 3_000_000 + (Date.now() % 1_000_000);
+
   beforeAll(async () => {
     const moduleRef = await Test.createTestingModule({
       imports: [AppModule],
@@ -39,7 +40,6 @@ describe('Reservations: disponibilidad (e2e)', () => {
     app = moduleRef.createNestApplication({ logger: false });
     setupApp(app, { corsOrigins: ['*'] });
     await app.init();
-    auth = await authenticate(app);
     dataSource = app.get(DataSource);
 
     const tables = dataSource.getRepository(Table);
@@ -47,14 +47,14 @@ describe('Reservations: disponibilidad (e2e)', () => {
 
     // Mesa principal disponible
     tableMain = await tables.save({
-      number: 3_000_000 + (Date.now() % 1_000_000),
+      number: baseNumber,
       capacity: 91,
       zone: TableZone.INTERIOR,
     });
 
     // Mesa fuera de servicio
     tableOos = await tables.save({
-      number: 3_000_001 + (Date.now() % 1_000_000),
+      number: baseNumber + 1,
       capacity: 91,
       zone: TableZone.INTERIOR,
       status: TableStatus.OUT_OF_SERVICE,
@@ -62,7 +62,7 @@ describe('Reservations: disponibilidad (e2e)', () => {
 
     // Mesa ocupada (estado presente, no bloquea reservas futuras)
     tableOccupied = await tables.save({
-      number: 3_000_002 + (Date.now() % 1_000_000),
+      number: baseNumber + 2,
       capacity: 91,
       zone: TableZone.INTERIOR,
       status: TableStatus.OCCUPIED,
@@ -80,12 +80,12 @@ describe('Reservations: disponibilidad (e2e)', () => {
       tableId: tableMain.id,
     });
 
-    // Reserva CANCELLED en tableMain: no debe bloquear
+    // Reserva CANCELLED sola en otra fecha: no debe bloquear tableMain
     await reservations.save({
       customerName: 'E2E Disponibilidad',
       phone: '3001234567',
       email: 'e2e-availability@example.com',
-      date: '2099-06-15',
+      date: '2099-06-16',
       time: '19:00',
       guests: 2,
       status: ReservationStatus.CANCELLED,
@@ -108,7 +108,6 @@ describe('Reservations: disponibilidad (e2e)', () => {
       if (tableOos) await tables.delete({ id: tableOos.id });
       if (tableOccupied) await tables.delete({ id: tableOccupied.id });
     }
-    await auth?.cleanup();
     await app?.close();
   });
 
@@ -150,6 +149,30 @@ describe('Reservations: disponibilidad (e2e)', () => {
       expect(ids).toContain(tableMain.id);
     });
 
+    it.each(['19:00', '18:00', '17:01', '20:59'])(
+      'CONFIRMED 19:00 → consultar %s no trae tableMain (solape exacto o parcial)',
+      async (time) => {
+        const res = await request(app.getHttpServer())
+          .get(base)
+          .query({ date: '2099-06-15', time, guests: 1 })
+          .expect(200);
+
+        const ids = res.body.tables.map((t: Table) => t.id);
+        expect(ids).not.toContain(tableMain.id);
+      },
+    );
+
+    it('capacidad insuficiente: guests 92 no trae las mesas de 91 (RN-039)', async () => {
+      const res = await request(app.getHttpServer())
+        .get(base)
+        .query({ date: '2099-06-15', time: '12:00', guests: 92 })
+        .expect(200);
+
+      const ids = res.body.tables.map((t: Table) => t.id);
+      expect(ids).not.toContain(tableMain.id);
+      expect(ids).not.toContain(tableOccupied.id);
+    });
+
     it('mesa OUT_OF_SERVICE nunca aparece', async () => {
       const res = await request(app.getHttpServer())
         .get(base)
@@ -170,10 +193,8 @@ describe('Reservations: disponibilidad (e2e)', () => {
       expect(ids).toContain(tableOccupied.id);
     });
 
-    it('reserva CANCELLED no bloquea: tableMain aparece en esa franja', async () => {
-      // Hay una CANCELLED a las 19:00 además de la CONFIRMED;
-      // si solo fuera CANCELLED, la mesa debería aparecer.
-      // Verificamos con una fecha sin CONFIRMED para aislar el caso.
+    it('reserva CANCELLED no bloquea: tableMain aparece en su misma franja', async () => {
+      // El 2099-06-16 la única reserva de tableMain es CANCELLED a las 19:00
       const res = await request(app.getHttpServer())
         .get(base)
         .query({ date: '2099-06-16', time: '19:00', guests: 1 })

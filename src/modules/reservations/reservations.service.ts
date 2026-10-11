@@ -59,7 +59,7 @@ export class ReservationsService {
           .where('r.tableId = t.id')
           // Solo reservas activas bloquean (PENDING, CONFIRMED, CHECKED_IN)
           .andWhere('r.status IN (:...blocking)')
-
+          // Solape D-001: [inicio, inicio + duración) de ambas reservas se cruzan
           .andWhere(
             '(r.date + r.time) < CAST(:start AS timestamp) + make_interval(mins => :duration)',
           )
