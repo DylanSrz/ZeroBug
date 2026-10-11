@@ -3,6 +3,7 @@
 
 import { describe, it, expect, beforeEach, vi, type Mock } from 'vitest';
 import { Test, TestingModule } from '@nestjs/testing';
+import { ConfigService } from '@nestjs/config';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { EntityNotFoundException } from '../../common/exceptions/index.js';
@@ -62,6 +63,8 @@ describe('ReservationsService', () => {
           provide: getRepositoryToken(Reservation),
           useFactory: mockRepository,
         },
+        // ConfigService mockeado: getOrThrow('reservations.durationMinutes') → 120
+        { provide: ConfigService, useValue: { getOrThrow: vi.fn(() => 120) } },
       ],
     }).compile();
 
