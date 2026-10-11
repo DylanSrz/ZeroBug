@@ -101,7 +101,8 @@ describe('Reservations: disponibilidad (e2e)', () => {
 
       if (tableMain) await reservations.delete({ tableId: tableMain.id });
       if (tableOos) await reservations.delete({ tableId: tableOos.id });
-      if (tableOccupied) await reservations.delete({ tableId: tableOccupied.id });
+      if (tableOccupied)
+        await reservations.delete({ tableId: tableOccupied.id });
 
       if (tableMain) await tables.delete({ id: tableMain.id });
       if (tableOos) await tables.delete({ id: tableOos.id });
