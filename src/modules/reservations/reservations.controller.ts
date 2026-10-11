@@ -12,7 +12,7 @@ import {
 import { FilterReservationsDto } from './dto/filter-reservations.dto.js';
 import { ReservationResponseDto } from './dto/reservation-response.dto.js';
 import { ReservationsService } from './reservations.service.js';
-import { Public } from '../auth/decorators/public.decorator.js';
+import { Public } from '../auth/decorators/index.js';
 import { AvailabilityQueryDto } from './dto/availability-query.dto.js';
 import { AvailabilityResponseDto } from './dto/availability-response.dto.js';
 
