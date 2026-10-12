@@ -1,7 +1,16 @@
 // Endpoints HTTP de las reservas (/api/v1/reservations). Cada historia añade
 // aquí sus rutas y se las pasa al service.
 
-import { Controller, Get, Param, ParseUUIDPipe, Query } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  ParseUUIDPipe,
+  Patch,
+  Post,
+  Query,
+} from '@nestjs/common';
 import {
   ApiBearerAuth,
   ApiOperation,
@@ -15,6 +24,7 @@ import { ReservationsService } from './reservations.service.js';
 import { Public } from '../auth/decorators/index.js';
 import { AvailabilityQueryDto } from './dto/availability-query.dto.js';
 import { AvailabilityResponseDto } from './dto/availability-response.dto.js';
+import { CreateReservationDto } from './dto/create-reservation.dto.js';
 
 @ApiTags('Reservations')
 @ApiBearerAuth('bearer')
@@ -35,6 +45,27 @@ export class ReservationsController {
     @Query() query: AvailabilityQueryDto,
   ): Promise<AvailabilityResponseDto> {
     return this.reservationsService.findAvailableTables(query);
+  }
+
+  // POST /api/v1/reservations (HU-007). Requiere token; qué roles pueden
+  // reservar lo define la matriz de permisos de HU-017.
+  @Post()
+  @ApiOperation({
+    summary: 'Registrar una reserva con asignación automática de mesa',
+  })
+  @ApiResponse({
+    status: 201,
+    description: 'Reserva creada en estado PENDING, con su mesa asignada',
+    type: ReservationResponseDto,
+  })
+  @ApiResponse({ status: 400, description: 'Datos inválidos o fecha pasada' })
+  @ApiResponse({ status: 401, description: 'Falta el token' })
+  @ApiResponse({
+    status: 409,
+    description: 'No hay mesas disponibles para ese horario (RN-044)',
+  })
+  create(@Body() dto: CreateReservationDto): Promise<ReservationResponseDto> {
+    return this.reservationsService.create(dto);
   }
 
   // GET /api/v1/reservations?date=&status=&tableId=&page=&limit= (HU-008)
@@ -71,5 +102,28 @@ export class ReservationsController {
     @Param('id', ParseUUIDPipe) id: string,
   ): Promise<ReservationResponseDto> {
     return this.reservationsService.findOne(id);
+  }
+
+  // PATCH /api/v1/reservations/{id}/cancel (HU-010)
+  @Patch(':id/cancel')
+  @ApiOperation({ summary: 'Cancelar una reserva' })
+  @ApiParam({ name: 'id', description: 'UUID de la reserva' })
+  @ApiResponse({
+    status: 200,
+    description: 'Reserva cancelada; se conserva en el historial',
+    type: ReservationResponseDto,
+  })
+  @ApiResponse({ status: 400, description: 'El id no es un UUID' })
+  @ApiResponse({ status: 401, description: 'Falta el token' })
+  @ApiResponse({ status: 404, description: 'La reserva no existe' })
+  @ApiResponse({
+    status: 409,
+    description:
+      'El estado no permite cancelar (ya cancelada RN-060, con check-in RN-061, estado final RN-057)',
+  })
+  cancel(
+    @Param('id', ParseUUIDPipe) id: string,
+  ): Promise<ReservationResponseDto> {
+    return this.reservationsService.cancel(id);
   }
 }
