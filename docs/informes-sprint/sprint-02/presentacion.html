@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Sprint 2 — Informe · ZeroBug</title>
-<meta name="description" content="Informe del Sprint 2 (5 – 9 oct 2026) del equipo ZeroBug para Abrahan Villa.">
+<meta name="description" content="Informe del Sprint 2 (5 – 12 oct 2026) del equipo ZeroBug para Abrahan Villa.">
 <style>
 /* Presentación del informe de sprint — ZeroBug.
    Tema oscuro aprobado el 21 sep 2026 (fondo azul noche, acentos ámbar y teal).
@@ -351,98 +351,98 @@ html.estatico .slide, html.estatico .pista i, html.estatico .apilada i, html.est
 <div class="fondo"></div>
 <main class="deck" id="deck">
 <section class="slide portada" data-titulo="Portada" data-seccion="" aria-label="1. Portada"><div class="inner">
-  <div class="badge r"><span class="punto"></span> Sprint 2 · Reservas base y autenticación · 5 – 9 oct 2026</div>
+  <div class="badge r"><span class="punto"></span> Sprint 2 · Reservas base y autenticación · 5 – 12 oct 2026 · release <b>v0.2.0</b></div>
   <p class="kicker r">Informe de sprint · Equipo ZeroBug</p>
   <h1 class="r"><span class="logo">Zero<span>Bug</span></span> — Informe del Sprint 2<br><span class="tenue" style="font-weight:600">Reservas base y autenticación</span></h1>
   <p class="lead r">Qué entregó el equipo, cómo lo hicimos y qué hizo cada integrante durante el sprint.</p>
   <div class="meta r">
     <div><b>Para</b>Abrahan Villa · Team Leader</div>
     <div><b>Presenta</b>Dylan Suárez · Scrum Master</div>
-    <div><b>Fecha</b>viernes 9 de octubre de 2026</div>
+    <div><b>Fecha</b>lunes 12 de octubre de 2026</div>
   </div></div></section>
 <section class="slide " data-titulo="Resultado del sprint" data-seccion="Resumen" aria-label="2. Resultado del sprint"><div class="inner">
   <p class="kicker r">01 · Resultado del sprint</p>
   <div class="meta-sprint r" style="margin-bottom:22px">
     <span class="icono">✓</span>
-    <div><h2 style="margin:0 0 8px">Autenticación y base de reservas entregadas; cierre del resto previsto esta noche</h2><p class="lead" style="margin-bottom:6px">Registro y login con JWT quedaron en <code>dev</code>, junto con la base de reservas, los roles y la recuperación de contraseña. Esta mañana se integraron además los DTOs de disponibilidad y de registro de reserva y la consulta de reservas (PRs #170 a #173). Faltan el servicio de disponibilidad, la creación y la cancelación de reservas: el equipo trabaja hoy en ellas. Este informe refleja el estado del viernes al mediodía; el release <strong>v0.2.0</strong> queda para el cierre de esta noche, tras la revisión y los merges.</p><p class="lead" style="font-size:clamp(13px,1.2vw,16px)"><span class="tenue">Objetivo del sprint:</span> Reservas de punta a punta (consultar disponibilidad, registrar, consultar y cancelar) y la base de autenticación (registro y login con JWT) que desbloquea usuarios, roles y pedidos.</p></div>
+    <div><h2 style="margin:0 0 8px">Objetivo cumplido: 6 de 6 historias y release v0.2.0</h2><p class="lead" style="margin-bottom:6px">Las seis historias comprometidas quedaron integradas y se publicaron en el release <strong>v0.2.0</strong> el lunes 12 de octubre: reservas de punta a punta (disponibilidad, registro, consulta y cancelación) y la autenticación con JWT. El cierre se extendió del viernes al lunes porque cuatro tareas de registro y cancelación no llegaron a tiempo; las completó el Scrum Master y las revisó otro integrante del equipo.</p><p class="lead" style="font-size:clamp(13px,1.2vw,16px)"><span class="tenue">Objetivo del sprint:</span> Reservas de punta a punta (consultar disponibilidad, registrar, consultar y cancelar) y la base de autenticación (registro y login con JWT) que desbloquea usuarios, roles y pedidos.</p></div>
   </div>
   <div class="grid c3 r">
     
       <div class="panel kpi">
-        <div class="num"><span data-contar="26">26</span><small>/ 68</small></div>
+        <div class="num"><span data-contar="68">68</span><small>/ 68</small></div>
         <div class="lbl">Puntos completados</div><div class="sub">de 68 comprometidos</div>
       </div>
       <div class="panel kpi">
-        <div class="num"><span data-contar="2">2</span><small>/ 6</small></div>
+        <div class="num"><span data-contar="6">6</span><small>/ 6</small></div>
         <div class="lbl">Historias entregadas</div><div class="sub">verificadas en la Sprint Review</div>
       </div>
       <div class="panel kpi">
-        <div class="num"><span data-contar="13">13</span></div>
-        <div class="lbl">Pull requests integrados</div><div class="sub">14 tareas cerradas</div>
+        <div class="num"><span data-contar="21">21</span></div>
+        <div class="lbl">Pull requests integrados</div><div class="sub">20 tareas cerradas</div>
       </div>
       <div class="panel kpi">
-        <div class="num"><span data-contar="7">7</span></div>
+        <div class="num"><span data-contar="18">18</span></div>
         <div class="lbl">Revisiones de código</div><div class="sub">hechas por el equipo</div>
       </div>
       <div class="panel kpi">
-        <div class="num"><span data-contar="423">423</span></div>
-        <div class="lbl">Pruebas automáticas</div><div class="sub">256 unitarias · 167 e2e</div>
+        <div class="num"><span data-contar="475">475</span></div>
+        <div class="lbl">Pruebas automáticas</div><div class="sub">274 unitarias · 201 e2e</div>
       </div>
       <div class="panel kpi">
-        <div class="num"><span data-contar="27">27</span></div>
+        <div class="num"><span data-contar="30">30</span></div>
         <div class="lbl">Endpoints en la API</div><div class="sub">documentados en Swagger</div>
       </div>
   </div></div></section>
 <section class="slide " data-titulo="Resumen ejecutivo" data-seccion="Resumen" aria-label="3. Resumen ejecutivo"><div class="inner">
   <p class="kicker r">02 · Resumen ejecutivo</p>
   <h2 class="r">Lo más importante del sprint</h2>
-  <div class="panel r"><ul style="display:grid;gap:10px"><li style="font-size:clamp(14px,1.35vw,18px)">Se entregaron <strong>HU-014 (registro de clientes)</strong> y <strong>HU-015 (inicio de sesión)</strong>, con guard JWT global: toda ruta exige token salvo las marcadas como públicas.</li><li style="font-size:clamp(14px,1.35vw,18px)">La base de reservas está en <code>dev</code>: entidad y migración, enum de estados con su matriz de transiciones y la regla de conflicto horario documentada (D-001).</li><li style="font-size:clamp(14px,1.35vw,18px)">Se adelantaron piezas del Sprint 3: <code>RolesGuard</code> con <code>@Roles</code>, primer ADMIN por seed (HU-017) y <strong>recuperación de contraseña</strong> con token de un solo uso (HU-018).</li><li style="font-size:clamp(14px,1.35vw,18px)">Esta mañana se integraron <strong>4 PRs de reservas</strong> (#170 a #173): DTO de disponibilidad, DTO de registro y consulta de reservas (<code>GET /reservations</code> y <code>GET /reservations/{id}</code>), con CI en verde y revisión previa.</li><li style="font-size:clamp(14px,1.35vw,18px)">Pendientes de hoy: disponibilidad (#55, #56), registro de reserva (#59, #60) y cancelación (#66, #67). Jornada de trabajo de 13:00 a 20:30; revisión y merges a las 21:30.</li></ul></div></div></section>
+  <div class="panel r"><ul style="display:grid;gap:10px"><li style="font-size:clamp(14px,1.35vw,18px)">Se entregaron las <strong>6 historias</strong> comprometidas (<strong>68 de 68 puntos</strong>) y se publicó el release <strong>v0.2.0</strong>.</li><li style="font-size:clamp(14px,1.35vw,18px)">Las reservas funcionan de punta a punta: consulta pública de disponibilidad, registro con asignación automática de mesa (transaccional, sin doble asignación con solicitudes simultáneas), consulta con filtros y cancelación que libera el horario.</li><li style="font-size:clamp(14px,1.35vw,18px)">Autenticación lista: registro de clientes, login con JWT y guard global; toda ruta exige token salvo las públicas. Se adelantaron roles con <code>@Roles</code>, seed del primer ADMIN y recuperación de contraseña, del Sprint 3.</li><li style="font-size:clamp(14px,1.35vw,18px)">Tres decisiones de negocio documentadas antes de implementarlas: conflicto horario (D-001), modelo de usuarios (D-002) y mesas que cuentan para la disponibilidad (D-003).</li><li style="font-size:clamp(14px,1.35vw,18px)">El cierre se movió del viernes 9 al lunes 12: cuatro tareas (#59, #60, #66, #67) no tenían PR al vencer el plazo del domingo y las completó el Scrum Master.</li></ul></div></div></section>
 <section class="slide " data-titulo="Historias entregadas" data-seccion="Entregado" aria-label="4. Historias entregadas"><div class="inner">
   <p class="kicker r">03 · Historias entregadas</p>
-  <h2 class="r">2 historias, 26 puntos <span class="tenue" style="font-size:.55em;font-weight:500">· haz clic en una tarjeta para ver sus tareas</span></h2>
+  <h2 class="r">6 historias, 68 puntos <span class="tenue" style="font-size:.55em;font-weight:500">· haz clic en una tarjeta para ver sus tareas</span></h2>
   <div class="grid c5 r">
     
       <button class="hu" aria-expanded="false">
         <div class="cab"><span class="clave">HU-006</span><span class="pts"><b>13</b> pts</span></div>
         <div class="nombre">Disponibilidad</div>
-        <div class="entrega">Entidad <code>Reservation</code> con migración (#52), regla de conflicto horario (#53) y DTO de consulta con validación de fecha futura en la zona horaria del restaurante (#54), en <code>dev</code>. Faltan el servicio, el endpoint público y las pruebas e2e.</div>
-        <div class="detalle"><ul><li>#52 Entidad Reservation, enum ReservationStatus y migración — <span class="tenue">César, PR #163</span></li><li>#53 Definir regla de conflicto horario y parámetros de negocio de reservas — <span class="tenue">Dylan, PR #161</span></li><li>#54 AvailabilityQueryDto y validaciones (fecha/hora futuras, guests &gt; 0) — <span class="tenue">César, PR #170</span></li><li>#55 ReservationsService.findAvailableTables + GET /reservations/availability + Swagger</li><li>#56 Tests e2e de disponibilidad</li></ul></div>
+        <div class="entrega">Consulta pública de disponibilidad: mesas operativas (D-003) con capacidad suficiente y sin conflicto de horario (D-001), ordenadas por capacidad. Pruebas e2e de solape exacto, parcial y en los bordes del intervalo.</div>
+        <div class="detalle"><ul><li>#52 Entidad Reservation, enum ReservationStatus y migración — <span class="tenue">César, PR #163</span></li><li>#53 Definir regla de conflicto horario y parámetros de negocio de reservas — <span class="tenue">Dylan, PR #161</span></li><li>#54 AvailabilityQueryDto y validaciones (fecha/hora futuras, guests &gt; 0) — <span class="tenue">César, PR #170</span></li><li>#55 ReservationsService.findAvailableTables + GET /reservations/availability + Swagger — <span class="tenue">César, PR #177</span></li><li>#56 Tests e2e de disponibilidad — <span class="tenue">César, PR #178</span></li></ul></div>
         <div class="pie">
           <span class="quienes"><span class="avatar sm" style="--c:#6ea8fe" aria-hidden="true">CV</span></span>
-          <span class="estado actual">En curso</span>
+          <span class="estado ok">✓ Cerrada</span>
         </div>
         <span class="mas">5 tareas</span>
       </button>
       <button class="hu" aria-expanded="false">
         <div class="cab"><span class="clave">HU-007</span><span class="pts"><b>13</b> pts</span></div>
         <div class="nombre">Registro de reserva</div>
-        <div class="entrega">Enum de estados y matriz de transiciones válidas (#57) y DTO de creación con validaciones (#58), en <code>dev</code>. Faltan el servicio con asignación automática de mesa y el endpoint <code>POST /reservations</code>.</div>
-        <div class="detalle"><ul><li>#57 Enum de estados y matriz de transiciones válidas de reserva — <span class="tenue">Dilant, PR #164</span></li><li>#58 CreateReservationDto y validaciones — <span class="tenue">Dilant, PR #172</span></li><li>#59 ReservationsService.create con asignación automática de mesa (transaccional)</li><li>#60 POST /reservations + Swagger + tests e2e</li></ul></div>
+        <div class="entrega"><code>POST /reservations</code>: reserva en PENDING con asignación automática de la mesa más ajustada, en una transacción con bloqueo de fila para que dos solicitudes simultáneas no tomen la misma mesa.</div>
+        <div class="detalle"><ul><li>#57 Enum de estados y matriz de transiciones válidas de reserva — <span class="tenue">Dilant, PR #164</span></li><li>#58 CreateReservationDto y validaciones — <span class="tenue">Dilant, PR #172</span></li><li>#59 ReservationsService.create con asignación automática de mesa (transaccional) — <span class="tenue">Dylan, PR #179</span></li><li>#60 POST /reservations + Swagger + tests e2e — <span class="tenue">Dylan, PR #180</span></li></ul></div>
         <div class="pie">
           <span class="quienes"><span class="avatar sm" style="--c:#36c7b8" aria-hidden="true">DM</span></span>
-          <span class="estado actual">En curso</span>
+          <span class="estado ok">✓ Cerrada</span>
         </div>
         <span class="mas">4 tareas</span>
       </button>
       <button class="hu" aria-expanded="false">
         <div class="cab"><span class="clave">HU-008</span><span class="pts"><b>8</b> pts</span></div>
         <div class="nombre">Consulta de reserva</div>
-        <div class="entrega">Servicio de consulta con filtros y paginación (#61) y endpoints <code>GET /reservations</code> y <code>GET /reservations/{id}</code> con pruebas e2e (#62), en <code>dev</code>. Pendiente la verificación cruzada de los criterios de aceptación.</div>
+        <div class="entrega">Consulta de reservas con filtros (fecha, estado, mesa) y paginación estable, y consulta por id con la mesa asignada; las canceladas y completadas siguen visibles.</div>
         <div class="detalle"><ul><li>#61 ReservationResponseDto y consultas findAll / findOne — <span class="tenue">Leonardo, PR #171</span></li><li>#62 GET /reservations y GET /reservations/{id} + Swagger + tests e2e — <span class="tenue">Leonardo, PR #173</span></li></ul></div>
         <div class="pie">
           <span class="quienes"><span class="avatar sm" style="--c:#3ddc97" aria-hidden="true">LA</span></span>
-          <span class="estado actual">En curso</span>
+          <span class="estado ok">✓ Cerrada</span>
         </div>
         <span class="mas">2 tareas</span>
       </button>
       <button class="hu" aria-expanded="false">
         <div class="cab"><span class="clave">HU-010</span><span class="pts"><b>8</b> pts</span></div>
         <div class="nombre">Cancelación</div>
-        <div class="entrega">Pendiente. Depende de la matriz de transiciones ya integrada; se trabaja hoy (#66, #67).</div>
-        <div class="detalle"><ul><li>#66 ReservationsService.cancel (estado, cancelledAt, liberación de disponibilidad)</li><li>#67 PATCH /reservations/{id}/cancel + Swagger + tests e2e</li></ul></div>
+        <div class="entrega"><code>PATCH /reservations/{id}/cancel</code>: conserva la reserva en el historial, registra la fecha de cancelación y libera el horario de la mesa; rechaza las ya canceladas, con check-in o en estado final.</div>
+        <div class="detalle"><ul><li>#66 ReservationsService.cancel (estado, cancelledAt, liberación de disponibilidad) — <span class="tenue">Dylan, PR #181</span></li><li>#67 PATCH /reservations/{id}/cancel + Swagger + tests e2e — <span class="tenue">Dylan, PR #182</span></li></ul></div>
         <div class="pie">
           <span class="quienes"><span class="avatar sm" style="--c:#3ddc97" aria-hidden="true">LA</span></span>
-          <span class="estado actual">En curso</span>
+          <span class="estado ok">✓ Cerrada</span>
         </div>
         <span class="mas">2 tareas</span>
       </button>
@@ -478,24 +478,24 @@ html.estatico .slide, html.estatico .pista i, html.estatico .apilada i, html.est
       <h3>Pull requests integrados</h3>
       <div class="barras" style="--serie:var(--teal)">
         
-          <button class="fila-barra" data-ir="6" data-tip="Dylan Suárez: 7 PRs integrados en dev">
+          <button class="fila-barra" data-ir="6" data-tip="Dylan Suárez: 13 PRs integrados en dev">
             <span class="quien"><span class="avatar sm" style="--c:#f5b942" aria-hidden="true">DS</span>Dylan</span>
             <span class="pista"><i data-w="100.0"></i></span>
-            <span class="valor">7</span>
+            <span class="valor">13</span>
           </button>
-          <button class="fila-barra" data-ir="7" data-tip="César Vega: 2 PRs integrados en dev">
+          <button class="fila-barra" data-ir="7" data-tip="César Vega: 4 PRs integrados en dev">
             <span class="quien"><span class="avatar sm" style="--c:#6ea8fe" aria-hidden="true">CV</span>César</span>
-            <span class="pista"><i data-w="28.6"></i></span>
-            <span class="valor">2</span>
+            <span class="pista"><i data-w="30.8"></i></span>
+            <span class="valor">4</span>
           </button>
           <button class="fila-barra" data-ir="8" data-tip="Dilant Murillo: 2 PRs integrados en dev">
             <span class="quien"><span class="avatar sm" style="--c:#36c7b8" aria-hidden="true">DM</span>Dilant</span>
-            <span class="pista"><i data-w="28.6"></i></span>
+            <span class="pista"><i data-w="15.4"></i></span>
             <span class="valor">2</span>
           </button>
           <button class="fila-barra" data-ir="9" data-tip="Leonardo Ayala: 2 PRs integrados en dev">
             <span class="quien"><span class="avatar sm" style="--c:#3ddc97" aria-hidden="true">LA</span>Leonardo</span>
-            <span class="pista"><i data-w="28.6"></i></span>
+            <span class="pista"><i data-w="15.4"></i></span>
             <span class="valor">2</span>
           </button>
       </div>
@@ -505,24 +505,24 @@ html.estatico .slide, html.estatico .pista i, html.estatico .apilada i, html.est
       <h3>Tareas resueltas</h3>
       <div class="barras" style="--serie:var(--info)">
         
-          <button class="fila-barra" data-ir="6" data-tip="Dylan Suárez: 8 tareas resueltas">
+          <button class="fila-barra" data-ir="6" data-tip="Dylan Suárez: 12 tareas resueltas">
             <span class="quien"><span class="avatar sm" style="--c:#f5b942" aria-hidden="true">DS</span>Dylan</span>
             <span class="pista"><i data-w="100.0"></i></span>
-            <span class="valor">8</span>
+            <span class="valor">12</span>
           </button>
-          <button class="fila-barra" data-ir="7" data-tip="César Vega: 2 tareas resueltas">
+          <button class="fila-barra" data-ir="7" data-tip="César Vega: 4 tareas resueltas">
             <span class="quien"><span class="avatar sm" style="--c:#6ea8fe" aria-hidden="true">CV</span>César</span>
-            <span class="pista"><i data-w="25.0"></i></span>
-            <span class="valor">2</span>
+            <span class="pista"><i data-w="33.3"></i></span>
+            <span class="valor">4</span>
           </button>
           <button class="fila-barra" data-ir="8" data-tip="Dilant Murillo: 2 tareas resueltas">
             <span class="quien"><span class="avatar sm" style="--c:#36c7b8" aria-hidden="true">DM</span>Dilant</span>
-            <span class="pista"><i data-w="25.0"></i></span>
+            <span class="pista"><i data-w="16.7"></i></span>
             <span class="valor">2</span>
           </button>
           <button class="fila-barra" data-ir="9" data-tip="Leonardo Ayala: 2 tareas resueltas">
             <span class="quien"><span class="avatar sm" style="--c:#3ddc97" aria-hidden="true">LA</span>Leonardo</span>
-            <span class="pista"><i data-w="25.0"></i></span>
+            <span class="pista"><i data-w="16.7"></i></span>
             <span class="valor">2</span>
           </button>
       </div>
@@ -532,20 +532,20 @@ html.estatico .slide, html.estatico .pista i, html.estatico .apilada i, html.est
       <h3>Revisiones de código</h3>
       <div class="barras" style="--serie:var(--ambar)">
         
-          <button class="fila-barra" data-ir="6" data-tip="Dylan Suárez: 7 revisiones — 7 aprobadas, 0 con cambios, 0 comentarios">
+          <button class="fila-barra" data-ir="6" data-tip="Dylan Suárez: 10 revisiones — 10 aprobadas, 0 con cambios, 0 comentarios">
             <span class="quien"><span class="avatar sm" style="--c:#f5b942" aria-hidden="true">DS</span>Dylan</span>
             <span class="pista"><i data-w="100.0"></i></span>
-            <span class="valor">7</span>
+            <span class="valor">10</span>
           </button>
           <button class="fila-barra" data-ir="7" data-tip="César Vega: 0 revisiones — 0 aprobadas, 0 con cambios, 0 comentarios">
             <span class="quien"><span class="avatar sm" style="--c:#6ea8fe" aria-hidden="true">CV</span>César</span>
             <span class="pista"><i data-w="0.0"></i></span>
             <span class="valor">0</span>
           </button>
-          <button class="fila-barra" data-ir="8" data-tip="Dilant Murillo: 0 revisiones — 0 aprobadas, 0 con cambios, 0 comentarios">
+          <button class="fila-barra" data-ir="8" data-tip="Dilant Murillo: 8 revisiones — 8 aprobadas, 0 con cambios, 0 comentarios">
             <span class="quien"><span class="avatar sm" style="--c:#36c7b8" aria-hidden="true">DM</span>Dilant</span>
-            <span class="pista"><i data-w="0.0"></i></span>
-            <span class="valor">0</span>
+            <span class="pista"><i data-w="80.0"></i></span>
+            <span class="valor">8</span>
           </button>
           <button class="fila-barra" data-ir="9" data-tip="Leonardo Ayala: 0 revisiones — 0 aprobadas, 0 con cambios, 0 comentarios">
             <span class="quien"><span class="avatar sm" style="--c:#3ddc97" aria-hidden="true">LA</span>Leonardo</span>
@@ -564,15 +564,15 @@ html.estatico .slide, html.estatico .pista i, html.estatico .apilada i, html.est
     <div class="persona r">
       <div>
         <div class="stats">
-          <div class="stat"><b data-contar="7">7</b><span>PRs integrados</span></div>
-          <div class="stat"><b data-contar="8">8</b><span>tareas resueltas</span></div>
-          <div class="stat" data-tip="7 aprobadas · 0 con cambios solicitados · 0 comentarios" tabindex="0"><b data-contar="7">7</b><span>revisiones hechas</span></div>
+          <div class="stat"><b data-contar="13">13</b><span>PRs integrados</span></div>
+          <div class="stat"><b data-contar="12">12</b><span>tareas resueltas</span></div>
+          <div class="stat" data-tip="10 aprobadas · 0 con cambios solicitados · 0 comentarios" tabindex="0"><b data-contar="10">10</b><span>revisiones hechas</span></div>
         </div>
-        <div class="panel"><h3>Aporte destacado</h3><ul><li><strong>HU-014 y HU-015</strong> completas: modelo de usuarios, contraseñas con scrypt, registro, login con JWT y guard global (PRs #166 y #167).</li><li>Decisiones de negocio documentadas en <code>docs/decisiones.md</code>: regla de conflicto horario de reservas (D-001) y modelo de usuarios (D-002) (#161).</li><li>Adelanto del Sprint 3: <code>RolesGuard</code> con <code>@Roles</code> y seed del primer ADMIN (#168), y recuperación de contraseña con token de un solo uso (#169).</li><li>Replanificación tras el cambio de equipo: actualización de equipo, sprints y Working Agreement (#165).</li><li>Revisión de los PRs #163, #164 y #170 a #173; en los de esta semana se hicieron ajustes menores directamente en las ramas (Swagger, nombres, orden estable del listado) y se coordinó la integración entre ramas.</li></ul></div>
+        <div class="panel"><h3>Aporte destacado</h3><ul><li><strong>HU-014 y HU-015</strong> completas: modelo de usuarios, contraseñas con scrypt, registro, login con JWT y guard global (#166, #167).</li><li>Registro y cancelación de reservas (#179 a #182): las cuatro tareas que no tenían PR al vencer el plazo del domingo, para cerrar HU-007 y HU-010.</li><li>Decisiones D-001, D-002 y D-003 en <code>docs/decisiones.md</code>, y replanificación del proyecto tras el cambio de equipo (#161, #165, #176).</li><li>Adelanto del Sprint 3: <code>RolesGuard</code> con <code>@Roles</code>, seed del primer ADMIN (#168) y recuperación de contraseña (#169).</li><li>Revisión de los PRs del equipo (#163, #164, #170 a #173, #177, #178), con ajustes en las ramas y pruebas añadidas antes de integrar; release v0.2.0.</li></ul></div>
       </div>
       <div class="panel">
-        <h3>Pull requests integrados <span class="tenue">(7)</span></h3>
-        <ul class="lista-prs"><li><a href="https://github.com/DylanSrz/ZeroBug/pull/161" target="_blank" rel="noopener" data-tip="PR #161: feat: regla de conflicto horario y parámetros de reservas — 7 oct 2026 09:52 · +97 / −0 líneas"><span class="n">#161</span><span class="tipo">función</span><span class="txt">Definir regla de conflicto horario y parámetros de negocio de reservas</span></a></li><li><a href="https://github.com/DylanSrz/ZeroBug/pull/165" target="_blank" rel="noopener" data-tip="PR #165: docs: actualizar equipo, sprints y Working Agreement — 7 oct 2026 21:52 · +88 / −47 líneas"><span class="n">#165</span><span class="tipo">docs</span><span class="txt">Actualizar equipo, sprints y Working Agreement</span></a></li><li><a href="https://github.com/DylanSrz/ZeroBug/pull/166" target="_blank" rel="noopener" data-tip="PR #166: feat: modelo de usuarios, contraseñas con scrypt y validadores (HU-014) — 7 oct 2026 21:54 · +708 / −0 líneas"><span class="n">#166</span><span class="tipo">función</span><span class="txt">Diseño del modelo de usuarios (users / customers / employees / roles) · Entidades User (+ Customer), enum UserStatus y migración · RegisterDto, política de contraseñas y hashing (bcrypt/argon2)</span></a></li><li><a href="https://github.com/DylanSrz/ZeroBug/pull/167" target="_blank" rel="noopener" data-tip="PR #167: feat: registro, login con JWT y guard global (HU-014, HU-015) — 7 oct 2026 21:59 · +1.152 / −16 líneas"><span class="n">#167</span><span class="tipo">función</span><span class="txt">AuthModule.register + POST /auth/register + Swagger + tests e2e · Configuración JWT (JwtModule, JWT_SECRET, JWT_EXPIRES_IN) y variables de entorno · AuthService.login + LoginDto + POST /auth/login · JwtStrategy, JwtAuthGuard, decorador @CurrentUser y @Public</span></a></li><li><a href="https://github.com/DylanSrz/ZeroBug/pull/168" target="_blank" rel="noopener" data-tip="PR #168: feat: RolesGuard con @Roles y seed del primer ADMIN (HU-017) — 7 oct 2026 22:21 · +361 / −14 líneas"><span class="n">#168</span><span class="tipo">función</span><span class="txt">RolesGuard con @Roles y seed del primer ADMIN (HU-017)</span></a></li><li><a href="https://github.com/DylanSrz/ZeroBug/pull/169" target="_blank" rel="noopener" data-tip="PR #169: feat: recuperación de contraseña con token de un solo uso (HU-018) — 7 oct 2026 22:27 · +849 / −6 líneas"><span class="n">#169</span><span class="tipo">función</span><span class="txt">Recuperación de contraseña con token de un solo uso (HU-018)</span></a></li><li><a href="https://github.com/DylanSrz/ZeroBug/pull/174" target="_blank" rel="noopener" data-tip="PR #174: fix: documentar el DTO de disponibilidad en Swagger y ordenar el spec — 9 oct 2026 10:48 · +11 / −1 líneas"><span class="n">#174</span><span class="tipo">corrección</span><span class="txt">Documentar el DTO de disponibilidad en Swagger y ordenar el spec</span></a></li></ul>
+        <h3>Pull requests integrados <span class="tenue">(13)</span></h3>
+        <ul class="lista-prs"><li><a href="https://github.com/DylanSrz/ZeroBug/pull/161" target="_blank" rel="noopener" data-tip="PR #161: feat: regla de conflicto horario y parámetros de reservas — 7 oct 2026 09:52 · +97 / −0 líneas"><span class="n">#161</span><span class="tipo">función</span><span class="txt">Definir regla de conflicto horario y parámetros de negocio de reservas</span></a></li><li><a href="https://github.com/DylanSrz/ZeroBug/pull/165" target="_blank" rel="noopener" data-tip="PR #165: docs: actualizar equipo, sprints y Working Agreement — 7 oct 2026 21:52 · +88 / −47 líneas"><span class="n">#165</span><span class="tipo">docs</span><span class="txt">Actualizar equipo, sprints y Working Agreement</span></a></li><li><a href="https://github.com/DylanSrz/ZeroBug/pull/166" target="_blank" rel="noopener" data-tip="PR #166: feat: modelo de usuarios, contraseñas con scrypt y validadores (HU-014) — 7 oct 2026 21:54 · +708 / −0 líneas"><span class="n">#166</span><span class="tipo">función</span><span class="txt">Diseño del modelo de usuarios (users / customers / employees / roles) · Entidades User (+ Customer), enum UserStatus y migración · RegisterDto, política de contraseñas y hashing (bcrypt/argon2)</span></a></li><li><a href="https://github.com/DylanSrz/ZeroBug/pull/167" target="_blank" rel="noopener" data-tip="PR #167: feat: registro, login con JWT y guard global (HU-014, HU-015) — 7 oct 2026 21:59 · +1.152 / −16 líneas"><span class="n">#167</span><span class="tipo">función</span><span class="txt">AuthModule.register + POST /auth/register + Swagger + tests e2e · Configuración JWT (JwtModule, JWT_SECRET, JWT_EXPIRES_IN) y variables de entorno · AuthService.login + LoginDto + POST /auth/login · JwtStrategy, JwtAuthGuard, decorador @CurrentUser y @Public</span></a></li><li><a href="https://github.com/DylanSrz/ZeroBug/pull/168" target="_blank" rel="noopener" data-tip="PR #168: feat: RolesGuard con @Roles y seed del primer ADMIN (HU-017) — 7 oct 2026 22:21 · +361 / −14 líneas"><span class="n">#168</span><span class="tipo">función</span><span class="txt">RolesGuard con @Roles y seed del primer ADMIN (HU-017)</span></a></li><li><a href="https://github.com/DylanSrz/ZeroBug/pull/169" target="_blank" rel="noopener" data-tip="PR #169: feat: recuperación de contraseña con token de un solo uso (HU-018) — 7 oct 2026 22:27 · +849 / −6 líneas"><span class="n">#169</span><span class="tipo">función</span><span class="txt">Recuperación de contraseña con token de un solo uso (HU-018)</span></a></li><li><a href="https://github.com/DylanSrz/ZeroBug/pull/174" target="_blank" rel="noopener" data-tip="PR #174: fix: documentar el DTO de disponibilidad en Swagger y ordenar el spec — 9 oct 2026 10:48 · +11 / −1 líneas"><span class="n">#174</span><span class="tipo">corrección</span><span class="txt">Documentar el DTO de disponibilidad en Swagger y ordenar el spec</span></a></li><li><a href="https://github.com/DylanSrz/ZeroBug/pull/175" target="_blank" rel="noopener" data-tip="PR #175: docs: informe del Sprint 2 — 9 oct 2026 11:38 · +2.345 / −0 líneas"><span class="n">#175</span><span class="tipo">docs</span><span class="txt">Informe del Sprint 2</span></a></li><li><a href="https://github.com/DylanSrz/ZeroBug/pull/176" target="_blank" rel="noopener" data-tip="PR #176: docs: D-003 mesas que cuentan para la disponibilidad — 9 oct 2026 13:52 · +21 / −0 líneas"><span class="n">#176</span><span class="tipo">docs</span><span class="txt">D-003 mesas que cuentan para la disponibilidad</span></a></li><li><a href="https://github.com/DylanSrz/ZeroBug/pull/179" target="_blank" rel="noopener" data-tip="PR #179: feat: registro de reserva con asignación automática de mesa (HU-007) — 12 oct 2026 22:01 · +179 / −2 líneas"><span class="n">#179</span><span class="tipo">función</span><span class="txt">ReservationsService.create con asignación automática de mesa (transaccional)</span></a></li><li><a href="https://github.com/DylanSrz/ZeroBug/pull/180" target="_blank" rel="noopener" data-tip="PR #180: feat: endpoint POST /reservations (HU-007) — 12 oct 2026 22:11 · +181 / −1 líneas"><span class="n">#180</span><span class="tipo">función</span><span class="txt">POST /reservations + Swagger + tests e2e</span></a></li><li><a href="https://github.com/DylanSrz/ZeroBug/pull/181" target="_blank" rel="noopener" data-tip="PR #181: feat: cancelación de reserva (HU-010) — 12 oct 2026 22:36 · +153 / −1 líneas"><span class="n">#181</span><span class="tipo">función</span><span class="txt">ReservationsService.cancel (estado, cancelledAt, liberación de disponibilidad)</span></a></li><li><a href="https://github.com/DylanSrz/ZeroBug/pull/182" target="_blank" rel="noopener" data-tip="PR #182: feat: endpoint PATCH /reservations/{id}/cancel (HU-010) — 12 oct 2026 22:40 · +187 / −0 líneas"><span class="n">#182</span><span class="tipo">función</span><span class="txt">PATCH /reservations/{id}/cancel + Swagger + tests e2e</span></a></li></ul>
       </div>
     </div></div></section>
 <section class="slide " data-titulo="César Vega" data-seccion="Equipo" aria-label="7. César Vega"><div class="inner">
@@ -583,15 +583,15 @@ html.estatico .slide, html.estatico .pista i, html.estatico .apilada i, html.est
     <div class="persona r">
       <div>
         <div class="stats">
-          <div class="stat"><b data-contar="2">2</b><span>PRs integrados</span></div>
-          <div class="stat"><b data-contar="2">2</b><span>tareas resueltas</span></div>
+          <div class="stat"><b data-contar="4">4</b><span>PRs integrados</span></div>
+          <div class="stat"><b data-contar="4">4</b><span>tareas resueltas</span></div>
           <div class="stat" data-tip="0 aprobadas · 0 con cambios solicitados · 0 comentarios" tabindex="0"><b data-contar="0">0</b><span>revisiones hechas</span></div>
         </div>
-        <div class="panel"><h3>Aporte destacado</h3><ul><li><strong>Entidad <code>Reservation</code></strong>, migración y módulo de reservas (#163), base de todas las historias de reservas.</li><li>PR #170 integrado: <code>AvailabilityQueryDto</code> y validador <code>@IsFutureDateTime</code>, que compara fecha y hora en la zona horaria del restaurante y no en la del servidor; incluye pruebas unitarias.</li><li>En curso hoy: servicio de disponibilidad, endpoint público y pruebas e2e (#55, #56).</li></ul></div>
+        <div class="panel"><h3>Aporte destacado</h3><ul><li><strong>HU-006 Disponibilidad</strong> completa: entidad <code>Reservation</code> y migración (#163), DTO con validador de fecha futura en la zona horaria del restaurante (#170), consulta de mesas libres y endpoint público (#177) y suite e2e (#178).</li><li>La consulta de disponibilidad acepta el <code>manager</code> de una transacción, lo que permitió reutilizarla en el registro de reservas (HU-007).</li></ul></div>
       </div>
       <div class="panel">
-        <h3>Pull requests integrados <span class="tenue">(2)</span></h3>
-        <ul class="lista-prs"><li><a href="https://github.com/DylanSrz/ZeroBug/pull/163" target="_blank" rel="noopener" data-tip="PR #163: feat(reservations): add Reservation entity, migration and module — 7 oct 2026 21:46 · +179 / −0 líneas"><span class="n">#163</span><span class="tipo">función</span><span class="txt">Entidad Reservation, enum ReservationStatus y migración</span></a></li><li><a href="https://github.com/DylanSrz/ZeroBug/pull/170" target="_blank" rel="noopener" data-tip="PR #170: Feature/hu 006 dto disponibilidad — 9 oct 2026 10:30 · +136 / −0 líneas"><span class="n">#170</span><span class="tipo">cambio</span><span class="txt">AvailabilityQueryDto y validaciones (fecha/hora futuras, guests &gt; 0)</span></a></li></ul>
+        <h3>Pull requests integrados <span class="tenue">(4)</span></h3>
+        <ul class="lista-prs"><li><a href="https://github.com/DylanSrz/ZeroBug/pull/163" target="_blank" rel="noopener" data-tip="PR #163: feat(reservations): add Reservation entity, migration and module — 7 oct 2026 21:46 · +179 / −0 líneas"><span class="n">#163</span><span class="tipo">función</span><span class="txt">Entidad Reservation, enum ReservationStatus y migración</span></a></li><li><a href="https://github.com/DylanSrz/ZeroBug/pull/170" target="_blank" rel="noopener" data-tip="PR #170: Feature/hu 006 dto disponibilidad — 9 oct 2026 10:30 · +136 / −0 líneas"><span class="n">#170</span><span class="tipo">cambio</span><span class="txt">AvailabilityQueryDto y validaciones (fecha/hora futuras, guests &gt; 0)</span></a></li><li><a href="https://github.com/DylanSrz/ZeroBug/pull/177" target="_blank" rel="noopener" data-tip="PR #177: feat: consulta de disponibilidad de mesas (HU-006) — 10 oct 2026 21:26 · +230 / −1 líneas"><span class="n">#177</span><span class="tipo">función</span><span class="txt">ReservationsService.findAvailableTables + GET /reservations/availability + Swagger</span></a></li><li><a href="https://github.com/DylanSrz/ZeroBug/pull/178" target="_blank" rel="noopener" data-tip="PR #178: test: e2e de disponibilidad de mesas (HU-006) — 10 oct 2026 21:29 · +223 / −0 líneas"><span class="n">#178</span><span class="tipo">pruebas</span><span class="txt">Tests e2e de disponibilidad</span></a></li></ul>
       </div>
     </div></div></section>
 <section class="slide " data-titulo="Dilant Murillo" data-seccion="Equipo" aria-label="8. Dilant Murillo"><div class="inner">
@@ -604,9 +604,9 @@ html.estatico .slide, html.estatico .pista i, html.estatico .apilada i, html.est
         <div class="stats">
           <div class="stat"><b data-contar="2">2</b><span>PRs integrados</span></div>
           <div class="stat"><b data-contar="2">2</b><span>tareas resueltas</span></div>
-          <div class="stat" data-tip="0 aprobadas · 0 con cambios solicitados · 0 comentarios" tabindex="0"><b data-contar="0">0</b><span>revisiones hechas</span></div>
+          <div class="stat" data-tip="8 aprobadas · 0 con cambios solicitados · 0 comentarios" tabindex="0"><b data-contar="8">8</b><span>revisiones hechas</span></div>
         </div>
-        <div class="panel"><h3>Aporte destacado</h3><ul><li><strong>Enum de estados y matriz de transiciones</strong> de reserva, con pruebas unitarias, unificado con el enum de la entidad (#164).</li><li>PR #172 integrado: <code>CreateReservationDto</code> con validaciones y documentación Swagger, reutilizando <code>@IsFutureDateTime</code>; incluye pruebas unitarias.</li><li>En curso hoy: creación de reserva con asignación automática de mesa y endpoint <code>POST /reservations</code> (#59, #60).</li></ul></div>
+        <div class="panel"><h3>Aporte destacado</h3><ul><li><strong>Enum de estados y matriz de transiciones</strong> de reserva con pruebas unitarias (#164), base de la cancelación y del ciclo de vida del Sprint 3.</li><li><code>CreateReservationDto</code> con validaciones y Swagger (#172).</li><li>Revisión, aprobación e integración de los PRs de registro y cancelación (#179 a #182), del release (#183) y de la decisión D-003 (#176).</li></ul></div>
       </div>
       <div class="panel">
         <h3>Pull requests integrados <span class="tenue">(2)</span></h3>
@@ -625,7 +625,7 @@ html.estatico .slide, html.estatico .pista i, html.estatico .apilada i, html.est
           <div class="stat"><b data-contar="2">2</b><span>tareas resueltas</span></div>
           <div class="stat" data-tip="0 aprobadas · 0 con cambios solicitados · 0 comentarios" tabindex="0"><b data-contar="0">0</b><span>revisiones hechas</span></div>
         </div>
-        <div class="panel"><h3>Aporte destacado</h3><ul><li>PR #171 integrado: consulta de reservas con filtros y paginación, <code>findOne</code> con respuesta de mesa anidada y pruebas unitarias.</li><li>PR #173 integrado: endpoints <code>GET /reservations</code> y <code>GET /reservations/{id}</code> protegidos con token, Swagger y suite e2e.</li><li>En curso hoy: cancelación de reserva, servicio y endpoint (#66, #67).</li></ul></div>
+        <div class="panel"><h3>Aporte destacado</h3><ul><li><strong>HU-008 Consulta de reserva</strong> completa: servicio con filtros y paginación (#171) y endpoints <code>GET /reservations</code> y <code>GET /reservations/{id}</code> con pruebas e2e (#173).</li><li><code>ReservationResponseDto</code> con la mesa anidada, reutilizado por el registro y la cancelación de reservas.</li></ul></div>
       </div>
       <div class="panel">
         <h3>Pull requests integrados <span class="tenue">(2)</span></h3>
@@ -635,8 +635,8 @@ html.estatico .slide, html.estatico .pista i, html.estatico .apilada i, html.est
 <section class="slide " data-titulo="Línea de tiempo" data-seccion="Equipo" aria-label="10. Línea de tiempo"><div class="inner">
   <p class="kicker r">05 · Línea de tiempo</p>
   <h2 class="r">Qué entró en <code style="font-size:.85em">dev</code> cada día <span class="tenue" style="font-size:.55em;font-weight:500">· clic en un nombre para filtrar</span></h2>
-  <div class="tl-leyenda r"><button data-autor="DylanSrz" aria-pressed="false"><span class="avatar sm" style="--c:#f5b942" aria-hidden="true">DS</span>Dylan <span class="tenue">7</span></button><button data-autor="cesarvega1" aria-pressed="false"><span class="avatar sm" style="--c:#6ea8fe" aria-hidden="true">CV</span>César <span class="tenue">2</span></button><button data-autor="MrDilant" aria-pressed="false"><span class="avatar sm" style="--c:#36c7b8" aria-hidden="true">DM</span>Dilant <span class="tenue">2</span></button><button data-autor="leonardo-200224" aria-pressed="false"><span class="avatar sm" style="--c:#3ddc97" aria-hidden="true">LA</span>Leonardo <span class="tenue">2</span></button></div>
-  <div class="timeline r" style="--dias:5">
+  <div class="tl-leyenda r"><button data-autor="DylanSrz" aria-pressed="false"><span class="avatar sm" style="--c:#f5b942" aria-hidden="true">DS</span>Dylan <span class="tenue">13</span></button><button data-autor="cesarvega1" aria-pressed="false"><span class="avatar sm" style="--c:#6ea8fe" aria-hidden="true">CV</span>César <span class="tenue">4</span></button><button data-autor="MrDilant" aria-pressed="false"><span class="avatar sm" style="--c:#36c7b8" aria-hidden="true">DM</span>Dilant <span class="tenue">2</span></button><button data-autor="leonardo-200224" aria-pressed="false"><span class="avatar sm" style="--c:#3ddc97" aria-hidden="true">LA</span>Leonardo <span class="tenue">2</span></button></div>
+  <div class="timeline r" style="--dias:8">
     <div class="dia vacio">
         <div class="fecha">lun<b>5</b>oct</div>
         
@@ -655,57 +655,69 @@ html.estatico .slide, html.estatico .pista i, html.estatico .apilada i, html.est
         <span class="tenue" style="font-size:11px;text-align:center">—</span>
       </div><div class="dia">
         <div class="fecha">vie<b>9</b>oct</div>
-        <a class="pr-pill" style="--c:#6ea8fe" data-autor="cesarvega1" href="https://github.com/DylanSrz/ZeroBug/pull/170" target="_blank" rel="noopener" data-tip="#170 AvailabilityQueryDto y validaciones (fecha/hora futuras, guests &gt; 0) — César Vega, 10:30"><span class="ini">CV</span><span class="num">#170</span></a><a class="pr-pill" style="--c:#f5b942" data-autor="DylanSrz" href="https://github.com/DylanSrz/ZeroBug/pull/174" target="_blank" rel="noopener" data-tip="#174 Documentar el DTO de disponibilidad en Swagger y ordenar el spec — Dylan Suárez, 10:48"><span class="ini">DS</span><span class="num">#174</span></a><a class="pr-pill" style="--c:#36c7b8" data-autor="MrDilant" href="https://github.com/DylanSrz/ZeroBug/pull/172" target="_blank" rel="noopener" data-tip="#172 CreateReservationDto y validaciones — Dilant Murillo, 10:51"><span class="ini">DM</span><span class="num">#172</span></a><a class="pr-pill" style="--c:#3ddc97" data-autor="leonardo-200224" href="https://github.com/DylanSrz/ZeroBug/pull/171" target="_blank" rel="noopener" data-tip="#171 ReservationResponseDto y consultas findAll / findOne — Leonardo Ayala, 10:58"><span class="ini">LA</span><span class="num">#171</span></a><a class="pr-pill" style="--c:#3ddc97" data-autor="leonardo-200224" href="https://github.com/DylanSrz/ZeroBug/pull/173" target="_blank" rel="noopener" data-tip="#173 GET /reservations y GET /reservations/{id} + Swagger + tests e2e — Leonardo Ayala, 10:59"><span class="ini">LA</span><span class="num">#173</span></a>
+        <a class="pr-pill" style="--c:#6ea8fe" data-autor="cesarvega1" href="https://github.com/DylanSrz/ZeroBug/pull/170" target="_blank" rel="noopener" data-tip="#170 AvailabilityQueryDto y validaciones (fecha/hora futuras, guests &gt; 0) — César Vega, 10:30"><span class="ini">CV</span><span class="num">#170</span></a><a class="pr-pill" style="--c:#f5b942" data-autor="DylanSrz" href="https://github.com/DylanSrz/ZeroBug/pull/174" target="_blank" rel="noopener" data-tip="#174 Documentar el DTO de disponibilidad en Swagger y ordenar el spec — Dylan Suárez, 10:48"><span class="ini">DS</span><span class="num">#174</span></a><a class="pr-pill" style="--c:#36c7b8" data-autor="MrDilant" href="https://github.com/DylanSrz/ZeroBug/pull/172" target="_blank" rel="noopener" data-tip="#172 CreateReservationDto y validaciones — Dilant Murillo, 10:51"><span class="ini">DM</span><span class="num">#172</span></a><a class="pr-pill" style="--c:#3ddc97" data-autor="leonardo-200224" href="https://github.com/DylanSrz/ZeroBug/pull/171" target="_blank" rel="noopener" data-tip="#171 ReservationResponseDto y consultas findAll / findOne — Leonardo Ayala, 10:58"><span class="ini">LA</span><span class="num">#171</span></a><a class="pr-pill" style="--c:#3ddc97" data-autor="leonardo-200224" href="https://github.com/DylanSrz/ZeroBug/pull/173" target="_blank" rel="noopener" data-tip="#173 GET /reservations y GET /reservations/{id} + Swagger + tests e2e — Leonardo Ayala, 10:59"><span class="ini">LA</span><span class="num">#173</span></a><a class="pr-pill" style="--c:#f5b942" data-autor="DylanSrz" href="https://github.com/DylanSrz/ZeroBug/pull/175" target="_blank" rel="noopener" data-tip="#175 Informe del Sprint 2 — Dylan Suárez, 11:38"><span class="ini">DS</span><span class="num">#175</span></a><a class="pr-pill" style="--c:#f5b942" data-autor="DylanSrz" href="https://github.com/DylanSrz/ZeroBug/pull/176" target="_blank" rel="noopener" data-tip="#176 D-003 mesas que cuentan para la disponibilidad — Dylan Suárez, 13:52"><span class="ini">DS</span><span class="num">#176</span></a>
+        
+      </div><div class="dia">
+        <div class="fecha">sáb<b>10</b>oct</div>
+        <a class="pr-pill" style="--c:#6ea8fe" data-autor="cesarvega1" href="https://github.com/DylanSrz/ZeroBug/pull/177" target="_blank" rel="noopener" data-tip="#177 ReservationsService.findAvailableTables + GET /reservations/availability + Swagger — César Vega, 21:26"><span class="ini">CV</span><span class="num">#177</span></a><a class="pr-pill" style="--c:#6ea8fe" data-autor="cesarvega1" href="https://github.com/DylanSrz/ZeroBug/pull/178" target="_blank" rel="noopener" data-tip="#178 Tests e2e de disponibilidad — César Vega, 21:29"><span class="ini">CV</span><span class="num">#178</span></a>
+        
+      </div><div class="dia vacio">
+        <div class="fecha">dom<b>11</b>oct</div>
+        
+        <span class="tenue" style="font-size:11px;text-align:center">—</span>
+      </div><div class="dia">
+        <div class="fecha">lun<b>12</b>oct</div>
+        <a class="pr-pill" style="--c:#f5b942" data-autor="DylanSrz" href="https://github.com/DylanSrz/ZeroBug/pull/179" target="_blank" rel="noopener" data-tip="#179 ReservationsService.create con asignación automática de mesa (transaccional) — Dylan Suárez, 22:01"><span class="ini">DS</span><span class="num">#179</span></a><a class="pr-pill" style="--c:#f5b942" data-autor="DylanSrz" href="https://github.com/DylanSrz/ZeroBug/pull/180" target="_blank" rel="noopener" data-tip="#180 POST /reservations + Swagger + tests e2e — Dylan Suárez, 22:11"><span class="ini">DS</span><span class="num">#180</span></a><a class="pr-pill" style="--c:#f5b942" data-autor="DylanSrz" href="https://github.com/DylanSrz/ZeroBug/pull/181" target="_blank" rel="noopener" data-tip="#181 ReservationsService.cancel (estado, cancelledAt, liberación de disponibilidad) — Dylan Suárez, 22:36"><span class="ini">DS</span><span class="num">#181</span></a><a class="pr-pill" style="--c:#f5b942" data-autor="DylanSrz" href="https://github.com/DylanSrz/ZeroBug/pull/182" target="_blank" rel="noopener" data-tip="#182 PATCH /reservations/{id}/cancel + Swagger + tests e2e — Dylan Suárez, 22:40"><span class="ini">DS</span><span class="num">#182</span></a>
         
       </div>
   </div></div></section>
 <section class="slide " data-titulo="Calidad" data-seccion="Calidad" aria-label="11. Calidad"><div class="inner">
   <p class="kicker r">06 · Calidad</p>
-  <h2 class="r">423 pruebas automáticas y CI obligatorio</h2>
+  <h2 class="r">475 pruebas automáticas y CI obligatorio</h2>
   <div class="grid c2 r">
     <div class="panel">
       <h3>Pruebas por módulo</h3>
       <div class="leyenda"><span><i style="background:var(--teal)"></i>Unitarias</span><span><i style="background:var(--ambar)"></i>End-to-end (PostgreSQL real)</span></div>
       <div class="barras">
         
-          <div class="fila-test" data-tip="Reservas: 76 unitarias + 0 e2e · 2 endpoints">
+          <div class="fila-test" data-tip="Reservas: 94 unitarias + 44 e2e · 5 endpoints">
             <span class="mod">Reservas</span>
-            <span class="apilada"><i style="background:var(--teal)" data-w="100.0"></i><i style="background:var(--ambar)" data-w="0.0"></i></span>
-            <span class="cifras"><b>76</b> <span class="tenue">(76 + 0)</span></span>
+            <span class="apilada"><i style="background:var(--teal)" data-w="68.1"></i><i style="background:var(--ambar)" data-w="31.9"></i></span>
+            <span class="cifras"><b>138</b> <span class="tenue">(94 + 44)</span></span>
           </div>
-          <div class="fila-test" data-tip="Autenticación: 41 unitarias + 30 e2e · 4 endpoints">
+          <div class="fila-test" data-tip="Autenticación: 41 unitarias + 50 e2e · 4 endpoints">
             <span class="mod">Autenticación</span>
-            <span class="apilada"><i style="background:var(--teal)" data-w="53.9"></i><i style="background:var(--ambar)" data-w="39.5"></i></span>
-            <span class="cifras"><b>71</b> <span class="tenue">(41 + 30)</span></span>
-          </div>
-          <div class="fila-test" data-tip="Plataforma: 26 unitarias + 43 e2e">
-            <span class="mod">Plataforma</span>
-            <span class="apilada"><i style="background:var(--teal)" data-w="34.2"></i><i style="background:var(--ambar)" data-w="56.6"></i></span>
-            <span class="cifras"><b>69</b> <span class="tenue">(26 + 43)</span></span>
+            <span class="apilada"><i style="background:var(--teal)" data-w="29.7"></i><i style="background:var(--ambar)" data-w="36.2"></i></span>
+            <span class="cifras"><b>91</b> <span class="tenue">(41 + 50)</span></span>
           </div>
           <div class="fila-test" data-tip="Mesas: 29 unitarias + 31 e2e · 5 endpoints">
             <span class="mod">Mesas</span>
-            <span class="apilada"><i style="background:var(--teal)" data-w="38.2"></i><i style="background:var(--ambar)" data-w="40.8"></i></span>
+            <span class="apilada"><i style="background:var(--teal)" data-w="21.0"></i><i style="background:var(--ambar)" data-w="22.5"></i></span>
             <span class="cifras"><b>60</b> <span class="tenue">(29 + 31)</span></span>
           </div>
           <div class="fila-test" data-tip="Categorías: 28 unitarias + 27 e2e · 5 endpoints">
             <span class="mod">Categorías</span>
-            <span class="apilada"><i style="background:var(--teal)" data-w="36.8"></i><i style="background:var(--ambar)" data-w="35.5"></i></span>
+            <span class="apilada"><i style="background:var(--teal)" data-w="20.3"></i><i style="background:var(--ambar)" data-w="19.6"></i></span>
             <span class="cifras"><b>55</b> <span class="tenue">(28 + 27)</span></span>
           </div>
           <div class="fila-test" data-tip="Productos: 32 unitarias + 20 e2e · 6 endpoints">
             <span class="mod">Productos</span>
-            <span class="apilada"><i style="background:var(--teal)" data-w="42.1"></i><i style="background:var(--ambar)" data-w="26.3"></i></span>
+            <span class="apilada"><i style="background:var(--teal)" data-w="23.2"></i><i style="background:var(--ambar)" data-w="14.5"></i></span>
             <span class="cifras"><b>52</b> <span class="tenue">(32 + 20)</span></span>
+          </div>
+          <div class="fila-test" data-tip="Plataforma: 26 unitarias + 13 e2e">
+            <span class="mod">Plataforma</span>
+            <span class="apilada"><i style="background:var(--teal)" data-w="18.8"></i><i style="background:var(--ambar)" data-w="9.4"></i></span>
+            <span class="cifras"><b>39</b> <span class="tenue">(26 + 13)</span></span>
           </div>
           <div class="fila-test" data-tip="Menú público: 10 unitarias + 16 e2e · 4 endpoints">
             <span class="mod">Menú público</span>
-            <span class="apilada"><i style="background:var(--teal)" data-w="13.2"></i><i style="background:var(--ambar)" data-w="21.1"></i></span>
+            <span class="apilada"><i style="background:var(--teal)" data-w="7.2"></i><i style="background:var(--ambar)" data-w="11.6"></i></span>
             <span class="cifras"><b>26</b> <span class="tenue">(10 + 16)</span></span>
           </div>
           <div class="fila-test" data-tip="Usuarios: 14 unitarias + 0 e2e">
             <span class="mod">Usuarios</span>
-            <span class="apilada"><i style="background:var(--teal)" data-w="18.4"></i><i style="background:var(--ambar)" data-w="0.0"></i></span>
+            <span class="apilada"><i style="background:var(--teal)" data-w="10.1"></i><i style="background:var(--ambar)" data-w="0.0"></i></span>
             <span class="cifras"><b>14</b> <span class="tenue">(14 + 0)</span></span>
           </div>
       </div>
@@ -717,27 +729,27 @@ html.estatico .slide, html.estatico .pista i, html.estatico .apilada i, html.est
   <h2 class="r">Qué aprendimos</h2>
   <div class="grid c3 retro r">
     <div class="panel"><h3><span class="marca m-ok">✓</span>Mantener</h3><ul><li>CI obligatorio y e2e contra PostgreSQL real.</li><li>Documentar las decisiones de negocio antes de implementarlas (D-001, D-002).</li><li>PRs pequeños, uno por tarea, con la sección &quot;Cómo probar&quot;.</li><li>Verificar el estado combinado de las ramas antes de integrar.</li></ul></div>
-    <div class="panel"><h3><span class="marca m-mejora">↻</span>Mejorar</h3><ul><li>Abrir los PRs antes: con sprints de una semana, la revisión del último día no deja margen.</li><li>Revisión entre pares más pronta: cuatro PRs llegaron al viernes sin revisión.</li><li>Coordinar quién implementa lo compartido (búsqueda de mesas libres) para no duplicar trabajo.</li><li>Revisar que el PR enlace bien su issue (<code>Closes #N</code>) y tenga un título descriptivo.</li></ul></div>
-    <div class="panel"><h3><span class="marca m-accion">→</span>Acciones</h3><ul><li>Hoy mismo cerrar las tareas de reservas pendientes: trabajo 13:00 a 20:30, revisión y merges 21:30 <span class="tenue">— Todo el equipo</span></li><li>Un PR no espera revisión más de medio día hábil; avisar bloqueos en la Daily <span class="tenue">— Todo el equipo</span></li><li>Celebrar la retrospectiva formal tras la revisión de esta noche y registrar el acta en <code>docs/retros/sprint-2.md</code> <span class="tenue">— Dylan Suárez</span></li><li>Tras el release, comprobar que <code>dev</code> sigue existiendo y sincronizarla con <code>main</code> <span class="tenue">— Dylan Suárez</span></li></ul></div>
+    <div class="panel"><h3><span class="marca m-mejora">↻</span>Mejorar</h3><ul><li>Abrir el PR en cuanto la tarea está lista: con sprints de una semana, acumularlos para el último día no deja margen de revisión.</li><li>Avisar en la daily cuando una tarea no va a llegar, antes de que venza el plazo.</li><li>Revisiones más repartidas: la mayoría las hicieron dos personas.</li><li>Revisar que el PR enlace bien su issue (<code>Closes #N</code>) y tenga un título descriptivo.</li></ul></div>
+    <div class="panel"><h3><span class="marca m-accion">→</span>Acciones</h3><ul><li>Daily escrita todos los días hábiles en el canal 📅 dailys, con bloqueos y lo que falta <span class="tenue">— Todo el equipo</span></li><li>Un PR no espera revisión más de medio día hábil; cada integrante revisa al menos un PR de otro por semana <span class="tenue">— Todo el equipo</span></li><li>Tablero de PRs en 📡 repositorio a mitad de jornada y antes de la revisión de cierre <span class="tenue">— Dylan Suárez</span></li><li>Fijar los finales de línea en LF con <code>.gitattributes</code> para que Prettier no falle en Windows <span class="tenue">— Dylan Suárez</span></li></ul></div>
   </div></div></section>
 <section class="slide " data-titulo="Decisiones y calendario" data-seccion="Proceso" aria-label="13. Decisiones y calendario"><div class="inner">
   <p class="kicker r">08 · Decisiones del sprint</p>
   <h2 class="r">Cambios de proceso y nuevo calendario</h2>
   <div class="grid c3 r" style="margin-bottom:18px">
-    <div class="panel"><h3>Replanificación hasta el 16 de octubre</h3><p>El equipo cambió por completo antes del Sprint 2 y el proyecto debe quedar terminado el viernes 16 de octubre. Quedan dos sprints: este y el Sprint 3, que absorbe los antiguos Sprints 4 y 5. Congelación de funcionalidades el jueves 15 a las 18:00.</p></div><div class="panel"><h3>Regla de conflicto horario (D-001)</h3><p>Una reserva dura 120 minutos y la tolerancia de no-show es de 15. Dos reservas de la misma mesa chocan si sus intervalos se solapan y la existente está pendiente, confirmada o con check-in.</p></div><div class="panel"><h3>Usuarios y roles (D-002)</h3><p>Una sola tabla de usuarios con rol y estado; los empleados tienen un perfil 1:1. Contraseñas con scrypt y primer ADMIN creado por seed.</p></div><div class="panel"><h3>Cierre del sprint esta noche</h3><p>El equipo trabaja hoy de 13:00 a 20:30 en las tareas pendientes de reservas; a las 21:30 se revisan y mergean los PRs y se publica el release v0.2.0.</p></div>
+    <div class="panel"><h3>Replanificación hasta el 16 de octubre</h3><p>El equipo cambió por completo antes del Sprint 2 y el proyecto debe quedar terminado el viernes 16 de octubre. Quedan dos sprints: este y el Sprint 3, que absorbe los antiguos Sprints 4 y 5. Congelación de funcionalidades el jueves 15 a las 18:00.</p></div><div class="panel"><h3>Regla de conflicto horario (D-001)</h3><p>Una reserva dura 120 minutos y la tolerancia de no-show es de 15. Dos reservas de la misma mesa chocan si sus intervalos se solapan y la existente está pendiente, confirmada o con check-in.</p></div><div class="panel"><h3>Usuarios y roles (D-002)</h3><p>Una sola tabla de usuarios con rol y estado; los empleados tienen un perfil 1:1. Contraseñas con scrypt y primer ADMIN creado por seed.</p></div><div class="panel"><h3>Mesas que cuentan para la disponibilidad (D-003)</h3><p>La disponibilidad excluye solo las mesas OUT_OF_SERVICE; las OCCUPIED sí cuentan, porque ese estado describe el momento actual y la reserva es para otra fecha u hora.</p></div><div class="panel"><h3>Plazo y relevo de tareas</h3><p>Una tarea sin PR al vencer el plazo acordado la toma otro integrante para no frenar el release; se registra en el informe.</p></div>
   </div>
   <div class="calendario r">
     <div class="sprint-caja ">
       <div class="t">Sprint 1</div><div class="f">18 – 24 sep</div><p>Plataforma, mesas, categorías, productos y menú</p>
       <span class="estado ok">✓ Hecho</span>
     </div>
-    <div class="sprint-caja actual">
-      <div class="t">Sprint 2</div><div class="f">5 – 9 oct</div><p>Reservas base y autenticación</p>
-      <span class="estado actual">● En curso</span>
-    </div>
     <div class="sprint-caja ">
+      <div class="t">Sprint 2</div><div class="f">5 – 12 oct</div><p>Reservas base y autenticación (v0.2.0)</p>
+      <span class="estado ok">✓ Hecho</span>
+    </div>
+    <div class="sprint-caja actual">
       <div class="t">Sprint 3</div><div class="f">12 – 16 oct</div><p>Cierre del proyecto: ciclo de reservas, usuarios, roles y pedidos (v1.0.0)</p>
-      <span class="estado pendiente">Planificado</span>
+      <span class="estado actual">● En curso</span>
     </div></div></div></section>
 <section class="slide " data-titulo="Incidencias" data-seccion="Proceso" aria-label="14. Incidencias"><div class="inner">
     <p class="kicker r">09 · Incidencias del sprint</p>
@@ -765,12 +777,12 @@ html.estatico .slide, html.estatico .pista i, html.estatico .apilada i, html.est
       </div>
       <div class="panel r" style="margin-bottom:14px">
         <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:10px">
-          <h3 style="margin:0">⚠ Cuatro PRs sin revisar el último día</h3><span class="estado ok">✓ En curso</span>
+          <h3 style="margin:0">⚠ Tareas sin entregar al vencer el plazo</h3><span class="estado ok">✓ Resuelta</span>
         </div>
         <div class="grid c3">
-          <div><p class="kicker" style="margin-bottom:4px">Qué pasó</p><p>Los PRs de DTOs y consulta de reservas se abrieron entre el jueves y la madrugada del viernes; faltan los de servicios y endpoints restantes.</p></div>
-          <div><p class="kicker" style="margin-bottom:4px">Impacto</p><p>HU-006, HU-007 y HU-010 no cierran en el horario regular.</p></div>
-          <div><p class="kicker" style="margin-bottom:4px">Solución</p><p>Los cuatro PRs se revisaron e integraron el viernes por la mañana. Jornada extendida hoy (13:00 a 20:30), merges a las 21:30 y release v0.2.0 esta noche.</p></div>
+          <div><p class="kicker" style="margin-bottom:4px">Qué pasó</p><p>Al cierre del viernes faltaban las tareas de registro y cancelación de reservas (#59, #60, #66, #67). Se fijó como plazo el domingo 11 a las 18:00 y a esa hora no tenían PR.</p></div>
+          <div><p class="kicker" style="margin-bottom:4px">Impacto</p><p>El cierre del sprint y el release se movieron al lunes 12, el mismo día en que arranca el Sprint 3.</p></div>
+          <div><p class="kicker" style="margin-bottom:4px">Solución</p><p>El Scrum Master implementó las cuatro tareas; otro integrante las revisó e integró y el release v0.2.0 salió el lunes por la noche.</p></div>
         </div>
       </div></div></section>
 <section class="slide " data-titulo="Sprint 3" data-seccion="Próximo sprint" aria-label="15. Sprint 3"><div class="inner">
@@ -783,9 +795,9 @@ html.estatico .slide, html.estatico .pista i, html.estatico .apilada i, html.est
         <table class="t"><thead><tr><th>Historia</th><th style="text-align:right">Puntos</th></tr></thead>
           <tbody><tr><td><code>HU-009</code> Modificación de reserva</td><td class="num">13</td></tr><tr><td><code>HU-011</code> Confirmación de reserva</td><td class="num">8</td></tr><tr><td><code>HU-012</code> Check-in del cliente</td><td class="num">8</td></tr><tr><td><code>HU-013</code> Gestión de no-show</td><td class="num">8</td></tr><tr><td><code>HU-016</code> Gestión de empleados</td><td class="num">13</td></tr><tr><td><code>HU-017</code> Roles y permisos</td><td class="num">13</td></tr><tr><td><code>HU-018</code> Recuperación de contraseña</td><td class="num">8</td></tr><tr><td><code>HU-019</code> Administración del perfil</td><td class="num">8</td></tr><tr><td><code>HU-020</code> Apertura de pedido por mesa</td><td class="num">13</td></tr></tbody>
           <tfoot><tr><td>Total comprometido</td><td class="num">92</td></tr></tfoot></table>
-        <p style="margin-top:12px">Lo que no se cierre esta noche del Sprint 2 (disponibilidad, registro y cancelación de reservas) pasa al inicio del Sprint 3. HU-018 y parte de HU-017 ya están en <code>dev</code>.</p>
+        <p style="margin-top:12px">El Sprint 2 cerró completo, así que el Sprint 3 arranca sin arrastre. HU-018 y parte de HU-017 ya están en <code>dev</code>.</p>
       </div>
-      <div class="panel"><h3>Riesgos que vigilamos</h3><ul><li>Con 92 puntos comprometidos y la congelación el jueves 15 a las 18:00, cualquier arrastre del Sprint 2 reduce el margen.</li><li>HU-011, HU-012 y HU-020 son secuenciales: el pedido se abre sobre una mesa ocupada por el check-in.</li><li>La aplicación de permisos por endpoint (HU-017) toca los controllers de todos los módulos y se hace el miércoles 14, cuando existan los endpoints de reservas y empleados.</li></ul></div>
+      <div class="panel"><h3>Riesgos que vigilamos</h3><ul><li>El Sprint 3 arranca el mismo lunes en que cerró el Sprint 2, con 92 puntos y la congelación el jueves 15 a las 18:00.</li><li>HU-011, HU-012 y HU-020 son secuenciales: el pedido se abre sobre una mesa ocupada por el check-in.</li><li>Parte del trabajo del Sprint 2 tuvo que reasignarse al cierre: en la Planning hay que confirmar la capacidad real de cada integrante para los 92 puntos.</li></ul></div>
     </div></div></section>
 <section class="slide portada" data-titulo="Cierre" data-seccion="" aria-label="16. Cierre"><div class="inner">
   <div style="text-align:center">
@@ -795,7 +807,7 @@ html.estatico .slide, html.estatico .pista i, html.estatico .apilada i, html.est
     <div class="meta r" style="justify-content:center">
       <div><b>Repositorio</b><a href="https://github.com/DylanSrz/ZeroBug" target="_blank" rel="noopener">github.com/DylanSrz/ZeroBug</a></div>
       <div><b>Tablero</b><a href="https://github.com/users/DylanSrz/projects/7" target="_blank" rel="noopener">GitHub Projects</a></div>
-      
+      <div><b>Release</b><a href="https://github.com/DylanSrz/ZeroBug/tree/v0.2.0" target="_blank" rel="noopener">v0.2.0</a></div>
     </div>
   </div></div></section>
 </main>
@@ -804,7 +816,7 @@ html.estatico .slide, html.estatico .pista i, html.estatico .apilada i, html.est
 <div class="hud">
   <div class="progreso"><i id="progreso"></i></div>
   <div class="hud-barra">
-    <div>ZeroBug · Informe del Sprint 2 · 5 – 9 oct 2026</div>
+    <div>ZeroBug · Informe del Sprint 2 · 5 – 12 oct 2026</div>
     <div class="teclas"><kbd>←</kbd><kbd>→</kbd> navegar <button data-capa="vista-general"><kbd>O</kbd> vista general</button> <button data-capa="ayuda"><kbd>?</kbd> atajos</button> <kbd>F</kbd> pantalla completa <span id="contador"></span></div>
   </div>
 </div>

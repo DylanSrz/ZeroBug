@@ -218,9 +218,14 @@ const tareas = issuesMilestone
 // ── tests y endpoints en el código del sprint ────────────────────────────────
 function medirCodigo(ref) {
   const modulos = git('ls-tree', '--name-only', `${ref}:src/modules`).split('\n').filter(Boolean);
+  // e2e que no llevan el nombre exacto del módulo que prueban
+  const e2eDe = { roles: 'auth', 'password-recovery': 'auth' };
   const moduloDe = (archivo) => {
     const m = archivo.match(/src\/modules\/([^/]+)\//) ?? archivo.match(/test\/([a-z-]+)\.e2e-spec\.ts$/);
-    return m && modulos.includes(m[1]) ? m[1] : 'plataforma';
+    if (!m) return 'plataforma';
+    // test/reservations-create.e2e-spec.ts → reservations
+    const candidatos = [m[1], e2eDe[m[1]], m[1].split('-')[0]];
+    return candidatos.find((c) => c && modulos.includes(c)) ?? 'plataforma';
   };
 
   const endpoints = { total: 0, porModulo: {} };
