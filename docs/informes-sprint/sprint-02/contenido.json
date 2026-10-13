@@ -3,43 +3,43 @@
   "nombre": "Reservas base y autenticación",
   "periodo": {
     "inicio": "2026-10-05",
-    "fin": "2026-10-09"
+    "fin": "2026-10-12"
   },
-  "fechaInforme": "2026-10-09",
+  "fechaInforme": "2026-10-12",
   "presenta": {
     "nombre": "Dylan Suárez",
     "rol": "Scrum Master"
   },
   "objetivo": "Reservas de punta a punta (consultar disponibilidad, registrar, consultar y cancelar) y la base de autenticación (registro y login con JWT) que desbloquea usuarios, roles y pedidos.",
-  "titular": "Autenticación y base de reservas entregadas; cierre del resto previsto esta noche",
-  "resultado": "Registro y login con JWT quedaron en `dev`, junto con la base de reservas, los roles y la recuperación de contraseña. Esta mañana se integraron además los DTOs de disponibilidad y de registro de reserva y la consulta de reservas (PRs #170 a #173). Faltan el servicio de disponibilidad, la creación y la cancelación de reservas: el equipo trabaja hoy en ellas. Este informe refleja el estado del viernes al mediodía; el release **v0.2.0** queda para el cierre de esta noche, tras la revisión y los merges.",
+  "titular": "Objetivo cumplido: 6 de 6 historias y release v0.2.0",
+  "resultado": "Las seis historias comprometidas quedaron integradas y se publicaron en el release **v0.2.0** el lunes 12 de octubre: reservas de punta a punta (disponibilidad, registro, consulta y cancelación) y la autenticación con JWT. El cierre se extendió del viernes al lunes porque cuatro tareas de registro y cancelación no llegaron a tiempo; las completó el Scrum Master y las revisó otro integrante del equipo.",
   "resumen": [
-    "Se entregaron **HU-014 (registro de clientes)** y **HU-015 (inicio de sesión)**, con guard JWT global: toda ruta exige token salvo las marcadas como públicas.",
-    "La base de reservas está en `dev`: entidad y migración, enum de estados con su matriz de transiciones y la regla de conflicto horario documentada (D-001).",
-    "Se adelantaron piezas del Sprint 3: `RolesGuard` con `@Roles`, primer ADMIN por seed (HU-017) y **recuperación de contraseña** con token de un solo uso (HU-018).",
-    "Esta mañana se integraron **4 PRs de reservas** (#170 a #173): DTO de disponibilidad, DTO de registro y consulta de reservas (`GET /reservations` y `GET /reservations/{id}`), con CI en verde y revisión previa.",
-    "Pendientes de hoy: disponibilidad (#55, #56), registro de reserva (#59, #60) y cancelación (#66, #67). Jornada de trabajo de 13:00 a 20:30; revisión y merges a las 21:30."
+    "Se entregaron las **6 historias** comprometidas (**68 de 68 puntos**) y se publicó el release **v0.2.0**.",
+    "Las reservas funcionan de punta a punta: consulta pública de disponibilidad, registro con asignación automática de mesa (transaccional, sin doble asignación con solicitudes simultáneas), consulta con filtros y cancelación que libera el horario.",
+    "Autenticación lista: registro de clientes, login con JWT y guard global; toda ruta exige token salvo las públicas. Se adelantaron roles con `@Roles`, seed del primer ADMIN y recuperación de contraseña, del Sprint 3.",
+    "Tres decisiones de negocio documentadas antes de implementarlas: conflicto horario (D-001), modelo de usuarios (D-002) y mesas que cuentan para la disponibilidad (D-003).",
+    "El cierre se movió del viernes 9 al lunes 12: cuatro tareas (#59, #60, #66, #67) no tenían PR al vencer el plazo del domingo y las completó el Scrum Master."
   ],
   "historias": {
     "14": {
       "corto": "Disponibilidad",
       "modulo": "reservations",
-      "entrega": "Entidad `Reservation` con migración (#52), regla de conflicto horario (#53) y DTO de consulta con validación de fecha futura en la zona horaria del restaurante (#54), en `dev`. Faltan el servicio, el endpoint público y las pruebas e2e."
+      "entrega": "Consulta pública de disponibilidad: mesas operativas (D-003) con capacidad suficiente y sin conflicto de horario (D-001), ordenadas por capacidad. Pruebas e2e de solape exacto, parcial y en los bordes del intervalo."
     },
     "15": {
       "corto": "Registro de reserva",
       "modulo": "reservations",
-      "entrega": "Enum de estados y matriz de transiciones válidas (#57) y DTO de creación con validaciones (#58), en `dev`. Faltan el servicio con asignación automática de mesa y el endpoint `POST /reservations`."
+      "entrega": "`POST /reservations`: reserva en PENDING con asignación automática de la mesa más ajustada, en una transacción con bloqueo de fila para que dos solicitudes simultáneas no tomen la misma mesa."
     },
     "16": {
       "corto": "Consulta de reserva",
       "modulo": "reservations",
-      "entrega": "Servicio de consulta con filtros y paginación (#61) y endpoints `GET /reservations` y `GET /reservations/{id}` con pruebas e2e (#62), en `dev`. Pendiente la verificación cruzada de los criterios de aceptación."
+      "entrega": "Consulta de reservas con filtros (fecha, estado, mesa) y paginación estable, y consulta por id con la mesa asignada; las canceladas y completadas siguen visibles."
     },
     "18": {
       "corto": "Cancelación",
       "modulo": "reservations",
-      "entrega": "Pendiente. Depende de la matriz de transiciones ya integrada; se trabaja hoy (#66, #67)."
+      "entrega": "`PATCH /reservations/{id}/cancel`: conserva la reserva en el historial, registra la fecha de cancelación y libera el horario de la mesa; rechaza las ya canceladas, con check-in o en estado final."
     },
     "22": {
       "corto": "Registro de clientes",
@@ -55,32 +55,30 @@
   "integrantes": {
     "DylanSrz": {
       "destacados": [
-        "**HU-014 y HU-015** completas: modelo de usuarios, contraseñas con scrypt, registro, login con JWT y guard global (PRs #166 y #167).",
-        "Decisiones de negocio documentadas en `docs/decisiones.md`: regla de conflicto horario de reservas (D-001) y modelo de usuarios (D-002) (#161).",
-        "Adelanto del Sprint 3: `RolesGuard` con `@Roles` y seed del primer ADMIN (#168), y recuperación de contraseña con token de un solo uso (#169).",
-        "Replanificación tras el cambio de equipo: actualización de equipo, sprints y Working Agreement (#165).",
-        "Revisión de los PRs #163, #164 y #170 a #173; en los de esta semana se hicieron ajustes menores directamente en las ramas (Swagger, nombres, orden estable del listado) y se coordinó la integración entre ramas."
+        "**HU-014 y HU-015** completas: modelo de usuarios, contraseñas con scrypt, registro, login con JWT y guard global (#166, #167).",
+        "Registro y cancelación de reservas (#179 a #182): las cuatro tareas que no tenían PR al vencer el plazo del domingo, para cerrar HU-007 y HU-010.",
+        "Decisiones D-001, D-002 y D-003 en `docs/decisiones.md`, y replanificación del proyecto tras el cambio de equipo (#161, #165, #176).",
+        "Adelanto del Sprint 3: `RolesGuard` con `@Roles`, seed del primer ADMIN (#168) y recuperación de contraseña (#169).",
+        "Revisión de los PRs del equipo (#163, #164, #170 a #173, #177, #178), con ajustes en las ramas y pruebas añadidas antes de integrar; release v0.2.0."
       ]
     },
     "cesarvega1": {
       "destacados": [
-        "**Entidad `Reservation`**, migración y módulo de reservas (#163), base de todas las historias de reservas.",
-        "PR #170 integrado: `AvailabilityQueryDto` y validador `@IsFutureDateTime`, que compara fecha y hora en la zona horaria del restaurante y no en la del servidor; incluye pruebas unitarias.",
-        "En curso hoy: servicio de disponibilidad, endpoint público y pruebas e2e (#55, #56)."
+        "**HU-006 Disponibilidad** completa: entidad `Reservation` y migración (#163), DTO con validador de fecha futura en la zona horaria del restaurante (#170), consulta de mesas libres y endpoint público (#177) y suite e2e (#178).",
+        "La consulta de disponibilidad acepta el `manager` de una transacción, lo que permitió reutilizarla en el registro de reservas (HU-007)."
       ]
     },
     "MrDilant": {
       "destacados": [
-        "**Enum de estados y matriz de transiciones** de reserva, con pruebas unitarias, unificado con el enum de la entidad (#164).",
-        "PR #172 integrado: `CreateReservationDto` con validaciones y documentación Swagger, reutilizando `@IsFutureDateTime`; incluye pruebas unitarias.",
-        "En curso hoy: creación de reserva con asignación automática de mesa y endpoint `POST /reservations` (#59, #60)."
+        "**Enum de estados y matriz de transiciones** de reserva con pruebas unitarias (#164), base de la cancelación y del ciclo de vida del Sprint 3.",
+        "`CreateReservationDto` con validaciones y Swagger (#172).",
+        "Revisión, aprobación e integración de los PRs de registro y cancelación (#179 a #182), del release (#183) y de la decisión D-003 (#176)."
       ]
     },
     "leonardo-200224": {
       "destacados": [
-        "PR #171 integrado: consulta de reservas con filtros y paginación, `findOne` con respuesta de mesa anidada y pruebas unitarias.",
-        "PR #173 integrado: endpoints `GET /reservations` y `GET /reservations/{id}` protegidos con token, Swagger y suite e2e.",
-        "En curso hoy: cancelación de reserva, servicio y endpoint (#66, #67)."
+        "**HU-008 Consulta de reserva** completa: servicio con filtros y paginación (#171) y endpoints `GET /reservations` y `GET /reservations/{id}` con pruebas e2e (#173).",
+        "`ReservationResponseDto` con la mesa anidada, reutilizado por el registro y la cancelación de reservas."
       ]
     }
   },
@@ -99,26 +97,26 @@
       "Verificar el estado combinado de las ramas antes de integrar."
     ],
     "mejorar": [
-      "Abrir los PRs antes: con sprints de una semana, la revisión del último día no deja margen.",
-      "Revisión entre pares más pronta: cuatro PRs llegaron al viernes sin revisión.",
-      "Coordinar quién implementa lo compartido (búsqueda de mesas libres) para no duplicar trabajo.",
+      "Abrir el PR en cuanto la tarea está lista: con sprints de una semana, acumularlos para el último día no deja margen de revisión.",
+      "Avisar en la daily cuando una tarea no va a llegar, antes de que venza el plazo.",
+      "Revisiones más repartidas: la mayoría las hicieron dos personas.",
       "Revisar que el PR enlace bien su issue (`Closes #N`) y tenga un título descriptivo."
     ],
     "acciones": [
       {
-        "accion": "Hoy mismo cerrar las tareas de reservas pendientes: trabajo 13:00 a 20:30, revisión y merges 21:30",
+        "accion": "Daily escrita todos los días hábiles en el canal 📅 dailys, con bloqueos y lo que falta",
         "responsable": "Todo el equipo"
       },
       {
-        "accion": "Un PR no espera revisión más de medio día hábil; avisar bloqueos en la Daily",
+        "accion": "Un PR no espera revisión más de medio día hábil; cada integrante revisa al menos un PR de otro por semana",
         "responsable": "Todo el equipo"
       },
       {
-        "accion": "Celebrar la retrospectiva formal tras la revisión de esta noche y registrar el acta en `docs/retros/sprint-2.md`",
+        "accion": "Tablero de PRs en 📡 repositorio a mitad de jornada y antes de la revisión de cierre",
         "responsable": "Dylan Suárez"
       },
       {
-        "accion": "Tras el release, comprobar que `dev` sigue existiendo y sincronizarla con `main`",
+        "accion": "Fijar los finales de línea en LF con `.gitattributes` para que Prettier no falle en Windows",
         "responsable": "Dylan Suárez"
       }
     ]
@@ -137,8 +135,12 @@
       "detalle": "Una sola tabla de usuarios con rol y estado; los empleados tienen un perfil 1:1. Contraseñas con scrypt y primer ADMIN creado por seed."
     },
     {
-      "titulo": "Cierre del sprint esta noche",
-      "detalle": "El equipo trabaja hoy de 13:00 a 20:30 en las tareas pendientes de reservas; a las 21:30 se revisan y mergean los PRs y se publica el release v0.2.0."
+      "titulo": "Mesas que cuentan para la disponibilidad (D-003)",
+      "detalle": "La disponibilidad excluye solo las mesas OUT_OF_SERVICE; las OCCUPIED sí cuentan, porque ese estado describe el momento actual y la reserva es para otra fecha u hora."
+    },
+    {
+      "titulo": "Plazo y relevo de tareas",
+      "detalle": "Una tarea sin PR al vencer el plazo acordado la toma otro integrante para no frenar el release; se registra en el informe."
     }
   ],
   "incidencias": [
@@ -157,11 +159,11 @@
       "estado": "Resuelta"
     },
     {
-      "titulo": "Cuatro PRs sin revisar el último día",
-      "detalle": "Los PRs de DTOs y consulta de reservas se abrieron entre el jueves y la madrugada del viernes; faltan los de servicios y endpoints restantes.",
-      "impacto": "HU-006, HU-007 y HU-010 no cierran en el horario regular.",
-      "solucion": "Los cuatro PRs se revisaron e integraron el viernes por la mañana. Jornada extendida hoy (13:00 a 20:30), merges a las 21:30 y release v0.2.0 esta noche.",
-      "estado": "En curso"
+      "titulo": "Tareas sin entregar al vencer el plazo",
+      "detalle": "Al cierre del viernes faltaban las tareas de registro y cancelación de reservas (#59, #60, #66, #67). Se fijó como plazo el domingo 11 a las 18:00 y a esa hora no tenían PR.",
+      "impacto": "El cierre del sprint y el release se movieron al lunes 12, el mismo día en que arranca el Sprint 3.",
+      "solucion": "El Scrum Master implementó las cuatro tareas; otro integrante las revisó e integró y el release v0.2.0 salió el lunes por la noche.",
+      "estado": "Resuelta"
     }
   ],
   "calendario": [
@@ -173,15 +175,15 @@
     },
     {
       "sprint": 2,
-      "fechas": "5 – 9 oct",
-      "meta": "Reservas base y autenticación",
-      "estado": "actual"
+      "fechas": "5 – 12 oct",
+      "meta": "Reservas base y autenticación (v0.2.0)",
+      "estado": "hecho"
     },
     {
       "sprint": 3,
       "fechas": "12 – 16 oct",
       "meta": "Cierre del proyecto: ciclo de reservas, usuarios, roles y pedidos (v1.0.0)",
-      "estado": "siguiente"
+      "estado": "actual"
     }
   ],
   "siguiente": {
@@ -247,11 +249,11 @@
         "puntos": 13
       }
     ],
-    "base": "Lo que no se cierre esta noche del Sprint 2 (disponibilidad, registro y cancelación de reservas) pasa al inicio del Sprint 3. HU-018 y parte de HU-017 ya están en `dev`.",
+    "base": "El Sprint 2 cerró completo, así que el Sprint 3 arranca sin arrastre. HU-018 y parte de HU-017 ya están en `dev`.",
     "riesgos": [
-      "Con 92 puntos comprometidos y la congelación el jueves 15 a las 18:00, cualquier arrastre del Sprint 2 reduce el margen.",
+      "El Sprint 3 arranca el mismo lunes en que cerró el Sprint 2, con 92 puntos y la congelación el jueves 15 a las 18:00.",
       "HU-011, HU-012 y HU-020 son secuenciales: el pedido se abre sobre una mesa ocupada por el check-in.",
-      "La aplicación de permisos por endpoint (HU-017) toca los controllers de todos los módulos y se hace el miércoles 14, cuando existan los endpoints de reservas y empleados."
+      "Parte del trabajo del Sprint 2 tuvo que reasignarse al cierre: en la Planning hay que confirmar la capacidad real de cada integrante para los 92 puntos."
     ]
   }
 }
