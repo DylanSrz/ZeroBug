@@ -1,0 +1,1005 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sprint 1 — Informe · ZeroBug</title>
+<meta name="description" content="Informe del Sprint 1 (18 – 24 sep 2026) del equipo ZeroBug para Abrahan Villa.">
+<style>
+/* Presentación del informe de sprint — ZeroBug.
+   Tema oscuro aprobado el 21 sep 2026 (fondo azul noche, acentos ámbar y teal).
+   Los colores de cada integrante vienen de equipo.json como --c en línea. */
+
+:root {
+  --bg: #0b1220;
+  --bg-2: #101a30;
+  --panel: rgba(255, 255, 255, 0.045);
+  --panel-2: rgba(255, 255, 255, 0.08);
+  --borde: rgba(255, 255, 255, 0.1);
+  --ink: #eef2f8;
+  --ink-2: #b9c4d6;
+  --ink-3: #8b98ad;
+  --ambar: #f5b942;
+  --teal: #36c7b8;
+  --ok: #3ddc97;
+  --info: #6ea8fe;
+  --pista: rgba(255, 255, 255, 0.1);
+  --radio: 14px;
+  --sans: "Segoe UI", "Inter", "Noto Sans", Roboto, Helvetica, Arial, sans-serif;
+  --mono: ui-monospace, "JetBrains Mono", "JetBrainsMono NFM", Menlo, Consolas, monospace;
+}
+
+* { box-sizing: border-box; }
+html, body { height: 100%; margin: 0; }
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--sans);
+  overflow: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+code { font-family: var(--mono); font-size: 0.9em; color: var(--teal); }
+a { color: inherit; }
+button { font: inherit; color: inherit; }
+:focus-visible { outline: 2px solid var(--ambar); outline-offset: 3px; border-radius: 6px; }
+
+/* ── fondo ─────────────────────────────────────────────────────────────── */
+.fondo {
+  position: fixed; inset: 0; z-index: 0;
+  background:
+    radial-gradient(900px 600px at 12% 8%, rgba(54, 199, 184, 0.15), transparent 60%),
+    radial-gradient(900px 700px at 92% 92%, rgba(245, 185, 66, 0.13), transparent 60%),
+    linear-gradient(160deg, var(--bg) 0%, var(--bg-2) 100%);
+}
+.fondo::after {
+  content: ""; position: absolute; inset: 0;
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.035) 1px, transparent 1px);
+  background-size: 48px 48px;
+  mask-image: radial-gradient(ellipse at center, black 40%, transparent 85%);
+}
+
+/* ── diapositivas ──────────────────────────────────────────────────────── */
+.deck { position: relative; z-index: 1; height: 100%; }
+.slide {
+  position: absolute; inset: 0;
+  display: flex; align-items: center; justify-content: center;
+  padding: clamp(24px, 5vh, 60px) clamp(24px, 6vw, 96px) clamp(56px, 8vh, 80px);
+  opacity: 0; visibility: hidden;
+  transform: translateX(40px) scale(0.985);
+  transition: opacity .45s ease, transform .45s cubic-bezier(.2,.7,.2,1), visibility 0s linear .45s;
+}
+.slide.activa {
+  opacity: 1; visibility: visible; transform: none;
+  transition: opacity .45s ease, transform .45s cubic-bezier(.2,.7,.2,1), visibility 0s;
+}
+.slide.previa { transform: translateX(-40px) scale(0.985); }
+.slide > .inner { width: min(1180px, 100%); max-height: 100%; }
+
+/* aparición escalonada de los bloques .r */
+.activa .r { animation: subir .55s cubic-bezier(.2,.7,.2,1) both; }
+.activa .r:nth-child(2) { animation-delay: .08s }
+.activa .r:nth-child(3) { animation-delay: .16s }
+.activa .r:nth-child(4) { animation-delay: .24s }
+.activa .r:nth-child(5) { animation-delay: .32s }
+.activa .r:nth-child(6) { animation-delay: .40s }
+.activa .r:nth-child(7) { animation-delay: .48s }
+@keyframes subir { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: none; } }
+
+/* ── tipografía ────────────────────────────────────────────────────────── */
+.kicker {
+  font-size: clamp(11px, 1.05vw, 13px); letter-spacing: .18em; text-transform: uppercase;
+  color: var(--ambar); font-weight: 700; margin: 0 0 10px;
+}
+h1 { font-size: clamp(34px, 5vw, 66px); line-height: 1.04; margin: 0 0 16px; letter-spacing: -0.02em; }
+h2 { font-size: clamp(24px, 3.1vw, 40px); line-height: 1.1; margin: 0 0 22px; letter-spacing: -0.015em; }
+h3 { margin: 0 0 8px; font-size: clamp(15px, 1.35vw, 18px); }
+.lead { font-size: clamp(15px, 1.5vw, 20px); color: var(--ink-2); line-height: 1.55; max-width: 64ch; margin: 0; }
+.tenue { color: var(--ink-3); }
+.fuerte { color: var(--ink); font-weight: 700; }
+.ambar { color: var(--ambar); }
+.logo { font-weight: 900; letter-spacing: -0.03em; }
+.logo span { color: var(--ambar); }
+
+/* ── bloques ───────────────────────────────────────────────────────────── */
+.grid { display: grid; gap: clamp(10px, 1.4vw, 18px); }
+.c2 { grid-template-columns: repeat(2, 1fr); }
+.c3 { grid-template-columns: repeat(3, 1fr); }
+.c5 { grid-template-columns: repeat(5, 1fr); }
+.panel {
+  background: var(--panel); border: 1px solid var(--borde);
+  border-radius: var(--radio); padding: clamp(14px, 1.6vw, 20px);
+}
+.panel p, .panel li { color: var(--ink-2); font-size: clamp(13px, 1.1vw, 15px); line-height: 1.5; margin: 0; }
+.panel ul { margin: 0; padding-left: 18px; }
+.panel li + li { margin-top: 5px; }
+.panel strong { color: var(--ink); }
+
+.chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.chip {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-size: clamp(11px, 1vw, 13px); padding: 5px 11px; border-radius: 999px;
+  background: var(--panel-2); border: 1px solid var(--borde); color: var(--ink-2); white-space: nowrap;
+}
+.estado {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-size: 12px; font-weight: 700; letter-spacing: .05em; text-transform: uppercase;
+  padding: 4px 10px; border-radius: 999px; white-space: nowrap;
+}
+.estado.ok { background: rgba(61, 220, 151, .15); color: var(--ok); }
+.estado.actual { background: rgba(245, 185, 66, .16); color: var(--ambar); }
+.estado.pendiente { background: var(--panel-2); color: var(--ink-3); }
+
+/* avatar de integrante: color de identidad + iniciales (nunca solo color) */
+.avatar {
+  --c: var(--ink-3);
+  width: 44px; height: 44px; border-radius: 12px; flex: none;
+  display: grid; place-items: center; font-weight: 800; font-size: 16px; color: #0b1220;
+  background: linear-gradient(135deg, var(--c), color-mix(in srgb, var(--c) 55%, white));
+}
+.avatar.xl { width: 84px; height: 84px; border-radius: 22px; font-size: 30px; }
+.avatar.sm { width: 28px; height: 28px; border-radius: 8px; font-size: 11px; }
+
+/* ── portada ───────────────────────────────────────────────────────────── */
+.portada .badge {
+  display: inline-flex; align-items: center; gap: 10px; padding: 8px 14px; border-radius: 999px;
+  border: 1px solid var(--borde); background: var(--panel); color: var(--ink-2); font-size: 14px; margin-bottom: 22px;
+}
+.portada .punto { width: 10px; height: 10px; border-radius: 50%; background: var(--ok); box-shadow: 0 0 0 4px rgba(61, 220, 151, .18); }
+.meta { margin-top: 28px; display: flex; gap: 32px; flex-wrap: wrap; color: var(--ink-2); font-size: clamp(14px, 1.25vw, 17px); }
+.meta b { display: block; color: var(--ink-3); font-size: 12px; letter-spacing: .12em; text-transform: uppercase; margin-bottom: 4px; }
+
+/* ── KPIs ──────────────────────────────────────────────────────────────── */
+.kpi .num { font-size: clamp(38px, 4.6vw, 62px); font-weight: 800; letter-spacing: -0.03em; line-height: 1; font-variant-numeric: tabular-nums; }
+.kpi .num small { font-size: 45%; color: var(--ink-3); font-weight: 600; margin-left: 4px; letter-spacing: 0; }
+.kpi .lbl { color: var(--ink-2); margin-top: 8px; font-size: clamp(13px, 1.1vw, 15px); }
+.kpi .sub { color: var(--ink-3); font-size: clamp(12px, 0.95vw, 13px); margin-top: 4px; }
+.meta-sprint { display: flex; gap: 14px; align-items: flex-start; }
+.meta-sprint .icono {
+  flex: none; width: 36px; height: 36px; border-radius: 50%; display: grid; place-items: center;
+  background: rgba(61, 220, 151, .15); color: var(--ok); font-weight: 900;
+}
+
+/* ── historias (tarjetas desplegables) ─────────────────────────────────── */
+.hu {
+  text-align: left; cursor: pointer; display: flex; flex-direction: column; gap: 10px;
+  background: var(--panel); border: 1px solid var(--borde); border-radius: var(--radio);
+  padding: 16px; transition: border-color .2s, background .2s, transform .2s;
+}
+.hu:hover { border-color: rgba(245, 185, 66, .45); background: var(--panel-2); transform: translateY(-2px); }
+.hu .cab { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
+.hu .clave { font-family: var(--mono); color: var(--ambar); font-size: 13px; font-weight: 700; }
+.hu .pts { font-size: 13px; color: var(--ink-2); font-variant-numeric: tabular-nums; }
+.hu .pts b { font-size: 22px; color: var(--ink); }
+.hu .nombre { font-size: clamp(15px, 1.3vw, 18px); font-weight: 700; color: var(--ink); }
+.hu .entrega { font-size: 13px; color: var(--ink-2); line-height: 1.45; }
+.hu .pie { margin-top: auto; display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+.hu .quienes { display: flex; gap: 4px; }
+.hu .mas { font-size: 12px; color: var(--ink-3); }
+.hu .detalle { display: none; border-top: 1px solid var(--borde); padding-top: 10px; }
+.hu[aria-expanded="true"] .detalle { display: block; }
+.hu[aria-expanded="true"] .entrega { display: none; }
+.hu[aria-expanded="true"] .mas::after { content: " ▲"; }
+.hu[aria-expanded="false"] .mas::after { content: " ▼"; }
+.hu .detalle li { font-size: 12.5px; color: var(--ink-2); line-height: 1.4; }
+.hu .detalle li + li { margin-top: 4px; }
+.hu .detalle ul { margin: 0; padding-left: 16px; }
+
+/* ── gráficos de barras (una serie = un tono) ──────────────────────────── */
+.barras { display: grid; gap: 12px; }
+.fila-barra {
+  display: grid; grid-template-columns: 104px 1fr 34px; gap: 10px; align-items: center;
+  font-size: clamp(13px, 1.1vw, 15px); background: none; border: 0; padding: 4px 6px; border-radius: 10px;
+  text-align: left; cursor: pointer;
+}
+.fila-barra:hover { background: var(--panel-2); }
+.fila-barra .quien { display: flex; align-items: center; gap: 10px; color: var(--ink); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.pista { height: 12px; background: var(--pista); border-radius: 4px; overflow: hidden; }
+.pista i { display: block; height: 100%; width: 0; background: var(--serie, var(--teal)); border-radius: 0 4px 4px 0; transition: width .9s cubic-bezier(.2,.7,.2,1) .2s; }
+.fila-barra .valor { font-variant-numeric: tabular-nums; color: var(--ink); font-weight: 700; text-align: right; }
+
+/* barras apiladas de pruebas: dos series con leyenda y separación de 2px */
+.leyenda { display: flex; gap: 16px; font-size: 13px; color: var(--ink-2); margin-bottom: 12px; }
+.leyenda i { display: inline-block; width: 12px; height: 12px; border-radius: 3px; margin-right: 6px; vertical-align: -1px; }
+.apilada { display: flex; gap: 2px; height: 14px; }
+.apilada i { display: block; height: 100%; width: 0; transition: width .9s cubic-bezier(.2,.7,.2,1) .2s; }
+.apilada i:first-child { border-radius: 4px 0 0 4px; }
+.apilada i:last-child { border-radius: 0 4px 4px 0; }
+.fila-test { display: grid; grid-template-columns: 150px 1fr 150px; gap: 12px; align-items: center; font-size: 14px; }
+.fila-test .mod { color: var(--ink); }
+.fila-test .cifras { color: var(--ink-2); font-variant-numeric: tabular-nums; text-align: right; }
+.fila-test .cifras b { color: var(--ink); }
+
+/* ── diapositiva de integrante ─────────────────────────────────────────── */
+.persona-cab { display: flex; gap: 20px; align-items: center; margin-bottom: 18px; }
+.persona-cab h2 { margin: 0 0 4px; }
+.persona-cab .rol { color: var(--ink-3); font-size: 13px; letter-spacing: .08em; text-transform: uppercase; font-weight: 700; }
+.persona { display: grid; grid-template-columns: 1.15fr 1fr; gap: clamp(12px, 1.6vw, 20px); align-items: start; }
+.stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 12px; }
+.stat { background: var(--panel); border: 1px solid var(--borde); border-radius: 12px; padding: 10px 12px; }
+.stat b { display: block; font-size: 28px; font-variant-numeric: tabular-nums; line-height: 1.1; }
+.stat span { font-size: 12px; color: var(--ink-3); }
+/* lista compacta de una línea por PR; el título completo va en el tooltip */
+.lista-prs { list-style: none; margin: 0; padding: 0 4px 12px 0; display: grid; gap: 2px; max-height: 50vh; overflow: auto;
+  mask-image: linear-gradient(180deg, black 88%, transparent); }
+.lista-prs a {
+  display: grid; grid-template-columns: 46px 74px 1fr; gap: 8px; align-items: center;
+  padding: 5px 8px; border-radius: 8px; text-decoration: none; font-size: 13px; color: var(--ink-2);
+}
+.lista-prs .txt { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.lista-prs a:hover { background: var(--panel-2); color: var(--ink); }
+.lista-prs .n { font-family: var(--mono); color: var(--ambar); font-size: 12px; }
+.lista-prs .tipo { font-size: 10.5px; text-transform: uppercase; letter-spacing: .05em; color: var(--ink-3); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+/* ── línea de tiempo ───────────────────────────────────────────────────── */
+.tl-leyenda { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 14px; }
+.tl-leyenda button {
+  display: inline-flex; align-items: center; gap: 8px; background: var(--panel); border: 1px solid var(--borde);
+  border-radius: 999px; padding: 4px 12px 4px 4px; cursor: pointer; font-size: 13px; color: var(--ink-2);
+}
+.tl-leyenda button[aria-pressed="true"] { border-color: var(--ambar); color: var(--ink); background: var(--panel-2); }
+.timeline { display: grid; grid-template-columns: repeat(var(--dias, 7), 1fr); gap: 8px; }
+.dia { background: var(--panel); border: 1px solid var(--borde); border-radius: 12px; padding: 10px 8px; min-height: 210px; display: flex; flex-direction: column; gap: 6px; }
+.dia .fecha { font-size: 12px; color: var(--ink-3); text-align: center; line-height: 1.3; margin-bottom: 4px; }
+.dia .fecha b { display: block; color: var(--ink); font-size: 18px; }
+.dia.vacio { opacity: .55; }
+.dia.fuera { border-style: dashed; background: transparent; }
+.fuera-lbl { display: block; margin-top: 3px; font-size: 10px; letter-spacing: .06em; text-transform: uppercase; color: var(--ink-3); }
+.pr-pill {
+  --c: var(--ink-3);
+  display: flex; align-items: center; gap: 6px; padding: 3px 6px 3px 3px; border-radius: 8px;
+  background: color-mix(in srgb, var(--c) 16%, transparent); border: 1px solid color-mix(in srgb, var(--c) 40%, transparent);
+  font-size: 11px; color: var(--ink); text-decoration: none; transition: opacity .2s;
+}
+.pr-pill .ini { background: var(--c); color: #0b1220; font-weight: 800; border-radius: 5px; padding: 1px 4px; font-size: 10px; }
+.pr-pill .num { font-family: var(--mono); }
+.timeline.filtrada .pr-pill:not(.visible) { opacity: .15; }
+
+/* ── retro / decisiones / calendario ───────────────────────────────────── */
+.retro h3 { display: flex; align-items: center; gap: 8px; }
+.retro .marca { width: 26px; height: 26px; border-radius: 8px; display: grid; place-items: center; font-size: 14px; font-weight: 900; }
+.m-ok { background: rgba(61, 220, 151, .15); color: var(--ok); }
+.m-mejora { background: rgba(245, 185, 66, .16); color: var(--ambar); }
+.m-accion { background: rgba(110, 168, 254, .16); color: var(--info); }
+.calendario { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; }
+.sprint-caja { background: var(--panel); border: 1px solid var(--borde); border-radius: 12px; padding: 12px; display: flex; flex-direction: column; align-items: flex-start; }
+.sprint-caja .estado { margin-top: auto; }
+.sprint-caja.actual { border-color: var(--ambar); background: rgba(245, 185, 66, .08); }
+.sprint-caja .t { font-weight: 800; }
+.sprint-caja .f { color: var(--ambar); font-size: 13px; margin: 4px 0 6px; font-variant-numeric: tabular-nums; }
+.sprint-caja p { font-size: 12.5px; color: var(--ink-2); margin: 0 0 8px; line-height: 1.4; }
+
+table.t { width: 100%; border-collapse: collapse; font-size: clamp(13px, 1.1vw, 15px); }
+table.t th { text-align: left; color: var(--ink-3); font-weight: 600; font-size: .82em; letter-spacing: .06em; text-transform: uppercase; padding: 8px 10px; border-bottom: 1px solid var(--borde); }
+table.t td { padding: 10px; border-bottom: 1px solid rgba(255, 255, 255, .06); color: var(--ink-2); vertical-align: top; }
+table.t td.num { text-align: right; font-variant-numeric: tabular-nums; color: var(--ink); font-weight: 700; }
+table.t tfoot td { color: var(--ink); font-weight: 700; border-bottom: 0; }
+
+/* ── controles fijos ───────────────────────────────────────────────────── */
+.hud { position: fixed; left: 0; right: 0; bottom: 0; z-index: 5; }
+.progreso { height: 3px; background: rgba(255, 255, 255, .08); }
+.progreso i { display: block; height: 100%; width: 0; background: linear-gradient(90deg, var(--teal), var(--ambar)); transition: width .4s ease; }
+.hud-barra { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 9px 20px 12px; font-size: 12.5px; color: var(--ink-3); }
+.hud-barra .teclas { display: flex; gap: 6px; align-items: center; flex-wrap: wrap; }
+kbd { font-family: inherit; border: 1px solid var(--borde); border-radius: 6px; padding: 1px 7px; background: rgba(255, 255, 255, .05); color: var(--ink-2); }
+.hud-barra button { background: none; border: 0; color: var(--ink-3); cursor: pointer; padding: 2px 6px; border-radius: 6px; }
+.hud-barra button:hover { color: var(--ink); background: var(--panel-2); }
+.nav { position: fixed; top: 50%; transform: translateY(-50%); z-index: 6; width: 44px; height: 44px; border-radius: 50%; border: 1px solid var(--borde); background: rgba(11, 18, 32, .6); color: var(--ink-2); font-size: 20px; cursor: pointer; display: grid; place-items: center; opacity: .55; transition: opacity .2s; }
+.nav:hover { opacity: 1; }
+.nav.izq { left: 14px; } .nav.der { right: 14px; }
+.nav[disabled] { opacity: .15; cursor: default; }
+
+/* tooltip flotante */
+.tip {
+  position: fixed; z-index: 30; pointer-events: none; max-width: 340px;
+  background: #0f1a2e; border: 1px solid var(--borde); border-radius: 10px; padding: 8px 10px;
+  font-size: 12.5px; line-height: 1.4; color: var(--ink); box-shadow: 0 10px 30px rgba(0, 0, 0, .45);
+  opacity: 0; transform: translateY(4px); transition: opacity .12s, transform .12s;
+}
+.tip.visible { opacity: 1; transform: none; }
+
+/* capas: vista general y ayuda */
+.capa {
+  position: fixed; inset: 0; z-index: 20; background: rgba(6, 10, 20, .88); backdrop-filter: blur(6px);
+  display: none; padding: 40px clamp(20px, 5vw, 80px); overflow: auto;
+}
+.capa.abierta { display: block; }
+.capa h2 { font-size: 22px; }
+.miniaturas { display: grid; grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); gap: 12px; }
+.miniaturas button {
+  text-align: left; background: var(--panel); border: 1px solid var(--borde); border-radius: 12px; padding: 14px;
+  cursor: pointer; min-height: 88px; display: flex; flex-direction: column; gap: 6px;
+}
+.miniaturas button:hover, .miniaturas button.actual { border-color: var(--ambar); background: var(--panel-2); }
+.miniaturas .n { font-family: var(--mono); color: var(--ambar); font-size: 12px; }
+.miniaturas .t { font-weight: 700; font-size: 14px; }
+.ayuda { max-width: 560px; margin: 8vh auto 0; }
+.ayuda table { width: 100%; border-collapse: collapse; }
+.ayuda td { padding: 8px 6px; border-bottom: 1px solid var(--borde); color: var(--ink-2); font-size: 14px; }
+.ayuda td:first-child { width: 170px; }
+
+/* ── pantallas pequeñas ────────────────────────────────────────────────── */
+@media screen and (max-width: 900px) {
+  body { overflow: auto; }
+  .c3, .c5, .calendario { grid-template-columns: repeat(2, 1fr); }
+  .c2, .persona { grid-template-columns: 1fr; }
+  .timeline { grid-template-columns: repeat(2, 1fr); }
+  .nav { display: none; }
+  .hud-barra .teclas { display: none; }
+}
+
+/* ?static: sin animaciones (capturas, proyectores lentos) */
+html.estatico .r { animation: none !important; }
+html.estatico .slide, html.estatico .pista i, html.estatico .apilada i, html.estatico .progreso i { transition: none !important; }
+
+/* impresión: una diapositiva por página apaisada */
+@page { size: 15in 9.375in; margin: 0; }
+@media print {
+  body { overflow: visible; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .hud, .nav, .capa, .tip { display: none !important; }
+  .slide { position: relative; opacity: 1 !important; visibility: visible !important; transform: none !important; height: 9.375in; width: 15in; page-break-after: always; break-after: page; overflow: hidden; }
+  .slide:last-child { break-after: auto; }
+  .r { animation: none !important; }
+  .hu .detalle { display: none !important; }
+  .lista-prs { max-height: none; overflow: visible; }
+}
+
+</style>
+</head>
+<body>
+<div class="fondo"></div>
+<main class="deck" id="deck">
+<section class="slide portada" data-titulo="Portada" data-seccion="" aria-label="1. Portada"><div class="inner">
+  <div class="badge r"><span class="punto"></span> Sprint 1 · Infraestructura y Gestión Base · 18 – 24 sep 2026 · release <b>v0.1.0</b></div>
+  <p class="kicker r">Informe de sprint · Equipo ZeroBug</p>
+  <h1 class="r"><span class="logo">Zero<span>Bug</span></span> — Informe del Sprint 1<br><span class="tenue" style="font-weight:600">Infraestructura y Gestión Base</span></h1>
+  <p class="lead r">Qué entregó el equipo, cómo lo hicimos y qué hizo cada integrante durante el sprint.</p>
+  <div class="meta r">
+    <div><b>Para</b>Abrahan Villa · Team Leader</div>
+    <div><b>Presenta</b>Dylan Suárez · Scrum Master</div>
+    <div><b>Fecha</b>viernes 25 de septiembre de 2026</div>
+  </div></div></section>
+<section class="slide " data-titulo="Resultado del sprint" data-seccion="Resumen" aria-label="2. Resultado del sprint"><div class="inner">
+  <p class="kicker r">01 · Resultado del sprint</p>
+  <div class="meta-sprint r" style="margin-bottom:22px">
+    <span class="icono">✓</span>
+    <div><h2 style="margin:0 0 8px">Objetivo cumplido: 5 de 5 historias y release v0.1.0</h2><p class="lead" style="margin-bottom:6px">Las cinco historias comprometidas se entregaron, se verificaron en la Sprint Review del 25 de septiembre y se publicaron en el release <strong>v0.1.0</strong>.</p><p class="lead" style="font-size:clamp(13px,1.2vw,16px)"><span class="tenue">Objetivo del sprint:</span> Dejar lista la plataforma base de la API y la administración de mesas, categorías, productos y el menú público del restaurante.</p></div>
+  </div>
+  <div class="grid c3 r">
+    
+      <div class="panel kpi">
+        <div class="num"><span data-contar="55">55</span><small>/ 55</small></div>
+        <div class="lbl">Puntos completados</div><div class="sub">de 55 comprometidos</div>
+      </div>
+      <div class="panel kpi">
+        <div class="num"><span data-contar="5">5</span><small>/ 5</small></div>
+        <div class="lbl">Historias entregadas</div><div class="sub">verificadas en la Sprint Review</div>
+      </div>
+      <div class="panel kpi">
+        <div class="num"><span data-contar="33">33</span></div>
+        <div class="lbl">Pull requests integrados</div><div class="sub">33 tareas cerradas</div>
+      </div>
+      <div class="panel kpi">
+        <div class="num"><span data-contar="33">33</span></div>
+        <div class="lbl">Revisiones de código</div><div class="sub">hechas por el equipo</div>
+      </div>
+      <div class="panel kpi">
+        <div class="num"><span data-contar="216">216</span></div>
+        <div class="lbl">Pruebas automáticas</div><div class="sub">109 unitarias · 107 e2e</div>
+      </div>
+      <div class="panel kpi">
+        <div class="num"><span data-contar="21">21</span></div>
+        <div class="lbl">Endpoints en la API</div><div class="sub">documentados en Swagger</div>
+      </div>
+  </div></div></section>
+<section class="slide " data-titulo="Resumen ejecutivo" data-seccion="Resumen" aria-label="3. Resumen ejecutivo"><div class="inner">
+  <p class="kicker r">02 · Resumen ejecutivo</p>
+  <h2 class="r">Lo más importante del sprint</h2>
+  <div class="panel r"><ul style="display:grid;gap:10px"><li style="font-size:clamp(14px,1.35vw,18px)">Se entregaron las <strong>5 historias</strong> comprometidas (<strong>55 de 55 puntos</strong>) y se publicó el primer release, <strong>v0.1.0</strong>.</li><li style="font-size:clamp(14px,1.35vw,18px)">La API expone <strong>21 endpoints</strong> documentados en Swagger: mesas, categorías, productos, menú público y estado del servicio.</li><li style="font-size:clamp(14px,1.35vw,18px)"><strong>216 pruebas automáticas</strong> (109 unitarias y 107 e2e contra PostgreSQL real) se ejecutan en cada pull request; sin CI en verde no se puede integrar.</li><li style="font-size:clamp(14px,1.35vw,18px)">Quedó definido el marco de trabajo del equipo: Working Agreement, Definition of Done, guía de Git, plantillas y tablero con épicas, historias y tareas.</li><li style="font-size:clamp(14px,1.35vw,18px)">Al cierre, el equipo acordó pasar a <strong>sprints de una semana</strong> (lunes a viernes) y replanificó el resto del proyecto en consecuencia.</li></ul></div></div></section>
+<section class="slide " data-titulo="Historias entregadas" data-seccion="Entregado" aria-label="4. Historias entregadas"><div class="inner">
+  <p class="kicker r">03 · Historias entregadas</p>
+  <h2 class="r">5 historias, 55 puntos <span class="tenue" style="font-size:.55em;font-weight:500">· haz clic en una tarjeta para ver sus tareas</span></h2>
+  <div class="grid c5 r">
+    
+      <button class="hu" aria-expanded="false">
+        <div class="cab"><span class="clave">HU-001</span><span class="pts"><b>8</b> pts</span></div>
+        <div class="nombre">Plataforma base</div>
+        <div class="entrega">NestJS 12 + TypeORM + PostgreSQL con migraciones versionadas, validación de variables de entorno, seguridad HTTP, formato uniforme de errores, Swagger y CI obligatorio.</div>
+        <div class="detalle"><ul><li>#29 Versionado /api/v1 y endpoint GET /api/v1/health — <span class="tenue">Kerin, PR #120</span></li><li>#30 ValidationPipe global, Helmet y CORS por entorno — <span class="tenue">Dylan, PR #117</span></li><li>#31 Migraciones TypeORM: DataSource CLI, scripts npm y primera migración — <span class="tenue">Dylan, PR #114</span></li><li>#32 Conectar validación zod del entorno y completar .env.example — <span class="tenue">Dylan, PR #115</span></li><li>#33 Filtro global de excepciones con formato de error uniforme — <span class="tenue">Dylan, PR #122</span></li><li>#34 Swagger con metadatos reales y README del proyecto — <span class="tenue">Dylan, PR #125</span></li><li>#35 docs: actualizar HU-001 al stack real (TypeORM, Vitest, oxlint, zod) — <span class="tenue">Dylan, PR #126</span></li></ul></div>
+        <div class="pie">
+          <span class="quienes"><span class="avatar sm" style="--c:#f5b942" aria-hidden="true">DS</span><span class="avatar sm" style="--c:#36c7b8" aria-hidden="true">KB</span></span>
+          <span class="estado ok">✓ Cerrada</span>
+        </div>
+        <span class="mas">7 tareas</span>
+      </button>
+      <button class="hu" aria-expanded="false">
+        <div class="cab"><span class="clave">HU-002</span><span class="pts"><b>13</b> pts</span></div>
+        <div class="nombre">Mesas</div>
+        <div class="entrega">Registro y administración de mesas con número único, capacidad mayor que cero, zonas y estados; filtros combinables por estado, zona y capacidad mínima.</div>
+        <div class="detalle"><ul><li>#36 Entidad Table, enum TableStatus y migración — <span class="tenue">Diego, PR #144</span></li><li>#37 DTOs y validaciones de mesas (crear, actualizar, cambiar estado, filtros) — <span class="tenue">Diego, PR #147</span></li><li>#38 TablesService: crear, listar con filtros, consultar, actualizar y cambiar estado — <span class="tenue">Diego, PR #151</span></li><li>#39 TablesController + Swagger (5 endpoints) — <span class="tenue">Diego, PR #153</span></li><li>#40 Tests e2e de mesas — <span class="tenue">Diego, PR #154</span></li></ul></div>
+        <div class="pie">
+          <span class="quienes"><span class="avatar sm" style="--c:#6ea8fe" aria-hidden="true">DG</span></span>
+          <span class="estado ok">✓ Cerrada</span>
+        </div>
+        <span class="mas">5 tareas</span>
+      </button>
+      <button class="hu" aria-expanded="false">
+        <div class="cab"><span class="clave">HU-003</span><span class="pts"><b>8</b> pts</span></div>
+        <div class="nombre">Categorías</div>
+        <div class="entrega">Categorías del menú con nombre único y activación o desactivación; una categoría inactiva se conserva pero deja de mostrarse al cliente.</div>
+        <div class="detalle"><ul><li>#41 Entidad Category, enum CategoryStatus y migración — <span class="tenue">Kerin, PR #134</span></li><li>#42 DTOs y validaciones de categorías — <span class="tenue">Kerin, PR #135</span></li><li>#43 CategoriesService + CategoriesController + Swagger — <span class="tenue">Kerin, PR #145</span></li><li>#44 Tests e2e de categorías — <span class="tenue">Kerin, PR #148</span></li></ul></div>
+        <div class="pie">
+          <span class="quienes"><span class="avatar sm" style="--c:#36c7b8" aria-hidden="true">KB</span></span>
+          <span class="estado ok">✓ Cerrada</span>
+        </div>
+        <span class="mas">4 tareas</span>
+      </button>
+      <button class="hu" aria-expanded="false">
+        <div class="cab"><span class="clave">HU-004</span><span class="pts"><b>13</b> pts</span></div>
+        <div class="nombre">Productos</div>
+        <div class="entrega">Productos asociados a una categoría existente, con precio mayor que cero, estado y disponibilidad independientes.</div>
+        <div class="detalle"><ul><li>#45 Entidad Product (relación con Category), enums y migración — <span class="tenue">Dylan, PR #139</span></li><li>#46 DTOs y validaciones de productos — <span class="tenue">Dylan, PR #131</span></li><li>#47 ProductsService + ProductsController + Swagger (6 endpoints) — <span class="tenue">Dylan, PR #140</span></li><li>#48 Tests e2e de productos — <span class="tenue">Dylan, PR #141</span></li></ul></div>
+        <div class="pie">
+          <span class="quienes"><span class="avatar sm" style="--c:#f5b942" aria-hidden="true">DS</span></span>
+          <span class="estado ok">✓ Cerrada</span>
+        </div>
+        <span class="mas">4 tareas</span>
+      </button>
+      <button class="hu" aria-expanded="false">
+        <div class="cab"><span class="clave">HU-005</span><span class="pts"><b>13</b> pts</span></div>
+        <div class="nombre">Menú público</div>
+        <div class="entrega">Consulta del menú para clientes: solo categorías y productos activos, con los no disponibles visibles pero marcados; refleja al instante los cambios de administración.</div>
+        <div class="detalle"><ul><li>#49 MenuService: consultas del menú público (solo activos) — <span class="tenue">Jonathan, PR #149</span></li><li>#50 MenuController, DTOs de respuesta y Swagger (4 endpoints) — <span class="tenue">Jonathan, PR #149</span></li><li>#51 Tests e2e del menú público — <span class="tenue">Dylan, PR #157</span></li></ul></div>
+        <div class="pie">
+          <span class="quienes"><span class="avatar sm" style="--c:#3ddc97" aria-hidden="true">JR</span></span>
+          <span class="estado ok">✓ Cerrada</span>
+        </div>
+        <span class="mas">3 tareas</span>
+      </button>
+  </div></div></section>
+<section class="slide " data-titulo="El equipo" data-seccion="Equipo" aria-label="5. El equipo"><div class="inner">
+  <p class="kicker r">04 · Aporte por integrante</p>
+  <h2 class="r">Qué hizo cada uno <span class="tenue" style="font-size:.55em;font-weight:500">· clic en un nombre para ver su detalle</span></h2>
+  <div class="grid c3 r">
+    
+    <div class="panel">
+      <h3>Pull requests integrados</h3>
+      <div class="barras" style="--serie:var(--teal)">
+        
+          <button class="fila-barra" data-ir="6" data-tip="Dylan Suárez: 18 PRs integrados en dev">
+            <span class="quien"><span class="avatar sm" style="--c:#f5b942" aria-hidden="true">DS</span>Dylan</span>
+            <span class="pista"><i data-w="100.0"></i></span>
+            <span class="valor">18</span>
+          </button>
+          <button class="fila-barra" data-ir="7" data-tip="Diego Gonzales: 6 PRs integrados en dev">
+            <span class="quien"><span class="avatar sm" style="--c:#6ea8fe" aria-hidden="true">DG</span>Diego</span>
+            <span class="pista"><i data-w="33.3"></i></span>
+            <span class="valor">6</span>
+          </button>
+          <button class="fila-barra" data-ir="8" data-tip="Kerin Barranco: 6 PRs integrados en dev">
+            <span class="quien"><span class="avatar sm" style="--c:#36c7b8" aria-hidden="true">KB</span>Kerin</span>
+            <span class="pista"><i data-w="33.3"></i></span>
+            <span class="valor">6</span>
+          </button>
+          <button class="fila-barra" data-ir="9" data-tip="Jonathan Rodríguez: 2 PRs integrados en dev">
+            <span class="quien"><span class="avatar sm" style="--c:#3ddc97" aria-hidden="true">JR</span>Jonathan</span>
+            <span class="pista"><i data-w="11.1"></i></span>
+            <span class="valor">2</span>
+          </button>
+          <button class="fila-barra" data-ir="10" data-tip="Jorel Hernández: 1 PR integrado en dev">
+            <span class="quien"><span class="avatar sm" style="--c:#c9a0ff" aria-hidden="true">JH</span>Jorel</span>
+            <span class="pista"><i data-w="5.6"></i></span>
+            <span class="valor">1</span>
+          </button>
+      </div>
+    </div>
+    
+    <div class="panel">
+      <h3>Tareas resueltas</h3>
+      <div class="barras" style="--serie:var(--info)">
+        
+          <button class="fila-barra" data-ir="6" data-tip="Dylan Suárez: 17 tareas resueltas">
+            <span class="quien"><span class="avatar sm" style="--c:#f5b942" aria-hidden="true">DS</span>Dylan</span>
+            <span class="pista"><i data-w="100.0"></i></span>
+            <span class="valor">17</span>
+          </button>
+          <button class="fila-barra" data-ir="7" data-tip="Diego Gonzales: 6 tareas resueltas">
+            <span class="quien"><span class="avatar sm" style="--c:#6ea8fe" aria-hidden="true">DG</span>Diego</span>
+            <span class="pista"><i data-w="35.3"></i></span>
+            <span class="valor">6</span>
+          </button>
+          <button class="fila-barra" data-ir="8" data-tip="Kerin Barranco: 6 tareas resueltas">
+            <span class="quien"><span class="avatar sm" style="--c:#36c7b8" aria-hidden="true">KB</span>Kerin</span>
+            <span class="pista"><i data-w="35.3"></i></span>
+            <span class="valor">6</span>
+          </button>
+          <button class="fila-barra" data-ir="9" data-tip="Jonathan Rodríguez: 3 tareas resueltas">
+            <span class="quien"><span class="avatar sm" style="--c:#3ddc97" aria-hidden="true">JR</span>Jonathan</span>
+            <span class="pista"><i data-w="17.6"></i></span>
+            <span class="valor">3</span>
+          </button>
+          <button class="fila-barra" data-ir="10" data-tip="Jorel Hernández: 1 tarea resuelta">
+            <span class="quien"><span class="avatar sm" style="--c:#c9a0ff" aria-hidden="true">JH</span>Jorel</span>
+            <span class="pista"><i data-w="5.9"></i></span>
+            <span class="valor">1</span>
+          </button>
+      </div>
+    </div>
+    
+    <div class="panel">
+      <h3>Revisiones de código</h3>
+      <div class="barras" style="--serie:var(--ambar)">
+        
+          <button class="fila-barra" data-ir="6" data-tip="Dylan Suárez: 30 revisiones — 17 aprobadas, 10 con cambios, 3 comentarios">
+            <span class="quien"><span class="avatar sm" style="--c:#f5b942" aria-hidden="true">DS</span>Dylan</span>
+            <span class="pista"><i data-w="100.0"></i></span>
+            <span class="valor">30</span>
+          </button>
+          <button class="fila-barra" data-ir="7" data-tip="Diego Gonzales: 1 revisiones — 1 aprobadas, 0 con cambios, 0 comentarios">
+            <span class="quien"><span class="avatar sm" style="--c:#6ea8fe" aria-hidden="true">DG</span>Diego</span>
+            <span class="pista"><i data-w="3.3"></i></span>
+            <span class="valor">1</span>
+          </button>
+          <button class="fila-barra" data-ir="8" data-tip="Kerin Barranco: 2 revisiones — 2 aprobadas, 0 con cambios, 0 comentarios">
+            <span class="quien"><span class="avatar sm" style="--c:#36c7b8" aria-hidden="true">KB</span>Kerin</span>
+            <span class="pista"><i data-w="6.7"></i></span>
+            <span class="valor">2</span>
+          </button>
+          <button class="fila-barra" data-ir="9" data-tip="Jonathan Rodríguez: 0 revisiones — 0 aprobadas, 0 con cambios, 0 comentarios">
+            <span class="quien"><span class="avatar sm" style="--c:#3ddc97" aria-hidden="true">JR</span>Jonathan</span>
+            <span class="pista"><i data-w="0.0"></i></span>
+            <span class="valor">0</span>
+          </button>
+          <button class="fila-barra" data-ir="10" data-tip="Jorel Hernández: 0 revisiones — 0 aprobadas, 0 con cambios, 0 comentarios">
+            <span class="quien"><span class="avatar sm" style="--c:#c9a0ff" aria-hidden="true">JH</span>Jorel</span>
+            <span class="pista"><i data-w="0.0"></i></span>
+            <span class="valor">0</span>
+          </button>
+      </div>
+    </div>
+  </div>
+  <p class="tenue r" style="margin-top:14px;font-size:13px">PRs integrados en <code>dev</code> durante el sprint · tareas cerradas por un PR del integrante · revisiones hechas a PRs de otros compañeros.</p></div></section>
+<section class="slide " data-titulo="Dylan Suárez" data-seccion="Equipo" aria-label="6. Dylan Suárez"><div class="inner">
+    <div class="persona-cab r">
+      <span class="avatar xl" style="--c:#f5b942" aria-hidden="true">DS</span>
+      <div><h2>Dylan Suárez</h2><div class="rol">Scrum Master · Desarrollador</div><div class="chips" style="margin-top:8px"><span class="chip">HU-001 · Plataforma base · 8 pts</span><span class="chip">HU-004 · Productos · 13 pts</span></div></div>
+    </div>
+    <div class="persona r">
+      <div>
+        <div class="stats">
+          <div class="stat"><b data-contar="18">18</b><span>PRs integrados</span></div>
+          <div class="stat"><b data-contar="17">17</b><span>tareas resueltas</span></div>
+          <div class="stat" data-tip="17 aprobadas · 10 con cambios solicitados · 3 comentarios" tabindex="0"><b data-contar="30">30</b><span>revisiones hechas</span></div>
+        </div>
+        <div class="panel"><h3>Aporte destacado</h3><ul><li>Puesta en marcha del proceso SCRUM: tablero con épicas, historias y tareas, milestones por sprint, Working Agreement, Definition of Done, guía de Git y plantillas de PR e issues.</li><li><strong>HU-001 Plataforma base</strong>: migraciones TypeORM, validación del entorno con zod, <code>ValidationPipe</code>, Helmet y CORS, filtro global de errores, Swagger, README y pipeline de CI.</li><li><strong>HU-004 Productos</strong> completa: entidad y migración, DTOs, servicio y controlador con 6 endpoints, 32 pruebas unitarias y 20 e2e.</li><li>Cierre del sprint: pruebas e2e del menú público, datos semilla de desarrollo, acta de la retrospectiva y release <strong>v0.1.0</strong>.</li><li>Revisión de código de los PRs del equipo, con correcciones aplicadas en las ramas cuando bloqueaban la integración.</li></ul></div>
+      </div>
+      <div class="panel">
+        <h3>Pull requests integrados <span class="tenue">(18)</span></h3>
+        <ul class="lista-prs"><li><a href="https://github.com/DylanSrz/ZeroBug/pull/115" target="_blank" rel="noopener" data-tip="PR #115: feat: validación de entorno con zod (HU-001) — 18 sep 2026 08:21 · +705 / −58 líneas"><span class="n">#115</span><span class="tipo">función</span><span class="txt">Conectar validación zod del entorno y completar .env.example</span></a></li><li><a href="https://github.com/DylanSrz/ZeroBug/pull/114" target="_blank" rel="noopener" data-tip="PR #114: feat: migraciones TypeORM (HU-001) — 18 sep 2026 08:21 · +652 / −23 líneas"><span class="n">#114</span><span class="tipo">función</span><span class="txt">Migraciones TypeORM: DataSource CLI, scripts npm y primera migración</span></a></li><li><a href="https://github.com/DylanSrz/ZeroBug/pull/117" target="_blank" rel="noopener" data-tip="PR #117: feat: ValidationPipe global, Helmet y CORS (HU-001) — 18 sep 2026 10:21 · +298 / −23 líneas"><span class="n">#117</span><span class="tipo">función</span><span class="txt">ValidationPipe global, Helmet y CORS por entorno</span></a></li><li><a href="https://github.com/DylanSrz/ZeroBug/pull/122" target="_blank" rel="noopener" data-tip="PR #122: feat: filtro global de excepciones y excepciones de dominio (HU-001) — 18 sep 2026 10:22 · +721 / −23 líneas"><span class="n">#122</span><span class="tipo">función</span><span class="txt">Filtro global de excepciones con formato de error uniforme</span></a></li><li><a href="https://github.com/DylanSrz/ZeroBug/pull/124" target="_blank" rel="noopener" data-tip="PR #124: docs: plantillas de PR e issues (.github) → dev — 18 sep 2026 10:30 · +218 / −0 líneas"><span class="n">#124</span><span class="tipo">docs</span><span class="txt">Plantillas de PR e issues y CODEOWNERS en .github/</span></a></li><li><a href="https://github.com/DylanSrz/ZeroBug/pull/125" target="_blank" rel="noopener" data-tip="PR #125: docs: README del proyecto y Swagger con metadatos reales (HU-001) — 18 sep 2026 10:51 · +195 / −102 líneas"><span class="n">#125</span><span class="tipo">docs</span><span class="txt">Swagger con metadatos reales y README del proyecto</span></a></li><li><a href="https://github.com/DylanSrz/ZeroBug/pull/126" target="_blank" rel="noopener" data-tip="PR #126: docs: actualizar hu-001 al stack real (typeorm, vitest, oxlint, zod) — 18 sep 2026 11:05 · +99 / −88 líneas"><span class="n">#126</span><span class="tipo">docs</span><span class="txt">Actualizar HU-001 al stack real (TypeORM, Vitest, oxlint, zod)</span></a></li><li><a href="https://github.com/DylanSrz/ZeroBug/pull/127" target="_blank" rel="noopener" data-tip="PR #127: chore: CI con GitHub Actions (lint, format, build, unit, e2e) — 18 sep 2026 11:13 · +93 / −1 líneas"><span class="n">#127</span><span class="tipo">infra</span><span class="txt">CI con GitHub Actions: lint, build, test y e2e en cada PR</span></a></li><li><a href="https://github.com/DylanSrz/ZeroBug/pull/128" target="_blank" rel="noopener" data-tip="PR #128: docs: Working Agreement y Definition of Done del equipo — 18 sep 2026 11:26 · +166 / −1 líneas"><span class="n">#128</span><span class="tipo">docs</span><span class="txt">Working Agreement y Definition of Done del equipo</span></a></li><li><a href="https://github.com/DylanSrz/ZeroBug/pull/129" target="_blank" rel="noopener" data-tip="PR #129: docs: Working Agreement y Definition of Done del equipo — 18 sep 2026 11:46 · +8 / −8 líneas"><span class="n">#129</span><span class="tipo">docs</span><span class="txt">Working Agreement y Definition of Done del equipo</span></a></li><li><a href="https://github.com/DylanSrz/ZeroBug/pull/131" target="_blank" rel="noopener" data-tip="PR #131: feat: DTOs y validaciones de productos (HU-004) — 20 sep 2026 10:29 · +238 / −2 líneas"><span class="n">#131</span><span class="tipo">función</span><span class="txt">DTOs y validaciones de productos</span></a></li><li><a href="https://github.com/DylanSrz/ZeroBug/pull/138" target="_blank" rel="noopener" data-tip="PR #138: docs: README con @jorel2610, guía de git para 5 integrantes y .nvmrc — 20 sep 2026 19:38 · +9 / −7 líneas"><span class="n">#138</span><span class="tipo">docs</span><span class="txt">README con @jorel2610, guía de git para 5 integrantes y .nvmrc</span></a></li><li><a href="https://github.com/DylanSrz/ZeroBug/pull/139" target="_blank" rel="noopener" data-tip="PR #139: feat: entidad Product, relación con Category y migración (HU-004) — 20 sep 2026 20:20 · +140 / −0 líneas"><span class="n">#139</span><span class="tipo">función</span><span class="txt">Entidad Product (relación con Category), enums y migración</span></a></li><li><a href="https://github.com/DylanSrz/ZeroBug/pull/140" target="_blank" rel="noopener" data-tip="PR #140: feat: ProductsService + ProductsController + Swagger (HU-004) — 20 sep 2026 20:49 · +516 / −2 líneas"><span class="n">#140</span><span class="tipo">función</span><span class="txt">ProductsService + ProductsController + Swagger (6 endpoints)</span></a></li><li><a href="https://github.com/DylanSrz/ZeroBug/pull/141" target="_blank" rel="noopener" data-tip="PR #141: test: e2e de productos (HU-004) — 20 sep 2026 21:15 · +253 / −0 líneas"><span class="n">#141</span><span class="tipo">pruebas</span><span class="txt">Tests e2e de productos</span></a></li><li><a href="https://github.com/DylanSrz/ZeroBug/pull/155" target="_blank" rel="noopener" data-tip="PR #155: chore: seeds de datos de desarrollo (#99) — 24 sep 2026 12:16 · +191 / −3 líneas"><span class="n">#155</span><span class="tipo">infra</span><span class="txt">Seeds de datos de desarrollo (mesas, categorías, productos)</span></a></li><li><a href="https://github.com/DylanSrz/ZeroBug/pull/156" target="_blank" rel="noopener" data-tip="PR #156: docs: acta de retrospectiva del Sprint 1 y cadencia semanal — 24 sep 2026 12:16 · +64 / −7 líneas"><span class="n">#156</span><span class="tipo">docs</span><span class="txt">Acta de retrospectiva del Sprint 1 y cadencia semanal</span></a></li><li><a href="https://github.com/DylanSrz/ZeroBug/pull/157" target="_blank" rel="noopener" data-tip="PR #157: test: e2e del menú público (HU-005) — 24 sep 2026 12:17 · +282 / −0 líneas"><span class="n">#157</span><span class="tipo">pruebas</span><span class="txt">Tests e2e del menú público</span></a></li></ul>
+      </div>
+    </div></div></section>
+<section class="slide " data-titulo="Diego Gonzales" data-seccion="Equipo" aria-label="7. Diego Gonzales"><div class="inner">
+    <div class="persona-cab r">
+      <span class="avatar xl" style="--c:#6ea8fe" aria-hidden="true">DG</span>
+      <div><h2>Diego Gonzales</h2><div class="rol">Desarrollador</div><div class="chips" style="margin-top:8px"><span class="chip">HU-002 · Mesas · 13 pts</span></div></div>
+    </div>
+    <div class="persona r">
+      <div>
+        <div class="stats">
+          <div class="stat"><b data-contar="6">6</b><span>PRs integrados</span></div>
+          <div class="stat"><b data-contar="6">6</b><span>tareas resueltas</span></div>
+          <div class="stat" data-tip="1 aprobadas · 0 con cambios solicitados · 0 comentarios" tabindex="0"><b data-contar="1">1</b><span>revisiones hechas</span></div>
+        </div>
+        <div class="panel"><h3>Aporte destacado</h3><ul><li><strong>HU-002 Mesas</strong> completa, sus 5 tareas: entidad <code>Table</code> y migración, DTOs con validaciones, servicio con filtros combinables, controlador con 5 endpoints documentados en Swagger.</li><li>Suite e2e de mesas con <strong>31 pruebas</strong> contra PostgreSQL, y 10 pruebas unitarias del servicio.</li><li>Ejercicio de iniciación GitFlow y revisión de los DTOs de productos.</li></ul></div>
+      </div>
+      <div class="panel">
+        <h3>Pull requests integrados <span class="tenue">(6)</span></h3>
+        <ul class="lista-prs"><li><a href="https://github.com/DylanSrz/ZeroBug/pull/113" target="_blank" rel="noopener" data-tip="PR #113: Agrege mi nombre en el Readme y agrege el equipo — 18 sep 2026 08:26 · +4 / −0 líneas"><span class="n">#113</span><span class="tipo">cambio</span><span class="txt">Ejercicio de iniciación GitFlow — @Gonza204658</span></a></li><li><a href="https://github.com/DylanSrz/ZeroBug/pull/144" target="_blank" rel="noopener" data-tip="PR #144: Creado la Entidad Table, enum TableStatus y migración #36 — 22 sep 2026 12:41 · +98 / −0 líneas"><span class="n">#144</span><span class="tipo">cambio</span><span class="txt">Entidad Table, enum TableStatus y migración</span></a></li><li><a href="https://github.com/DylanSrz/ZeroBug/pull/147" target="_blank" rel="noopener" data-tip="PR #147: DTOs y validaciones de mesas (crear, actualizar, cambiar estado, filt… — 23 sep 2026 09:04 · +226 / −0 líneas"><span class="n">#147</span><span class="tipo">cambio</span><span class="txt">DTOs y validaciones de mesas (crear, actualizar, cambiar estado, filtros)</span></a></li><li><a href="https://github.com/DylanSrz/ZeroBug/pull/151" target="_blank" rel="noopener" data-tip="PR #151: Feature/hu 002 service mesa — 23 sep 2026 22:22 · +364 / −1 líneas"><span class="n">#151</span><span class="tipo">cambio</span><span class="txt">Crear, listar con filtros, consultar, actualizar y cambiar estado</span></a></li><li><a href="https://github.com/DylanSrz/ZeroBug/pull/153" target="_blank" rel="noopener" data-tip="PR #153: Feature/hu 002 controller table — 23 sep 2026 22:38 · +113 / −0 líneas"><span class="n">#153</span><span class="tipo">cambio</span><span class="txt">TablesController + Swagger (5 endpoints)</span></a></li><li><a href="https://github.com/DylanSrz/ZeroBug/pull/154" target="_blank" rel="noopener" data-tip="PR #154: Feature/hu 002 e2e mesa — 24 sep 2026 11:14 · +409 / −0 líneas"><span class="n">#154</span><span class="tipo">cambio</span><span class="txt">Tests e2e de mesas</span></a></li></ul>
+      </div>
+    </div></div></section>
+<section class="slide " data-titulo="Kerin Barranco" data-seccion="Equipo" aria-label="8. Kerin Barranco"><div class="inner">
+    <div class="persona-cab r">
+      <span class="avatar xl" style="--c:#36c7b8" aria-hidden="true">KB</span>
+      <div><h2>Kerin Barranco</h2><div class="rol">Desarrollador</div><div class="chips" style="margin-top:8px"><span class="chip">HU-001 · Plataforma base · 8 pts</span><span class="chip">HU-003 · Categorías · 8 pts</span></div></div>
+    </div>
+    <div class="persona r">
+      <div>
+        <div class="stats">
+          <div class="stat"><b data-contar="6">6</b><span>PRs integrados</span></div>
+          <div class="stat"><b data-contar="6">6</b><span>tareas resueltas</span></div>
+          <div class="stat" data-tip="2 aprobadas · 0 con cambios solicitados · 0 comentarios" tabindex="0"><b data-contar="2">2</b><span>revisiones hechas</span></div>
+        </div>
+        <div class="panel"><h3>Aporte destacado</h3><ul><li><strong>HU-001</strong>: versionado de la API bajo <code>/api/v1</code> y endpoint de estado del servicio.</li><li><strong>HU-003 Categorías</strong> completa: entidad y migración, DTOs, servicio y controlador con 5 endpoints, <strong>28 pruebas unitarias y 27 e2e</strong>.</li><li>Ejercicio de iniciación GitFlow y revisiones aprobadas a compañeros.</li></ul></div>
+      </div>
+      <div class="panel">
+        <h3>Pull requests integrados <span class="tenue">(6)</span></h3>
+        <ul class="lista-prs"><li><a href="https://github.com/DylanSrz/ZeroBug/pull/121" target="_blank" rel="noopener" data-tip="PR #121: feat: add presentation — 18 sep 2026 10:04 · +3 / −3 líneas"><span class="n">#121</span><span class="tipo">función</span><span class="txt">Ejercicio de iniciación GitFlow — @Kerin0011</span></a></li><li><a href="https://github.com/DylanSrz/ZeroBug/pull/120" target="_blank" rel="noopener" data-tip="PR #120: Feature/hu 001 health versionado — 18 sep 2026 10:39 · +54 / −25 líneas"><span class="n">#120</span><span class="tipo">cambio</span><span class="txt">Versionado /api/v1 y endpoint GET /api/v1/health</span></a></li><li><a href="https://github.com/DylanSrz/ZeroBug/pull/134" target="_blank" rel="noopener" data-tip="PR #134: Feature/hu 003 entidad categorias — 20 sep 2026 19:55 · +81 / −0 líneas"><span class="n">#134</span><span class="tipo">cambio</span><span class="txt">Entidad Category, enum CategoryStatus y migración</span></a></li><li><a href="https://github.com/DylanSrz/ZeroBug/pull/135" target="_blank" rel="noopener" data-tip="PR #135: feat: add category DTOs — 20 sep 2026 20:04 · +112 / −0 líneas"><span class="n">#135</span><span class="tipo">función</span><span class="txt">DTOs y validaciones de categorías</span></a></li><li><a href="https://github.com/DylanSrz/ZeroBug/pull/145" target="_blank" rel="noopener" data-tip="PR #145: feat: implement categories — 22 sep 2026 14:28 · +563 / −1 líneas"><span class="n">#145</span><span class="tipo">función</span><span class="txt">CategoriesService + CategoriesController + Swagger</span></a></li><li><a href="https://github.com/DylanSrz/ZeroBug/pull/148" target="_blank" rel="noopener" data-tip="PR #148: Feature/hu 003 e2e categoria — 23 sep 2026 09:29 · +342 / −0 líneas"><span class="n">#148</span><span class="tipo">cambio</span><span class="txt">Tests e2e de categorías</span></a></li></ul>
+      </div>
+    </div></div></section>
+<section class="slide " data-titulo="Jonathan Rodríguez" data-seccion="Equipo" aria-label="9. Jonathan Rodríguez"><div class="inner">
+    <div class="persona-cab r">
+      <span class="avatar xl" style="--c:#3ddc97" aria-hidden="true">JR</span>
+      <div><h2>Jonathan Rodríguez</h2><div class="rol">Desarrollador</div><div class="chips" style="margin-top:8px"><span class="chip">HU-005 · Menú público · 13 pts</span></div></div>
+    </div>
+    <div class="persona r">
+      <div>
+        <div class="stats">
+          <div class="stat"><b data-contar="2">2</b><span>PRs integrados</span></div>
+          <div class="stat"><b data-contar="3">3</b><span>tareas resueltas</span></div>
+          <div class="stat" data-tip="0 aprobadas · 0 con cambios solicitados · 0 comentarios" tabindex="0"><b data-contar="0">0</b><span>revisiones hechas</span></div>
+        </div>
+        <div class="panel"><h3>Aporte destacado</h3><ul><li><strong>HU-005 Menú público</strong>: servicio y controlador con los 4 endpoints del menú y las reglas de visibilidad RN-031 a RN-035.</li><li>10 pruebas unitarias del servicio del menú.</li><li>Ejercicio de iniciación GitFlow.</li></ul></div>
+      </div>
+      <div class="panel">
+        <h3>Pull requests integrados <span class="tenue">(2)</span></h3>
+        <ul class="lista-prs"><li><a href="https://github.com/DylanSrz/ZeroBug/pull/112" target="_blank" rel="noopener" data-tip="PR #112: docs: agregar presentacion de Jonathan al readme — 17 sep 2026 20:44 · +6 / −0 líneas"><span class="n">#112</span><span class="tipo">docs</span><span class="txt">Ejercicio de iniciación GitFlow — @rodriguezvjhona-droid</span></a></li><li><a href="https://github.com/DylanSrz/ZeroBug/pull/149" target="_blank" rel="noopener" data-tip="PR #149: Entrega de tarea — 23 sep 2026 22:13 · +614 / −0 líneas"><span class="n">#149</span><span class="tipo">cambio</span><span class="txt">Consultas del menú público (solo activos) · MenuController, DTOs de respuesta y Swagger (4 endpoints)</span></a></li></ul>
+      </div>
+    </div></div></section>
+<section class="slide " data-titulo="Jorel Hernández" data-seccion="Equipo" aria-label="10. Jorel Hernández"><div class="inner">
+    <div class="persona-cab r">
+      <span class="avatar xl" style="--c:#c9a0ff" aria-hidden="true">JH</span>
+      <div><h2>Jorel Hernández</h2><div class="rol">Desarrollador</div></div>
+    </div>
+    <div class="persona r">
+      <div>
+        <div class="stats">
+          <div class="stat"><b data-contar="1">1</b><span>PRs integrados</span></div>
+          <div class="stat"><b data-contar="1">1</b><span>tareas resueltas</span></div>
+          <div class="stat" data-tip="0 aprobadas · 0 con cambios solicitados · 0 comentarios" tabindex="0"><b data-contar="0">0</b><span>revisiones hechas</span></div>
+        </div>
+        <div class="panel"><h3>Aporte destacado</h3><ul><li>Incorporación al equipo durante el sprint: acceso al repositorio y al tablero.</li><li>Ejercicio de iniciación GitFlow completado.</li></ul></div>
+      </div>
+      <div class="panel">
+        <h3>Pull requests integrados <span class="tenue">(1)</span></h3>
+        <ul class="lista-prs"><li><a href="https://github.com/DylanSrz/ZeroBug/pull/146" target="_blank" rel="noopener" data-tip="PR #146: docs: agregar presentacion de Jorel Hernandez al readme — 22 sep 2026 14:21 · +3 / −2 líneas"><span class="n">#146</span><span class="tipo">docs</span><span class="txt">Ejercicio de iniciación GitFlow — @jorel2610</span></a></li></ul>
+      </div>
+    </div></div></section>
+<section class="slide " data-titulo="Línea de tiempo" data-seccion="Equipo" aria-label="11. Línea de tiempo"><div class="inner">
+  <p class="kicker r">05 · Línea de tiempo</p>
+  <h2 class="r">Qué entró en <code style="font-size:.85em">dev</code> cada día <span class="tenue" style="font-size:.55em;font-weight:500">· clic en un nombre para filtrar</span></h2>
+  <div class="tl-leyenda r"><button data-autor="DylanSrz" aria-pressed="false"><span class="avatar sm" style="--c:#f5b942" aria-hidden="true">DS</span>Dylan <span class="tenue">18</span></button><button data-autor="Gonza204658" aria-pressed="false"><span class="avatar sm" style="--c:#6ea8fe" aria-hidden="true">DG</span>Diego <span class="tenue">6</span></button><button data-autor="Kerin0011" aria-pressed="false"><span class="avatar sm" style="--c:#36c7b8" aria-hidden="true">KB</span>Kerin <span class="tenue">6</span></button><button data-autor="rodriguezvjhona-droid" aria-pressed="false"><span class="avatar sm" style="--c:#3ddc97" aria-hidden="true">JR</span>Jonathan <span class="tenue">2</span></button><button data-autor="jorel2610" aria-pressed="false"><span class="avatar sm" style="--c:#c9a0ff" aria-hidden="true">JH</span>Jorel <span class="tenue">1</span></button></div>
+  <div class="timeline r" style="--dias:8">
+    <div class="dia fuera" data-tip="Antes del inicio del sprint">
+        <div class="fecha">jue<b>17</b>sep<span class="fuera-lbl">previo</span></div>
+        <a class="pr-pill" style="--c:#3ddc97" data-autor="rodriguezvjhona-droid" href="https://github.com/DylanSrz/ZeroBug/pull/112" target="_blank" rel="noopener" data-tip="#112 Ejercicio de iniciación GitFlow — @rodriguezvjhona-droid — Jonathan Rodríguez, 20:44"><span class="ini">JR</span><span class="num">#112</span></a>
+        
+      </div><div class="dia">
+        <div class="fecha">vie<b>18</b>sep</div>
+        <a class="pr-pill" style="--c:#f5b942" data-autor="DylanSrz" href="https://github.com/DylanSrz/ZeroBug/pull/115" target="_blank" rel="noopener" data-tip="#115 Conectar validación zod del entorno y completar .env.example — Dylan Suárez, 08:21"><span class="ini">DS</span><span class="num">#115</span></a><a class="pr-pill" style="--c:#f5b942" data-autor="DylanSrz" href="https://github.com/DylanSrz/ZeroBug/pull/114" target="_blank" rel="noopener" data-tip="#114 Migraciones TypeORM: DataSource CLI, scripts npm y primera migración — Dylan Suárez, 08:21"><span class="ini">DS</span><span class="num">#114</span></a><a class="pr-pill" style="--c:#6ea8fe" data-autor="Gonza204658" href="https://github.com/DylanSrz/ZeroBug/pull/113" target="_blank" rel="noopener" data-tip="#113 Ejercicio de iniciación GitFlow — @Gonza204658 — Diego Gonzales, 08:26"><span class="ini">DG</span><span class="num">#113</span></a><a class="pr-pill" style="--c:#36c7b8" data-autor="Kerin0011" href="https://github.com/DylanSrz/ZeroBug/pull/121" target="_blank" rel="noopener" data-tip="#121 Ejercicio de iniciación GitFlow — @Kerin0011 — Kerin Barranco, 10:04"><span class="ini">KB</span><span class="num">#121</span></a><a class="pr-pill" style="--c:#f5b942" data-autor="DylanSrz" href="https://github.com/DylanSrz/ZeroBug/pull/117" target="_blank" rel="noopener" data-tip="#117 ValidationPipe global, Helmet y CORS por entorno — Dylan Suárez, 10:21"><span class="ini">DS</span><span class="num">#117</span></a><a class="pr-pill" style="--c:#f5b942" data-autor="DylanSrz" href="https://github.com/DylanSrz/ZeroBug/pull/122" target="_blank" rel="noopener" data-tip="#122 Filtro global de excepciones con formato de error uniforme — Dylan Suárez, 10:22"><span class="ini">DS</span><span class="num">#122</span></a><a class="pr-pill" style="--c:#f5b942" data-autor="DylanSrz" href="https://github.com/DylanSrz/ZeroBug/pull/124" target="_blank" rel="noopener" data-tip="#124 Plantillas de PR e issues y CODEOWNERS en .github/ — Dylan Suárez, 10:30"><span class="ini">DS</span><span class="num">#124</span></a><a class="pr-pill" style="--c:#36c7b8" data-autor="Kerin0011" href="https://github.com/DylanSrz/ZeroBug/pull/120" target="_blank" rel="noopener" data-tip="#120 Versionado /api/v1 y endpoint GET /api/v1/health — Kerin Barranco, 10:39"><span class="ini">KB</span><span class="num">#120</span></a><a class="pr-pill" style="--c:#f5b942" data-autor="DylanSrz" href="https://github.com/DylanSrz/ZeroBug/pull/125" target="_blank" rel="noopener" data-tip="#125 Swagger con metadatos reales y README del proyecto — Dylan Suárez, 10:51"><span class="ini">DS</span><span class="num">#125</span></a><a class="pr-pill" style="--c:#f5b942" data-autor="DylanSrz" href="https://github.com/DylanSrz/ZeroBug/pull/126" target="_blank" rel="noopener" data-tip="#126 Actualizar HU-001 al stack real (TypeORM, Vitest, oxlint, zod) — Dylan Suárez, 11:05"><span class="ini">DS</span><span class="num">#126</span></a><a class="pr-pill" style="--c:#f5b942" data-autor="DylanSrz" href="https://github.com/DylanSrz/ZeroBug/pull/127" target="_blank" rel="noopener" data-tip="#127 CI con GitHub Actions: lint, build, test y e2e en cada PR — Dylan Suárez, 11:13"><span class="ini">DS</span><span class="num">#127</span></a><a class="pr-pill" style="--c:#f5b942" data-autor="DylanSrz" href="https://github.com/DylanSrz/ZeroBug/pull/128" target="_blank" rel="noopener" data-tip="#128 Working Agreement y Definition of Done del equipo — Dylan Suárez, 11:26"><span class="ini">DS</span><span class="num">#128</span></a><a class="pr-pill" style="--c:#f5b942" data-autor="DylanSrz" href="https://github.com/DylanSrz/ZeroBug/pull/129" target="_blank" rel="noopener" data-tip="#129 Working Agreement y Definition of Done del equipo — Dylan Suárez, 11:46"><span class="ini">DS</span><span class="num">#129</span></a>
+        
+      </div><div class="dia vacio">
+        <div class="fecha">sáb<b>19</b>sep</div>
+        
+        <span class="tenue" style="font-size:11px;text-align:center">—</span>
+      </div><div class="dia">
+        <div class="fecha">dom<b>20</b>sep</div>
+        <a class="pr-pill" style="--c:#f5b942" data-autor="DylanSrz" href="https://github.com/DylanSrz/ZeroBug/pull/131" target="_blank" rel="noopener" data-tip="#131 DTOs y validaciones de productos — Dylan Suárez, 10:29"><span class="ini">DS</span><span class="num">#131</span></a><a class="pr-pill" style="--c:#f5b942" data-autor="DylanSrz" href="https://github.com/DylanSrz/ZeroBug/pull/138" target="_blank" rel="noopener" data-tip="#138 README con @jorel2610, guía de git para 5 integrantes y .nvmrc — Dylan Suárez, 19:38"><span class="ini">DS</span><span class="num">#138</span></a><a class="pr-pill" style="--c:#36c7b8" data-autor="Kerin0011" href="https://github.com/DylanSrz/ZeroBug/pull/134" target="_blank" rel="noopener" data-tip="#134 Entidad Category, enum CategoryStatus y migración — Kerin Barranco, 19:55"><span class="ini">KB</span><span class="num">#134</span></a><a class="pr-pill" style="--c:#36c7b8" data-autor="Kerin0011" href="https://github.com/DylanSrz/ZeroBug/pull/135" target="_blank" rel="noopener" data-tip="#135 DTOs y validaciones de categorías — Kerin Barranco, 20:04"><span class="ini">KB</span><span class="num">#135</span></a><a class="pr-pill" style="--c:#f5b942" data-autor="DylanSrz" href="https://github.com/DylanSrz/ZeroBug/pull/139" target="_blank" rel="noopener" data-tip="#139 Entidad Product (relación con Category), enums y migración — Dylan Suárez, 20:20"><span class="ini">DS</span><span class="num">#139</span></a><a class="pr-pill" style="--c:#f5b942" data-autor="DylanSrz" href="https://github.com/DylanSrz/ZeroBug/pull/140" target="_blank" rel="noopener" data-tip="#140 ProductsService + ProductsController + Swagger (6 endpoints) — Dylan Suárez, 20:49"><span class="ini">DS</span><span class="num">#140</span></a><a class="pr-pill" style="--c:#f5b942" data-autor="DylanSrz" href="https://github.com/DylanSrz/ZeroBug/pull/141" target="_blank" rel="noopener" data-tip="#141 Tests e2e de productos — Dylan Suárez, 21:15"><span class="ini">DS</span><span class="num">#141</span></a>
+        
+      </div><div class="dia vacio">
+        <div class="fecha">lun<b>21</b>sep</div>
+        
+        <span class="tenue" style="font-size:11px;text-align:center">—</span>
+      </div><div class="dia">
+        <div class="fecha">mar<b>22</b>sep</div>
+        <a class="pr-pill" style="--c:#6ea8fe" data-autor="Gonza204658" href="https://github.com/DylanSrz/ZeroBug/pull/144" target="_blank" rel="noopener" data-tip="#144 Entidad Table, enum TableStatus y migración — Diego Gonzales, 12:41"><span class="ini">DG</span><span class="num">#144</span></a><a class="pr-pill" style="--c:#c9a0ff" data-autor="jorel2610" href="https://github.com/DylanSrz/ZeroBug/pull/146" target="_blank" rel="noopener" data-tip="#146 Ejercicio de iniciación GitFlow — @jorel2610 — Jorel Hernández, 14:21"><span class="ini">JH</span><span class="num">#146</span></a><a class="pr-pill" style="--c:#36c7b8" data-autor="Kerin0011" href="https://github.com/DylanSrz/ZeroBug/pull/145" target="_blank" rel="noopener" data-tip="#145 CategoriesService + CategoriesController + Swagger — Kerin Barranco, 14:28"><span class="ini">KB</span><span class="num">#145</span></a>
+        
+      </div><div class="dia">
+        <div class="fecha">mié<b>23</b>sep</div>
+        <a class="pr-pill" style="--c:#6ea8fe" data-autor="Gonza204658" href="https://github.com/DylanSrz/ZeroBug/pull/147" target="_blank" rel="noopener" data-tip="#147 DTOs y validaciones de mesas (crear, actualizar, cambiar estado, filtros) — Diego Gonzales, 09:04"><span class="ini">DG</span><span class="num">#147</span></a><a class="pr-pill" style="--c:#36c7b8" data-autor="Kerin0011" href="https://github.com/DylanSrz/ZeroBug/pull/148" target="_blank" rel="noopener" data-tip="#148 Tests e2e de categorías — Kerin Barranco, 09:29"><span class="ini">KB</span><span class="num">#148</span></a><a class="pr-pill" style="--c:#3ddc97" data-autor="rodriguezvjhona-droid" href="https://github.com/DylanSrz/ZeroBug/pull/149" target="_blank" rel="noopener" data-tip="#149 Consultas del menú público (solo activos) · MenuController, DTOs de respuesta y Swagger (4 endpoints) — Jonathan Rodríguez, 22:13"><span class="ini">JR</span><span class="num">#149</span></a><a class="pr-pill" style="--c:#6ea8fe" data-autor="Gonza204658" href="https://github.com/DylanSrz/ZeroBug/pull/151" target="_blank" rel="noopener" data-tip="#151 Crear, listar con filtros, consultar, actualizar y cambiar estado — Diego Gonzales, 22:22"><span class="ini">DG</span><span class="num">#151</span></a><a class="pr-pill" style="--c:#6ea8fe" data-autor="Gonza204658" href="https://github.com/DylanSrz/ZeroBug/pull/153" target="_blank" rel="noopener" data-tip="#153 TablesController + Swagger (5 endpoints) — Diego Gonzales, 22:38"><span class="ini">DG</span><span class="num">#153</span></a>
+        
+      </div><div class="dia">
+        <div class="fecha">jue<b>24</b>sep</div>
+        <a class="pr-pill" style="--c:#6ea8fe" data-autor="Gonza204658" href="https://github.com/DylanSrz/ZeroBug/pull/154" target="_blank" rel="noopener" data-tip="#154 Tests e2e de mesas — Diego Gonzales, 11:14"><span class="ini">DG</span><span class="num">#154</span></a><a class="pr-pill" style="--c:#f5b942" data-autor="DylanSrz" href="https://github.com/DylanSrz/ZeroBug/pull/155" target="_blank" rel="noopener" data-tip="#155 Seeds de datos de desarrollo (mesas, categorías, productos) — Dylan Suárez, 12:16"><span class="ini">DS</span><span class="num">#155</span></a><a class="pr-pill" style="--c:#f5b942" data-autor="DylanSrz" href="https://github.com/DylanSrz/ZeroBug/pull/156" target="_blank" rel="noopener" data-tip="#156 Acta de retrospectiva del Sprint 1 y cadencia semanal — Dylan Suárez, 12:16"><span class="ini">DS</span><span class="num">#156</span></a><a class="pr-pill" style="--c:#f5b942" data-autor="DylanSrz" href="https://github.com/DylanSrz/ZeroBug/pull/157" target="_blank" rel="noopener" data-tip="#157 Tests e2e del menú público — Dylan Suárez, 12:17"><span class="ini">DS</span><span class="num">#157</span></a>
+        
+      </div>
+  </div></div></section>
+<section class="slide " data-titulo="Calidad" data-seccion="Calidad" aria-label="12. Calidad"><div class="inner">
+  <p class="kicker r">06 · Calidad</p>
+  <h2 class="r">216 pruebas automáticas y CI obligatorio</h2>
+  <div class="grid c2 r">
+    <div class="panel">
+      <h3>Pruebas por módulo</h3>
+      <div class="leyenda"><span><i style="background:var(--teal)"></i>Unitarias</span><span><i style="background:var(--ambar)"></i>End-to-end (PostgreSQL real)</span></div>
+      <div class="barras">
+        
+          <div class="fila-test" data-tip="Mesas: 29 unitarias + 31 e2e · 5 endpoints">
+            <span class="mod">Mesas</span>
+            <span class="apilada"><i style="background:var(--teal)" data-w="48.3"></i><i style="background:var(--ambar)" data-w="51.7"></i></span>
+            <span class="cifras"><b>60</b> <span class="tenue">(29 + 31)</span></span>
+          </div>
+          <div class="fila-test" data-tip="Categorías: 28 unitarias + 27 e2e · 5 endpoints">
+            <span class="mod">Categorías</span>
+            <span class="apilada"><i style="background:var(--teal)" data-w="46.7"></i><i style="background:var(--ambar)" data-w="45.0"></i></span>
+            <span class="cifras"><b>55</b> <span class="tenue">(28 + 27)</span></span>
+          </div>
+          <div class="fila-test" data-tip="Productos: 32 unitarias + 20 e2e · 6 endpoints">
+            <span class="mod">Productos</span>
+            <span class="apilada"><i style="background:var(--teal)" data-w="53.3"></i><i style="background:var(--ambar)" data-w="33.3"></i></span>
+            <span class="cifras"><b>52</b> <span class="tenue">(32 + 20)</span></span>
+          </div>
+          <div class="fila-test" data-tip="Menú público: 10 unitarias + 16 e2e · 4 endpoints">
+            <span class="mod">Menú público</span>
+            <span class="apilada"><i style="background:var(--teal)" data-w="16.7"></i><i style="background:var(--ambar)" data-w="26.7"></i></span>
+            <span class="cifras"><b>26</b> <span class="tenue">(10 + 16)</span></span>
+          </div>
+          <div class="fila-test" data-tip="Plataforma: 10 unitarias + 13 e2e">
+            <span class="mod">Plataforma</span>
+            <span class="apilada"><i style="background:var(--teal)" data-w="16.7"></i><i style="background:var(--ambar)" data-w="21.7"></i></span>
+            <span class="cifras"><b>23</b> <span class="tenue">(10 + 13)</span></span>
+          </div>
+      </div>
+    </div>
+    <div class="panel"><h3>Cómo aseguramos la calidad</h3><ul><li><strong>CI obligatorio</strong> en cada pull request: lint sin warnings, Prettier, build, pruebas unitarias y e2e con PostgreSQL efímero.</li><li>Las <strong>pruebas e2e corren contra PostgreSQL real</strong>, no contra simulaciones, y se pueden repetir sin dejar datos residuales.</li><li><strong>Formato uniforme de errores</strong> con trazabilidad a la regla de negocio incumplida (<code>rule: &quot;RN-016&quot;</code>), lo que permite verificar los criterios de aceptación mirando la respuesta.</li><li><strong>Verificación cruzada</strong>: en la Sprint Review, cada historia la prueba alguien distinto a su autor contra sus criterios de aceptación.</li></ul></div>
+  </div></div></section>
+<section class="slide " data-titulo="Retrospectiva" data-seccion="Proceso" aria-label="13. Retrospectiva"><div class="inner">
+  <p class="kicker r">07 · Retrospectiva</p>
+  <h2 class="r">Qué aprendimos</h2>
+  <div class="grid c3 retro r">
+    <div class="panel"><h3><span class="marca m-ok">✓</span>Mantener</h3><ul><li>CI obligatorio desde el primer día.</li><li>Working Agreement y Definition of Done escritos antes de programar.</li><li>Pruebas desde el principio, e2e contra PostgreSQL real.</li><li>Errores con trazabilidad a las reglas de negocio.</li><li>Tablero con jerarquía épica → historia → tarea.</li></ul></div>
+    <div class="panel"><h3><span class="marca m-mejora">↻</span>Mejorar</h3><ul><li>Revisar la rama destino antes de abrir un PR (GitHub propone <code>main</code> por defecto).</li><li>Que el checklist del PR refleje lo que realmente se ejecutó.</li><li>Evitar cambios accidentales en archivos de otros compañeros.</li><li>Actualizar la rama con <code>dev</code> antes de pedir revisión.</li><li>Repartir más las revisiones: se concentraron en el Scrum Master.</li><li>Difundir antes las convenciones del proyecto (rutas, nombres, excepciones).</li><li>Anticipar el efecto de los cambios de configuración del repositorio antes de aplicarlos.</li></ul></div>
+    <div class="panel"><h3><span class="marca m-accion">→</span>Acciones</h3><ul><li>Antes de cada push, revisar <code>git diff origin/dev...HEAD</code> en busca de archivos ajenos <span class="tenue">— Todo el equipo</span></li><li>Antes de pedir revisión, actualizar la rama con <code>dev</code> y levantar la aplicación <span class="tenue">— Todo el equipo</span></li><li>Documentar en el README las convenciones que más se olvidan <span class="tenue">— Dylan Suárez</span></li><li>Que cada PR lo revise alguien distinto al Scrum Master siempre que sea posible <span class="tenue">— Todo el equipo</span></li><li>Tras cada release, comprobar que <code>dev</code> sigue existiendo y sincronizarla con <code>main</code> <span class="tenue">— Dylan Suárez</span></li></ul></div>
+  </div></div></section>
+<section class="slide " data-titulo="Decisiones y calendario" data-seccion="Proceso" aria-label="14. Decisiones y calendario"><div class="inner">
+  <p class="kicker r">08 · Decisiones del sprint</p>
+  <h2 class="r">Cambios de proceso y nuevo calendario</h2>
+  <div class="grid c3 r" style="margin-bottom:18px">
+    <div class="panel"><h3>Sprints de una semana</h3><p>Desde el Sprint 2 los sprints duran una semana, de lunes a viernes. El Sprint 2 va del jueves 24 de septiembre al viernes 2 de octubre; desde el Sprint 3 la cadencia queda alineada al lunes.</p></div><div class="panel"><h3>Replanificación del proyecto</h3><p>Con media capacidad por sprint, el alcance se redistribuyó en cinco sprints: reservas en los Sprints 2 y 3, usuarios y seguridad en el 4, y pedidos en el 5 (cierre el 23 de octubre).</p></div><div class="panel"><h3>Alcance acotado por sprint</h3><p>El Sprint 2 compromete 34 puntos en lugar de los 79 planificados originalmente para las dos semanas de reservas.</p></div>
+  </div>
+  <div class="calendario r">
+    <div class="sprint-caja ">
+      <div class="t">Sprint 1</div><div class="f">18 – 24 sep</div><p>Plataforma, mesas, categorías, productos y menú</p>
+      <span class="estado ok">✓ Hecho</span>
+    </div>
+    <div class="sprint-caja actual">
+      <div class="t">Sprint 2</div><div class="f">24 sep – 2 oct</div><p>Reservas: disponibilidad, registro y consulta</p>
+      <span class="estado actual">● En curso</span>
+    </div>
+    <div class="sprint-caja ">
+      <div class="t">Sprint 3</div><div class="f">5 – 9 oct</div><p>Reservas: modificación, cancelación, confirmación, check-in y no-show</p>
+      <span class="estado pendiente">Planificado</span>
+    </div>
+    <div class="sprint-caja ">
+      <div class="t">Sprint 4</div><div class="f">12 – 16 oct</div><p>Usuarios, autenticación JWT, roles y perfil</p>
+      <span class="estado pendiente">Planificado</span>
+    </div>
+    <div class="sprint-caja ">
+      <div class="t">Sprint 5</div><div class="f">19 – 23 oct</div><p>Pedidos por mesa</p>
+      <span class="estado pendiente">Planificado</span>
+    </div></div></div></section>
+<section class="slide " data-titulo="Incidencias" data-seccion="Proceso" aria-label="15. Incidencias"><div class="inner">
+    <p class="kicker r">09 · Incidencias del sprint</p>
+    <h2 class="r">Qué salió mal y cómo lo resolvimos</h2>
+    
+      <div class="panel r" style="margin-bottom:14px">
+        <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:10px">
+          <h3 style="margin:0">⚠ Rama <code>dev</code> eliminada al publicar el release</h3><span class="estado ok">✓ Resuelta</span>
+        </div>
+        <div class="grid c3">
+          <div><p class="kicker" style="margin-bottom:4px">Qué pasó</p><p>Al mergear el release <strong>v0.1.0</strong> a <code>main</code>, el borrado automático de ramas —activado ese mismo día para limpiar ramas viejas— eliminó también la rama <code>dev</code> del repositorio remoto, porque era la rama de origen del PR de release.</p></div>
+          <div><p class="kicker" style="margin-bottom:4px">Impacto</p><p>No se perdió trabajo: todo el contenido estaba en <code>main</code>. Durante un día no se pudieron abrir PRs hacia <code>dev</code>.</p></div>
+          <div><p class="kicker" style="margin-bottom:4px">Solución</p><p>Se restauró <code>dev</code> el 25 de septiembre desde el release, se desactivó el borrado automático y se añadió al cierre de cada sprint la comprobación de que <code>dev</code> sigue existiendo.</p></div>
+        </div>
+      </div></div></section>
+<section class="slide " data-titulo="Sprint 2" data-seccion="Próximo sprint" aria-label="16. Sprint 2"><div class="inner">
+    <p class="kicker r">10 · Próximo sprint</p>
+    <h2 class="r">Sprint 2 · 24 sep – 2 oct 2026</h2>
+    <p class="lead r" style="margin-bottom:18px"><span class="tenue">Objetivo:</span> Que un cliente pueda consultar la disponibilidad de mesas, registrar una reserva y consultarla después.</p>
+    <div class="grid c2 r">
+      <div class="panel">
+        <h3>Historias comprometidas</h3>
+        <table class="t"><thead><tr><th>Historia</th><th style="text-align:right">Puntos</th></tr></thead>
+          <tbody><tr><td><code>HU-006</code> Consulta de disponibilidad de mesas</td><td class="num">13</td></tr><tr><td><code>HU-007</code> Registro de reserva</td><td class="num">13</td></tr><tr><td><code>HU-008</code> Consulta de reserva</td><td class="num">8</td></tr></tbody>
+          <tfoot><tr><td>Total comprometido</td><td class="num">34</td></tr></tfoot></table>
+        <p style="margin-top:12px">Antes de las historias: la entidad <code>Reservation</code> con su migración (#52) y la definición de la regla de conflicto horario (#53).</p>
+      </div>
+      <div class="panel"><h3>Riesgos que vigilamos</h3><ul><li>La regla de conflicto horario (duración de una reserva, margen entre reservas, horario de servicio) debe quedar definida al inicio: disponibilidad y registro dependen de ella.</li><li>Las tres historias son secuenciales (registro depende de disponibilidad y consulta de registro); un retraso en HU-006 se arrastra al resto.</li><li>Con sprints de una semana el margen es menor; lo que no quepa pasa al Sprint 3 en lugar de alargar el sprint.</li></ul></div>
+    </div></div></section>
+<section class="slide portada" data-titulo="Cierre" data-seccion="" aria-label="17. Cierre"><div class="inner">
+  <div style="text-align:center">
+    <p class="kicker r">Gracias</p>
+    <h1 class="r"><span class="logo">Zero<span>Bug</span></span></h1>
+    <p class="lead r" style="margin:0 auto">Preguntas y comentarios bienvenidos.</p>
+    <div class="meta r" style="justify-content:center">
+      <div><b>Repositorio</b><a href="https://github.com/DylanSrz/ZeroBug" target="_blank" rel="noopener">github.com/DylanSrz/ZeroBug</a></div>
+      <div><b>Tablero</b><a href="https://github.com/users/DylanSrz/projects/7" target="_blank" rel="noopener">GitHub Projects</a></div>
+      <div><b>Release</b><a href="https://github.com/DylanSrz/ZeroBug/tree/v0.1.0" target="_blank" rel="noopener">v0.1.0</a></div>
+    </div>
+  </div></div></section>
+</main>
+<button class="nav izq" id="anterior" aria-label="Diapositiva anterior">‹</button>
+<button class="nav der" id="siguiente" aria-label="Diapositiva siguiente">›</button>
+<div class="hud">
+  <div class="progreso"><i id="progreso"></i></div>
+  <div class="hud-barra">
+    <div>ZeroBug · Informe del Sprint 1 · 18 – 24 sep 2026</div>
+    <div class="teclas"><kbd>←</kbd><kbd>→</kbd> navegar <button data-capa="vista-general"><kbd>O</kbd> vista general</button> <button data-capa="ayuda"><kbd>?</kbd> atajos</button> <kbd>F</kbd> pantalla completa <span id="contador"></span></div>
+  </div>
+</div>
+<div class="capa" id="vista-general" role="dialog" aria-label="Vista general"><h2>Vista general <span class="tenue" style="font-size:14px;font-weight:500">· Esc para cerrar</span></h2><div class="miniaturas"></div></div>
+<div class="capa" id="ayuda" role="dialog" aria-label="Atajos de teclado"><div class="ayuda"><h2>Atajos de teclado</h2><table>
+  <tr><td><kbd>→</kbd> <kbd>↓</kbd> <kbd>Espacio</kbd></td><td>Siguiente diapositiva</td></tr>
+  <tr><td><kbd>←</kbd> <kbd>↑</kbd></td><td>Diapositiva anterior</td></tr>
+  <tr><td><kbd>Inicio</kbd> <kbd>Fin</kbd></td><td>Primera / última</td></tr>
+  <tr><td><kbd>O</kbd></td><td>Vista general de todas las diapositivas</td></tr>
+  <tr><td><kbd>F</kbd></td><td>Pantalla completa</td></tr>
+  <tr><td><kbd>Esc</kbd></td><td>Cerrar esta ventana</td></tr>
+  <tr><td>Clic</td><td>En tarjetas, nombres y PRs para ver el detalle</td></tr>
+</table><p class="tenue" style="margin-top:14px;font-size:13px"><button data-capa="ayuda" style="background:none;border:1px solid var(--borde);border-radius:8px;padding:6px 12px;cursor:pointer">Cerrar</button></p></div></div>
+<div class="tip" id="tip" role="tooltip"></div>
+<script>
+/* Navegación e interacción de la presentación del informe de sprint.
+   Sin dependencias: el HTML generado es autocontenido y funciona sin internet. */
+(() => {
+  const html = document.documentElement;
+  const estatico = new URLSearchParams(location.search).has('static');
+  if (estatico) html.classList.add('estatico');
+
+  const slides = [...document.querySelectorAll('.slide')];
+  const $ = (sel, raiz = document) => raiz.querySelector(sel);
+  const $$ = (sel, raiz = document) => [...raiz.querySelectorAll(sel)];
+  const barra = $('#progreso');
+  const contador = $('#contador');
+  const btnPrev = $('#anterior');
+  const btnSig = $('#siguiente');
+  const capaVista = $('#vista-general');
+  const capaAyuda = $('#ayuda');
+  const tip = $('#tip');
+
+  const desdeHash = () => Math.min(slides.length - 1, Math.max(0, (parseInt(location.hash.slice(1), 10) || 1) - 1));
+  let actual = desdeHash();
+
+  // ── animaciones al entrar en una diapositiva ───────────────────────────
+  function animarBarras(slide) {
+    $$('[data-w]', slide).forEach((el) => {
+      if (estatico) { el.style.width = el.dataset.w + '%'; return; }
+      el.style.width = '0';
+      requestAnimationFrame(() => requestAnimationFrame(() => { el.style.width = el.dataset.w + '%'; }));
+    });
+  }
+  function contar(slide) {
+    $$('[data-contar]', slide).forEach((el) => {
+      const fin = Number(el.dataset.contar);
+      if (estatico || !Number.isFinite(fin)) { el.textContent = fin.toLocaleString('es-CO'); return; }
+      const t0 = performance.now();
+      const dur = 900 + Math.min(fin, 200) * 2;
+      const paso = (t) => {
+        const p = Math.min(1, (t - t0) / dur);
+        el.textContent = Math.round(fin * (1 - Math.pow(1 - p, 3))).toLocaleString('es-CO');
+        if (p < 1) requestAnimationFrame(paso);
+      };
+      requestAnimationFrame(paso);
+    });
+  }
+
+  function mostrar(n) {
+    actual = Math.min(slides.length - 1, Math.max(0, n));
+    slides.forEach((s, k) => {
+      s.classList.toggle('activa', k === actual);
+      s.classList.toggle('previa', k < actual);
+      s.setAttribute('aria-hidden', k === actual ? 'false' : 'true');
+    });
+    const s = slides[actual];
+    animarBarras(s);
+    contar(s);
+    barra.style.width = ((actual + 1) / slides.length) * 100 + '%';
+    contador.textContent = `${actual + 1} / ${slides.length}`;
+    btnPrev.disabled = actual === 0;
+    btnSig.disabled = actual === slides.length - 1;
+    history.replaceState(null, '', location.pathname + location.search + '#' + (actual + 1));
+    $$('.miniaturas button').forEach((b, k) => b.classList.toggle('actual', k === actual));
+    ocultarTip();
+  }
+  const ir = (n) => { if (n !== actual && n >= 0 && n < slides.length) mostrar(n); };
+
+  // ── capas: vista general (O) y ayuda (?) ───────────────────────────────
+  const miniaturas = $('.miniaturas', capaVista);
+  slides.forEach((s, k) => {
+    const b = document.createElement('button');
+    b.innerHTML = `<span class="n">${String(k + 1).padStart(2, '0')}</span><span class="t"></span><span class="tenue"></span>`;
+    b.querySelector('.t').textContent = s.dataset.titulo || `Diapositiva ${k + 1}`;
+    b.querySelector('.tenue').textContent = s.dataset.seccion || '';
+    b.addEventListener('click', () => { cerrarCapas(); ir(k); });
+    miniaturas.appendChild(b);
+  });
+  const abierta = () => capaVista.classList.contains('abierta') || capaAyuda.classList.contains('abierta');
+  function alternar(capa) {
+    const abrir = !capa.classList.contains('abierta');
+    cerrarCapas();
+    if (abrir) {
+      capa.classList.add('abierta');
+      (capa === capaVista ? $$('.miniaturas button')[actual] : capa.querySelector('button'))?.focus();
+    }
+  }
+  function cerrarCapas() { capaVista.classList.remove('abierta'); capaAyuda.classList.remove('abierta'); }
+  $$('[data-capa]').forEach((b) => b.addEventListener('click', () => alternar($('#' + b.dataset.capa))));
+  $$('.capa').forEach((c) => c.addEventListener('click', (e) => { if (e.target === c) cerrarCapas(); }));
+
+  // ── teclado ────────────────────────────────────────────────────────────
+  document.addEventListener('keydown', (e) => {
+    if (e.metaKey || e.ctrlKey || e.altKey) return;
+    const k = e.key;
+    if (k === 'Escape') { if (abierta()) { cerrarCapas(); e.preventDefault(); } return; }
+    if (k === 'o' || k === 'O' || k === 'g' || k === 'G') { alternar(capaVista); e.preventDefault(); return; }
+    if (k === '?' || k === 'h' || k === 'H') { alternar(capaAyuda); e.preventDefault(); return; }
+    if (k === 'f' || k === 'F') {
+      if (document.fullscreenElement) document.exitFullscreen(); else html.requestFullscreen?.();
+      return;
+    }
+    if (abierta()) return;
+    // Enter/espacio sobre un control interactivo lo activan, no avanzan
+    const enControl = e.target.closest?.('button, a, [role="button"]');
+    switch (k) {
+      case 'ArrowRight': case 'ArrowDown': case 'PageDown': ir(actual + 1); e.preventDefault(); break;
+      case ' ': if (!enControl) { ir(actual + 1); e.preventDefault(); } break;
+      case 'ArrowLeft': case 'ArrowUp': case 'PageUp': case 'Backspace': ir(actual - 1); e.preventDefault(); break;
+      case 'Home': ir(0); e.preventDefault(); break;
+      case 'End': ir(slides.length - 1); e.preventDefault(); break;
+    }
+  });
+  btnPrev.addEventListener('click', () => ir(actual - 1));
+  btnSig.addEventListener('click', () => ir(actual + 1));
+  window.addEventListener('hashchange', () => { const n = desdeHash(); if (n !== actual) mostrar(n); });
+
+  // clic en el fondo vacío de la diapositiva: mitad derecha avanza, izquierda retrocede
+  $('#deck').addEventListener('click', (e) => {
+    if (e.target.closest('button, a, .hu, .panel, table, .timeline, .barras, .lista-prs')) return;
+    ir(e.clientX > innerWidth / 2 ? actual + 1 : actual - 1);
+  });
+
+  // deslizar en pantallas táctiles
+  let x0 = null;
+  document.addEventListener('touchstart', (e) => { x0 = e.touches[0].clientX; }, { passive: true });
+  document.addEventListener('touchend', (e) => {
+    if (x0 === null) return;
+    const dx = e.changedTouches[0].clientX - x0; x0 = null;
+    if (Math.abs(dx) > 50) ir(dx < 0 ? actual + 1 : actual - 1);
+  });
+
+  // ── elementos interactivos ─────────────────────────────────────────────
+  // historias: la tarjeta se despliega para ver sus tareas
+  $$('.hu').forEach((card) => card.addEventListener('click', () => {
+    card.setAttribute('aria-expanded', card.getAttribute('aria-expanded') === 'true' ? 'false' : 'true');
+  }));
+  // saltos a otra diapositiva (fila de un integrante → su diapositiva)
+  $$('[data-ir]').forEach((el) => el.addEventListener('click', () => ir(Number(el.dataset.ir) - 1)));
+
+  // línea de tiempo: filtrar por integrante desde la leyenda
+  $$('.tl-leyenda').forEach((ley) => {
+    const tl = ley.nextElementSibling;
+    $$('button', ley).forEach((b) => b.addEventListener('click', () => {
+      const activo = b.getAttribute('aria-pressed') === 'true';
+      $$('button', ley).forEach((x) => x.setAttribute('aria-pressed', 'false'));
+      tl.classList.toggle('filtrada', !activo);
+      $$('.pr-pill', tl).forEach((p) => p.classList.toggle('visible', !activo && p.dataset.autor === b.dataset.autor));
+      if (!activo) b.setAttribute('aria-pressed', 'true');
+    }));
+  });
+
+  // tooltips: cualquier elemento con data-tip
+  function ocultarTip() { tip.classList.remove('visible'); }
+  function mostrarTip(el) {
+    tip.textContent = el.dataset.tip;
+    tip.classList.add('visible');
+    const r = el.getBoundingClientRect();
+    const t = tip.getBoundingClientRect();
+    let x = r.left + r.width / 2 - t.width / 2;
+    let y = r.top - t.height - 10;
+    if (y < 8) y = r.bottom + 10;
+    x = Math.max(8, Math.min(innerWidth - t.width - 8, x));
+    tip.style.left = x + 'px';
+    tip.style.top = y + 'px';
+  }
+  $$('[data-tip]').forEach((el) => {
+    el.addEventListener('mouseenter', () => mostrarTip(el));
+    el.addEventListener('focus', () => mostrarTip(el));
+    el.addEventListener('mouseleave', ocultarTip);
+    el.addEventListener('blur', ocultarTip);
+  });
+
+  mostrar(actual);
+})();
+
+</script>
+</body>
+</html>

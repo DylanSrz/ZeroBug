@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Informe del Sprint 2 — ZeroBug</title>
+<meta name="author" content="Dylan Suárez">
+<style>
+/* Documento PDF del informe de sprint — A4 vertical, tono formal.
+   El pie de página con la numeración lo añade generar.mjs (@page), porque
+   incluye el número de sprint. */
+
+:root {
+  --ink: #0f172a;
+  --ink-2: #334155;
+  --ink-3: #64748b;
+  --navy: #1e3a5f;
+  --ambar: #a16207;
+  --ok: #15803d;
+  --borde: #dbe2ea;
+  --suave: #f5f7fa;
+  --sans: "Noto Sans", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --mono: "JetBrains Mono", "JetBrainsMono NFM", Menlo, Consolas, monospace;
+}
+
+* { box-sizing: border-box; }
+html { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+body {
+  margin: 0; color: var(--ink); font-family: var(--sans);
+  font-size: 10pt; line-height: 1.5; background: #fff;
+}
+/* en pantalla se ve como una hoja */
+@media screen {
+  body { background: #e9edf2; padding: 24px 0; }
+  .hoja { width: 210mm; margin: 0 auto; background: #fff; padding: 18mm 16mm; box-shadow: 0 4px 24px rgba(15, 23, 42, .12); }
+}
+code { font-family: var(--mono); font-size: .88em; background: var(--suave); padding: 0 3px; border-radius: 3px; }
+a { color: var(--navy); text-decoration: none; }
+strong { color: var(--ink); }
+
+/* ── portada ───────────────────────────────────────────────────────────── */
+.cabecera {
+  display: flex; justify-content: space-between; align-items: flex-end; gap: 16px;
+  border-bottom: 3px solid var(--ambar); padding-bottom: 12px; margin-bottom: 14px;
+}
+.cabecera .marca { font-weight: 800; font-size: 13pt; letter-spacing: -0.02em; color: var(--navy); }
+.cabecera .marca span { color: var(--ambar); }
+.cabecera h1 { margin: 4px 0 0; font-size: 22pt; line-height: 1.1; color: var(--ink); letter-spacing: -0.02em; }
+.cabecera .sprint { text-align: right; color: var(--ink-3); font-size: 9pt; }
+.cabecera .sprint b { display: block; font-size: 26pt; line-height: 1; color: var(--navy); }
+
+table.ficha { width: 100%; border-collapse: collapse; margin-bottom: 16px; font-size: 9.5pt; }
+table.ficha th { text-align: left; width: 24%; color: var(--ink-3); font-weight: 600; padding: 4px 8px 4px 0; vertical-align: top; }
+table.ficha td { padding: 4px 0; color: var(--ink); }
+
+.estado-sprint {
+  display: flex; gap: 10px; align-items: flex-start; background: #ecfdf3; border: 1px solid #b7ebcb;
+  border-radius: 6px; padding: 10px 12px; margin-bottom: 14px;
+}
+.estado-sprint .icono { flex: none; width: 20px; height: 20px; border-radius: 50%; background: var(--ok); color: #fff; font-weight: 800; font-size: 11pt; display: grid; place-items: center; line-height: 1; }
+.estado-sprint p { margin: 0; }
+.estado-sprint .objetivo { color: var(--ink-3); font-size: 9pt; }
+
+.kpis { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; margin: 0 0 16px; }
+.kpis div { border: 1px solid var(--borde); border-radius: 6px; padding: 8px 10px; background: var(--suave); }
+.kpis b { display: block; font-size: 17pt; line-height: 1.1; color: var(--navy); font-variant-numeric: tabular-nums; }
+.kpis span { font-size: 8.5pt; color: var(--ink-3); }
+
+/* ── secciones ─────────────────────────────────────────────────────────── */
+h2 {
+  font-size: 13pt; color: var(--navy); margin: 20px 0 8px; padding-bottom: 4px;
+  border-bottom: 1px solid var(--borde); break-after: avoid;
+}
+h2 .n { color: var(--ambar); margin-right: 6px; }
+h3 { font-size: 11pt; margin: 0; color: var(--ink); break-after: avoid; }
+p { margin: 0 0 8px; }
+ul { margin: 0 0 8px; padding-left: 18px; }
+li { margin-bottom: 3px; }
+.nota { color: var(--ink-3); font-size: 8.5pt; }
+
+table.t { width: 100%; border-collapse: collapse; font-size: 9pt; margin-bottom: 10px; }
+table.t th { background: #eef2f7; color: var(--ink-2); text-align: left; font-weight: 600; padding: 5px 7px; border: 1px solid var(--borde); }
+table.t td { padding: 5px 7px; border: 1px solid var(--borde); vertical-align: top; }
+table.t td.num, table.t th.num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+table.t td.mono { font-family: var(--mono); font-size: 8.5pt; white-space: nowrap; color: var(--navy); }
+table.t tr { break-inside: avoid; }
+table.t tfoot td { font-weight: 700; background: var(--suave); }
+/* el total no se repite en cada página cuando la tabla se parte */
+table.t tfoot { display: table-row-group; }
+/* tablas cortas: nunca partidas entre páginas */
+table.t.junta { break-inside: avoid; }
+.ok { color: var(--ok); font-weight: 700; white-space: nowrap; }
+
+/* ── integrantes ───────────────────────────────────────────────────────── */
+.integrante { border: 1px solid var(--borde); border-radius: 8px; padding: 12px 14px; margin-bottom: 12px; }
+.integrante .cab { display: flex; gap: 12px; align-items: center; margin-bottom: 8px; break-after: avoid; }
+.avatar {
+  --c: #94a3b8; flex: none; width: 34px; height: 34px; border-radius: 9px; display: grid; place-items: center;
+  font-weight: 800; font-size: 11pt; color: #0b1220; background: var(--c);
+}
+.integrante .rol { color: var(--ink-3); font-size: 8.5pt; }
+.integrante .cifras { margin-left: auto; display: flex; gap: 14px; text-align: right; }
+.integrante .cifras b { display: block; font-size: 13pt; line-height: 1.1; color: var(--navy); font-variant-numeric: tabular-nums; }
+.integrante .cifras span { font-size: 8pt; color: var(--ink-3); }
+.integrante ul { margin-bottom: 8px; }
+.integrante table.t { margin-bottom: 0; }
+
+.dos { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.caja { border: 1px solid var(--borde); border-radius: 6px; padding: 10px 12px; break-inside: avoid; }
+.caja h3 { font-size: 10pt; margin-bottom: 6px; }
+
+.firma { margin-top: 22px; padding-top: 10px; border-top: 1px solid var(--borde); color: var(--ink-3); font-size: 8.5pt; }
+
+/* ── impresión ─────────────────────────────────────────────────────────── */
+@media print {
+  .hoja { padding: 0; }
+  .salto { break-before: page; }
+  .integrante, .caja { break-inside: avoid; }
+  .integrante.largo { break-inside: auto; }
+}
+
+@page {
+  size: A4; margin: 16mm 15mm 18mm;
+  @bottom-left { content: "ZeroBug · Informe del Sprint 2 · 5 – 9 oct 2026"; font-family: "Noto Sans", sans-serif; font-size: 8pt; color: #64748b; }
+  @bottom-right { content: "Página " counter(page) " de " counter(pages); font-family: "Noto Sans", sans-serif; font-size: 8pt; color: #64748b; }
+}
+</style>
+</head>
+<body><div class="hoja">
+
+<div class="cabecera">
+  <div><div class="marca">Zero<span>Bug</span> — Restaurant API</div><h1>Informe del Sprint 2</h1><div style="color:var(--ink-2);font-size:11pt">Reservas base y autenticación</div></div>
+  <div class="sprint">Sprint<b>02</b>5 – 9 oct 2026</div>
+</div>
+
+<table class="ficha">
+  <tr><th>Para</th><td>Abrahan Villa — Team Leader</td></tr>
+  <tr><th>De</th><td>Dylan Suárez — Scrum Master, en nombre del equipo</td></tr>
+  <tr><th>Fecha del informe</th><td>viernes 9 de octubre de 2026</td></tr>
+  <tr><th>Periodo del sprint</th><td>5 – 9 oct 2026</td></tr>
+  
+  <tr><th>Equipo</th><td>Dylan Suárez · César Vega · Dilant Murillo · Leonardo Ayala</td></tr>
+</table>
+
+<div class="estado-sprint">
+  <span class="icono">✓</span>
+  <div><p><strong>Autenticación y base de reservas entregadas; cierre del resto previsto esta noche.</strong> Registro y login con JWT quedaron en <code>dev</code>, junto con la base de reservas, los roles y la recuperación de contraseña. Esta mañana se integraron además los DTOs de disponibilidad y de registro de reserva y la consulta de reservas (PRs #170 a #173). Faltan el servicio de disponibilidad, la creación y la cancelación de reservas: el equipo trabaja hoy en ellas. Este informe refleja el estado del viernes al mediodía; el release <strong>v0.2.0</strong> queda para el cierre de esta noche, tras la revisión y los merges.</p><p class="objetivo"><strong>Objetivo del sprint:</strong> Reservas de punta a punta (consultar disponibilidad, registrar, consultar y cancelar) y la base de autenticación (registro y login con JWT) que desbloquea usuarios, roles y pedidos.</p></div>
+</div>
+
+<div class="kpis">
+  <div><b>26/68</b><span>puntos completados</span></div>
+  <div><b>2/6</b><span>historias entregadas</span></div>
+  <div><b>13</b><span>pull requests integrados</span></div>
+  <div><b>423</b><span>pruebas automáticas</span></div>
+  <div><b>27</b><span>endpoints en la API</span></div>
+</div>
+
+<h2><span class="n">1.</span>Resumen ejecutivo</h2>
+<ul><li>Se entregaron <strong>HU-014 (registro de clientes)</strong> y <strong>HU-015 (inicio de sesión)</strong>, con guard JWT global: toda ruta exige token salvo las marcadas como públicas.</li><li>La base de reservas está en <code>dev</code>: entidad y migración, enum de estados con su matriz de transiciones y la regla de conflicto horario documentada (D-001).</li><li>Se adelantaron piezas del Sprint 3: <code>RolesGuard</code> con <code>@Roles</code>, primer ADMIN por seed (HU-017) y <strong>recuperación de contraseña</strong> con token de un solo uso (HU-018).</li><li>Esta mañana se integraron <strong>4 PRs de reservas</strong> (#170 a #173): DTO de disponibilidad, DTO de registro y consulta de reservas (<code>GET /reservations</code> y <code>GET /reservations/{id}</code>), con CI en verde y revisión previa.</li><li>Pendientes de hoy: disponibilidad (#55, #56), registro de reserva (#59, #60) y cancelación (#66, #67). Jornada de trabajo de 13:00 a 20:30; revisión y merges a las 21:30.</li></ul>
+
+<h2><span class="n">2.</span>Historias entregadas</h2>
+<table class="t junta">
+  <thead><tr><th>Historia</th><th>Qué se entregó</th><th>Responsable</th><th class="num">Puntos</th><th>Estado</th></tr></thead>
+  <tbody><tr>
+    <td><strong>HU-006</strong><br>Disponibilidad</td>
+    <td>Entidad <code>Reservation</code> con migración (#52), regla de conflicto horario (#53) y DTO de consulta con validación de fecha futura en la zona horaria del restaurante (#54), en <code>dev</code>. Faltan el servicio, el endpoint público y las pruebas e2e.</td>
+    <td>César Vega</td>
+    <td class="num">13</td>
+    <td>En curso</td></tr><tr>
+    <td><strong>HU-007</strong><br>Registro de reserva</td>
+    <td>Enum de estados y matriz de transiciones válidas (#57) y DTO de creación con validaciones (#58), en <code>dev</code>. Faltan el servicio con asignación automática de mesa y el endpoint <code>POST /reservations</code>.</td>
+    <td>Dilant Murillo</td>
+    <td class="num">13</td>
+    <td>En curso</td></tr><tr>
+    <td><strong>HU-008</strong><br>Consulta de reserva</td>
+    <td>Servicio de consulta con filtros y paginación (#61) y endpoints <code>GET /reservations</code> y <code>GET /reservations/{id}</code> con pruebas e2e (#62), en <code>dev</code>. Pendiente la verificación cruzada de los criterios de aceptación.</td>
+    <td>Leonardo Ayala</td>
+    <td class="num">8</td>
+    <td>En curso</td></tr><tr>
+    <td><strong>HU-010</strong><br>Cancelación</td>
+    <td>Pendiente. Depende de la matriz de transiciones ya integrada; se trabaja hoy (#66, #67).</td>
+    <td>Leonardo Ayala</td>
+    <td class="num">8</td>
+    <td>En curso</td></tr><tr>
+    <td><strong>HU-014</strong><br>Registro de clientes</td>
+    <td>Modelo de usuarios con roles y estados, contraseñas con scrypt, política de contraseñas y endpoint de registro.</td>
+    <td>Dylan Suárez</td>
+    <td class="num">13</td>
+    <td><span class="ok">✓ Cerrada</span></td></tr><tr>
+    <td><strong>HU-015</strong><br>Inicio de sesión</td>
+    <td>Login con JWT, guard global con rutas públicas explícitas y helper de pruebas e2e autenticadas para los módulos existentes.</td>
+    <td>Dylan Suárez</td>
+    <td class="num">13</td>
+    <td><span class="ok">✓ Cerrada</span></td></tr></tbody>
+  <tfoot><tr><td colspan="3">Total</td><td class="num">26 / 68</td><td>2 de 6</td></tr></tfoot>
+</table>
+<p class="nota">Cada historia se cierra cuando todas sus tareas están integradas y alguien distinto a su autor verificó sus criterios de aceptación en la Sprint Review.</p>
+
+<h2><span class="n">3.</span>Trabajo por integrante</h2>
+<p class="nota" style="margin-bottom:10px">PRs: pull requests integrados en <code>dev</code> durante el sprint. Tareas: tareas del tablero cerradas por un PR del integrante. Revisiones: revisiones de código hechas a PRs de otros compañeros.</p>
+<table class="t junta" style="margin-bottom:14px">
+  <thead><tr><th>Integrante</th><th>Rol</th><th>Historias a cargo</th><th class="num">PRs</th><th class="num">Tareas</th><th class="num">Revisiones</th></tr></thead>
+  <tbody><tr><td><strong>Dylan Suárez</strong></td><td>Scrum Master · Desarrollador</td><td>HU-014 (13 pts), HU-015 (13 pts)</td><td class="num">7</td><td class="num">8</td><td class="num">7</td></tr><tr><td><strong>César Vega</strong></td><td>Desarrollador</td><td>HU-006 (13 pts)</td><td class="num">2</td><td class="num">2</td><td class="num">0</td></tr><tr><td><strong>Dilant Murillo</strong></td><td>Desarrollador</td><td>HU-007 (13 pts)</td><td class="num">2</td><td class="num">2</td><td class="num">0</td></tr><tr><td><strong>Leonardo Ayala</strong></td><td>Desarrollador</td><td>HU-008 (8 pts), HU-010 (8 pts)</td><td class="num">2</td><td class="num">2</td><td class="num">0</td></tr></tbody>
+  <tfoot><tr><td colspan="3">Total del equipo</td><td class="num">13</td><td class="num">14</td><td class="num">7</td></tr></tfoot>
+</table>
+
+<div class="integrante">
+  <div class="cab">
+    <span class="avatar" style="--c:#f5b942">DS</span>
+    <div><h3>Dylan Suárez</h3><div class="rol">Scrum Master · Desarrollador · responsable de HU-014 Registro de clientes, HU-015 Inicio de sesión</div></div>
+    <div class="cifras">
+      <div><b>7</b><span>PRs</span></div>
+      <div><b>8</b><span>tareas</span></div>
+      <div><b>7</b><span>revisiones</span></div>
+    </div>
+  </div>
+  <ul><li><strong>HU-014 y HU-015</strong> completas: modelo de usuarios, contraseñas con scrypt, registro, login con JWT y guard global (PRs #166 y #167).</li><li>Decisiones de negocio documentadas en <code>docs/decisiones.md</code>: regla de conflicto horario de reservas (D-001) y modelo de usuarios (D-002) (#161).</li><li>Adelanto del Sprint 3: <code>RolesGuard</code> con <code>@Roles</code> y seed del primer ADMIN (#168), y recuperación de contraseña con token de un solo uso (#169).</li><li>Replanificación tras el cambio de equipo: actualización de equipo, sprints y Working Agreement (#165).</li><li>Revisión de los PRs #163, #164 y #170 a #173; en los de esta semana se hicieron ajustes menores directamente en las ramas (Swagger, nombres, orden estable del listado) y se coordinó la integración entre ramas.</li></ul>
+  <table class="t"><thead><tr><th style="width:52px">PR</th><th>Cambio integrado</th><th class="num" style="width:90px">Fecha</th></tr></thead><tbody><tr><td class="mono">#161</td><td>Definir regla de conflicto horario y parámetros de negocio de reservas</td><td class="num">7 oct 2026</td></tr><tr><td class="mono">#165</td><td>Actualizar equipo, sprints y Working Agreement</td><td class="num">7 oct 2026</td></tr><tr><td class="mono">#166</td><td>Diseño del modelo de usuarios (users / customers / employees / roles) · Entidades User (+ Customer), enum UserStatus y migración · RegisterDto, política de contraseñas y hashing (bcrypt/argon2)</td><td class="num">7 oct 2026</td></tr><tr><td class="mono">#167</td><td>AuthModule.register + POST /auth/register + Swagger + tests e2e · Configuración JWT (JwtModule, JWT_SECRET, JWT_EXPIRES_IN) y variables de entorno · AuthService.login + LoginDto + POST /auth/login · JwtStrategy, JwtAuthGuard, decorador @CurrentUser y @Public</td><td class="num">7 oct 2026</td></tr><tr><td class="mono">#168</td><td>RolesGuard con @Roles y seed del primer ADMIN (HU-017)</td><td class="num">7 oct 2026</td></tr><tr><td class="mono">#169</td><td>Recuperación de contraseña con token de un solo uso (HU-018)</td><td class="num">7 oct 2026</td></tr><tr><td class="mono">#174</td><td>Documentar el DTO de disponibilidad en Swagger y ordenar el spec</td><td class="num">9 oct 2026</td></tr></tbody></table>
+  <p class="nota" style="margin:6px 0 0">Revisiones: 7 aprobadas · 0 con cambios solicitados · 0 comentarios.</p>
+</div>
+<div class="integrante">
+  <div class="cab">
+    <span class="avatar" style="--c:#6ea8fe">CV</span>
+    <div><h3>César Vega</h3><div class="rol">Desarrollador · responsable de HU-006 Disponibilidad</div></div>
+    <div class="cifras">
+      <div><b>2</b><span>PRs</span></div>
+      <div><b>2</b><span>tareas</span></div>
+      <div><b>0</b><span>revisiones</span></div>
+    </div>
+  </div>
+  <ul><li><strong>Entidad <code>Reservation</code></strong>, migración y módulo de reservas (#163), base de todas las historias de reservas.</li><li>PR #170 integrado: <code>AvailabilityQueryDto</code> y validador <code>@IsFutureDateTime</code>, que compara fecha y hora en la zona horaria del restaurante y no en la del servidor; incluye pruebas unitarias.</li><li>En curso hoy: servicio de disponibilidad, endpoint público y pruebas e2e (#55, #56).</li></ul>
+  <table class="t"><thead><tr><th style="width:52px">PR</th><th>Cambio integrado</th><th class="num" style="width:90px">Fecha</th></tr></thead><tbody><tr><td class="mono">#163</td><td>Entidad Reservation, enum ReservationStatus y migración</td><td class="num">7 oct 2026</td></tr><tr><td class="mono">#170</td><td>AvailabilityQueryDto y validaciones (fecha/hora futuras, guests &gt; 0)</td><td class="num">9 oct 2026</td></tr></tbody></table>
+  
+</div>
+<div class="integrante">
+  <div class="cab">
+    <span class="avatar" style="--c:#36c7b8">DM</span>
+    <div><h3>Dilant Murillo</h3><div class="rol">Desarrollador · responsable de HU-007 Registro de reserva</div></div>
+    <div class="cifras">
+      <div><b>2</b><span>PRs</span></div>
+      <div><b>2</b><span>tareas</span></div>
+      <div><b>0</b><span>revisiones</span></div>
+    </div>
+  </div>
+  <ul><li><strong>Enum de estados y matriz de transiciones</strong> de reserva, con pruebas unitarias, unificado con el enum de la entidad (#164).</li><li>PR #172 integrado: <code>CreateReservationDto</code> con validaciones y documentación Swagger, reutilizando <code>@IsFutureDateTime</code>; incluye pruebas unitarias.</li><li>En curso hoy: creación de reserva con asignación automática de mesa y endpoint <code>POST /reservations</code> (#59, #60).</li></ul>
+  <table class="t"><thead><tr><th style="width:52px">PR</th><th>Cambio integrado</th><th class="num" style="width:90px">Fecha</th></tr></thead><tbody><tr><td class="mono">#164</td><td>Enum de estados y matriz de transiciones válidas de reserva</td><td class="num">7 oct 2026</td></tr><tr><td class="mono">#172</td><td>CreateReservationDto y validaciones</td><td class="num">9 oct 2026</td></tr></tbody></table>
+  
+</div>
+<div class="integrante">
+  <div class="cab">
+    <span class="avatar" style="--c:#3ddc97">LA</span>
+    <div><h3>Leonardo Ayala</h3><div class="rol">Desarrollador · responsable de HU-008 Consulta de reserva, HU-010 Cancelación</div></div>
+    <div class="cifras">
+      <div><b>2</b><span>PRs</span></div>
+      <div><b>2</b><span>tareas</span></div>
+      <div><b>0</b><span>revisiones</span></div>
+    </div>
+  </div>
+  <ul><li>PR #171 integrado: consulta de reservas con filtros y paginación, <code>findOne</code> con respuesta de mesa anidada y pruebas unitarias.</li><li>PR #173 integrado: endpoints <code>GET /reservations</code> y <code>GET /reservations/{id}</code> protegidos con token, Swagger y suite e2e.</li><li>En curso hoy: cancelación de reserva, servicio y endpoint (#66, #67).</li></ul>
+  <table class="t"><thead><tr><th style="width:52px">PR</th><th>Cambio integrado</th><th class="num" style="width:90px">Fecha</th></tr></thead><tbody><tr><td class="mono">#171</td><td>ReservationResponseDto y consultas findAll / findOne</td><td class="num">9 oct 2026</td></tr><tr><td class="mono">#173</td><td>GET /reservations y GET /reservations/{id} + Swagger + tests e2e</td><td class="num">9 oct 2026</td></tr></tbody></table>
+  
+</div>
+
+<h2><span class="n">4.</span>Calidad</h2>
+<table class="t junta">
+  <thead><tr><th>Módulo</th><th class="num">Pruebas unitarias</th><th class="num">Pruebas e2e</th><th class="num">Total</th><th class="num">Endpoints</th></tr></thead>
+  <tbody><tr><td>Reservas</td><td class="num">76</td><td class="num">0</td><td class="num">76</td><td class="num">2</td></tr><tr><td>Autenticación</td><td class="num">41</td><td class="num">30</td><td class="num">71</td><td class="num">4</td></tr><tr><td>Plataforma</td><td class="num">26</td><td class="num">43</td><td class="num">69</td><td class="num">1</td></tr><tr><td>Mesas</td><td class="num">29</td><td class="num">31</td><td class="num">60</td><td class="num">5</td></tr><tr><td>Categorías</td><td class="num">28</td><td class="num">27</td><td class="num">55</td><td class="num">5</td></tr><tr><td>Productos</td><td class="num">32</td><td class="num">20</td><td class="num">52</td><td class="num">6</td></tr><tr><td>Menú público</td><td class="num">10</td><td class="num">16</td><td class="num">26</td><td class="num">4</td></tr><tr><td>Usuarios</td><td class="num">14</td><td class="num">0</td><td class="num">14</td><td class="num">—</td></tr></tbody>
+  <tfoot><tr><td>Total</td><td class="num">256</td><td class="num">167</td><td class="num">423</td><td class="num">27</td></tr></tfoot>
+</table>
+<ul><li><strong>CI obligatorio</strong> en cada pull request: lint sin warnings, Prettier, build, pruebas unitarias y e2e con PostgreSQL efímero.</li><li><strong>Autenticación por defecto</strong>: un guard global exige token en todas las rutas; las públicas se declaran con <code>@Public()</code>.</li><li><strong>Contraseñas con scrypt</strong>, política de contraseñas y tokens de recuperación guardados solo como hash, con vencimiento y consumo atómico.</li><li><strong>Migraciones generadas contra una base limpia</strong> y verificadas con ejecutar, revertir y ejecutar de nuevo.</li></ul>
+
+<h2><span class="n">5.</span>Retrospectiva</h2>
+<div class="dos">
+  <div class="caja"><h3>Mantener</h3><ul><li>CI obligatorio y e2e contra PostgreSQL real.</li><li>Documentar las decisiones de negocio antes de implementarlas (D-001, D-002).</li><li>PRs pequeños, uno por tarea, con la sección &quot;Cómo probar&quot;.</li><li>Verificar el estado combinado de las ramas antes de integrar.</li></ul></div>
+  <div class="caja"><h3>Mejorar</h3><ul><li>Abrir los PRs antes: con sprints de una semana, la revisión del último día no deja margen.</li><li>Revisión entre pares más pronta: cuatro PRs llegaron al viernes sin revisión.</li><li>Coordinar quién implementa lo compartido (búsqueda de mesas libres) para no duplicar trabajo.</li><li>Revisar que el PR enlace bien su issue (<code>Closes #N</code>) y tenga un título descriptivo.</li></ul></div>
+</div>
+<table class="t junta" style="margin-top:10px"><thead><tr><th>Acción acordada</th><th>Responsable</th></tr></thead>
+  <tbody><tr><td>Hoy mismo cerrar las tareas de reservas pendientes: trabajo 13:00 a 20:30, revisión y merges 21:30</td><td>Todo el equipo</td></tr><tr><td>Un PR no espera revisión más de medio día hábil; avisar bloqueos en la Daily</td><td>Todo el equipo</td></tr><tr><td>Celebrar la retrospectiva formal tras la revisión de esta noche y registrar el acta en <code>docs/retros/sprint-2.md</code></td><td>Dylan Suárez</td></tr><tr><td>Tras el release, comprobar que <code>dev</code> sigue existiendo y sincronizarla con <code>main</code></td><td>Dylan Suárez</td></tr></tbody></table>
+
+<h2><span class="n">6.</span>Decisiones del sprint</h2>
+<ul><li><strong>Replanificación hasta el 16 de octubre.</strong> El equipo cambió por completo antes del Sprint 2 y el proyecto debe quedar terminado el viernes 16 de octubre. Quedan dos sprints: este y el Sprint 3, que absorbe los antiguos Sprints 4 y 5. Congelación de funcionalidades el jueves 15 a las 18:00.</li><li><strong>Regla de conflicto horario (D-001).</strong> Una reserva dura 120 minutos y la tolerancia de no-show es de 15. Dos reservas de la misma mesa chocan si sus intervalos se solapan y la existente está pendiente, confirmada o con check-in.</li><li><strong>Usuarios y roles (D-002).</strong> Una sola tabla de usuarios con rol y estado; los empleados tienen un perfil 1:1. Contraseñas con scrypt y primer ADMIN creado por seed.</li><li><strong>Cierre del sprint esta noche.</strong> El equipo trabaja hoy de 13:00 a 20:30 en las tareas pendientes de reservas; a las 21:30 se revisan y mergean los PRs y se publica el release v0.2.0.</li></ul>
+<table class="t junta"><thead><tr><th>Sprint</th><th>Fechas</th><th>Meta</th><th>Estado</th></tr></thead>
+  <tbody><tr><td>Sprint 1</td><td style="white-space:nowrap">18 – 24 sep</td><td>Plataforma, mesas, categorías, productos y menú</td><td><span class="ok">✓ Hecho</span></td></tr><tr><td>Sprint 2</td><td style="white-space:nowrap">5 – 9 oct</td><td>Reservas base y autenticación</td><td><strong>En curso</strong></td></tr><tr><td>Sprint 3</td><td style="white-space:nowrap">12 – 16 oct</td><td>Cierre del proyecto: ciclo de reservas, usuarios, roles y pedidos (v1.0.0)</td><td>Planificado</td></tr></tbody></table>
+
+<h2><span class="n">7.</span>Incidencias</h2>
+<div class="caja" style="margin-bottom:10px"><h3>Cambio completo del equipo antes del Sprint 2 — <span class="ok">Mitigada</span></h3>
+  <p><strong>Qué pasó:</strong> El equipo anterior perdió el acceso al repositorio y se incorporaron tres desarrolladores nuevos.</p>
+  <p><strong>Impacto:</strong> Los 68 puntos se concentraron en menos tiempo.</p>
+  <p style="margin:0"><strong>Solución:</strong> Replanificación del 7 de octubre y Working Agreement actualizado.</p></div><div class="caja" style="margin-bottom:10px"><h3>Conflictos de integración entre ramas — <span class="ok">Resuelta</span></h3>
+  <p><strong>Qué pasó:</strong> Dos ramas definieron por separado el enum de estados y una migración; el guard JWT global dejó sin token las pruebas e2e previas.</p>
+  <p><strong>Impacto:</strong> Los merges no se podían integrar tal cual y fallaban pruebas e2e.</p>
+  <p style="margin:0"><strong>Solución:</strong> Un único enum, migración regenerada y helper <code>authenticate</code> para las pruebas e2e.</p></div><div class="caja" style="margin-bottom:10px"><h3>Cuatro PRs sin revisar el último día — <span class="ok">En curso</span></h3>
+  <p><strong>Qué pasó:</strong> Los PRs de DTOs y consulta de reservas se abrieron entre el jueves y la madrugada del viernes; faltan los de servicios y endpoints restantes.</p>
+  <p><strong>Impacto:</strong> HU-006, HU-007 y HU-010 no cierran en el horario regular.</p>
+  <p style="margin:0"><strong>Solución:</strong> Los cuatro PRs se revisaron e integraron el viernes por la mañana. Jornada extendida hoy (13:00 a 20:30), merges a las 21:30 y release v0.2.0 esta noche.</p></div>
+
+<h2><span class="n">8.</span>Plan del Sprint 3 (12 – 16 oct 2026)</h2>
+<p><strong>Objetivo:</strong> Completar el ciclo de vida de las reservas, la gestión de usuarios con roles y permisos, y la apertura de pedidos; publicar v1.0.0.</p>
+<table class="t junta"><thead><tr><th>Historia</th><th class="num">Puntos</th></tr></thead>
+  <tbody><tr><td><strong>HU-009</strong> Modificación de reserva</td><td class="num">13</td></tr><tr><td><strong>HU-011</strong> Confirmación de reserva</td><td class="num">8</td></tr><tr><td><strong>HU-012</strong> Check-in del cliente</td><td class="num">8</td></tr><tr><td><strong>HU-013</strong> Gestión de no-show</td><td class="num">8</td></tr><tr><td><strong>HU-016</strong> Gestión de empleados</td><td class="num">13</td></tr><tr><td><strong>HU-017</strong> Roles y permisos</td><td class="num">13</td></tr><tr><td><strong>HU-018</strong> Recuperación de contraseña</td><td class="num">8</td></tr><tr><td><strong>HU-019</strong> Administración del perfil</td><td class="num">8</td></tr><tr><td><strong>HU-020</strong> Apertura de pedido por mesa</td><td class="num">13</td></tr></tbody>
+  <tfoot><tr><td>Total comprometido</td><td class="num">92</td></tr></tfoot></table>
+<p>Lo que no se cierre esta noche del Sprint 2 (disponibilidad, registro y cancelación de reservas) pasa al inicio del Sprint 3. HU-018 y parte de HU-017 ya están en <code>dev</code>.</p>
+<p><strong>Riesgos que vigilamos:</strong></p>
+<ul><li>Con 92 puntos comprometidos y la congelación el jueves 15 a las 18:00, cualquier arrastre del Sprint 2 reduce el margen.</li><li>HU-011, HU-012 y HU-020 son secuenciales: el pedido se abre sobre una mesa ocupada por el check-in.</li><li>La aplicación de permisos por endpoint (HU-017) toca los controllers de todos los módulos y se hace el miércoles 14, cuando existan los endpoints de reservas y empleados.</li></ul>
+
+<h2 class="salto"><span class="n">Anexo.</span>Tareas del sprint</h2>
+<table class="t">
+  <thead><tr><th style="width:44px">#</th><th>Tarea</th><th style="width:70px">Historia</th><th>Resuelta por</th><th style="width:52px">PR</th></tr></thead>
+  <tbody><tr><td class="mono">#52</td><td>Entidad Reservation, enum ReservationStatus y migración</td><td>HU-006</td><td>César Vega</td><td class="mono">#163</td></tr><tr><td class="mono">#53</td><td>Definir regla de conflicto horario y parámetros de negocio de reservas</td><td>HU-006</td><td>Dylan Suárez</td><td class="mono">#161</td></tr><tr><td class="mono">#54</td><td>AvailabilityQueryDto y validaciones (fecha/hora futuras, guests &gt; 0)</td><td>HU-006</td><td>César Vega</td><td class="mono">#170</td></tr><tr><td class="mono">#55</td><td>ReservationsService.findAvailableTables + GET /reservations/availability + Swagger</td><td>HU-006</td><td>—</td><td class="mono">—</td></tr><tr><td class="mono">#56</td><td>Tests e2e de disponibilidad</td><td>HU-006</td><td>—</td><td class="mono">—</td></tr><tr><td class="mono">#57</td><td>Enum de estados y matriz de transiciones válidas de reserva</td><td>HU-007</td><td>Dilant Murillo</td><td class="mono">#164</td></tr><tr><td class="mono">#58</td><td>CreateReservationDto y validaciones</td><td>HU-007</td><td>Dilant Murillo</td><td class="mono">#172</td></tr><tr><td class="mono">#59</td><td>ReservationsService.create con asignación automática de mesa (transaccional)</td><td>HU-007</td><td>—</td><td class="mono">—</td></tr><tr><td class="mono">#60</td><td>POST /reservations + Swagger + tests e2e</td><td>HU-007</td><td>—</td><td class="mono">—</td></tr><tr><td class="mono">#61</td><td>ReservationResponseDto y consultas findAll / findOne</td><td>HU-008</td><td>Leonardo Ayala</td><td class="mono">#171</td></tr><tr><td class="mono">#62</td><td>GET /reservations y GET /reservations/{id} + Swagger + tests e2e</td><td>HU-008</td><td>Leonardo Ayala</td><td class="mono">#173</td></tr><tr><td class="mono">#66</td><td>ReservationsService.cancel (estado, cancelledAt, liberación de disponibilidad)</td><td>HU-010</td><td>—</td><td class="mono">—</td></tr><tr><td class="mono">#67</td><td>PATCH /reservations/{id}/cancel + Swagger + tests e2e</td><td>HU-010</td><td>—</td><td class="mono">—</td></tr><tr><td class="mono">#74</td><td>Spike: diseño del modelo de usuarios (users / customers / employees / roles)</td><td>HU-014</td><td>Dylan Suárez</td><td class="mono">#166</td></tr><tr><td class="mono">#75</td><td>Entidades User (+ Customer), enum UserStatus y migración</td><td>HU-014</td><td>Dylan Suárez</td><td class="mono">#166</td></tr><tr><td class="mono">#76</td><td>RegisterDto, política de contraseñas y hashing (bcrypt/argon2)</td><td>HU-014</td><td>Dylan Suárez</td><td class="mono">#166</td></tr><tr><td class="mono">#77</td><td>AuthModule.register + POST /auth/register + Swagger + tests e2e</td><td>HU-014</td><td>Dylan Suárez</td><td class="mono">#167</td></tr><tr><td class="mono">#78</td><td>Configuración JWT (JwtModule, JWT_SECRET, JWT_EXPIRES_IN) y variables de entorno</td><td>HU-015</td><td>Dylan Suárez</td><td class="mono">#167</td></tr><tr><td class="mono">#79</td><td>AuthService.login + LoginDto + POST /auth/login</td><td>HU-015</td><td>Dylan Suárez</td><td class="mono">#167</td></tr><tr><td class="mono">#80</td><td>JwtStrategy, JwtAuthGuard, decorador @CurrentUser y @Public</td><td>HU-015</td><td>Dylan Suárez</td><td class="mono">#167</td></tr><tr><td class="mono">#106</td><td>Ceremonias Sprint 2 — Planning, Dailies, Review y Retro</td><td>Proceso</td><td>—</td><td class="mono">—</td></tr><tr><td class="mono">#162</td><td>Firma del Working Agreement — equipo del Sprint 2</td><td>Proceso</td><td>—</td><td class="mono">—</td></tr></tbody>
+</table>
+
+<div class="firma">
+  Informe preparado por Dylan Suárez (Scrum Master) con datos obtenidos de GitHub el viernes 9 de octubre de 2026: pull requests, revisiones y tablero del proyecto.
+  Las cifras de pruebas y endpoints se midieron sobre el código de <code>dev</code>.
+</div>
+
+</div></body></html>

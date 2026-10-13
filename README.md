@@ -3,7 +3,7 @@
 [![CI](https://github.com/DylanSrz/ZeroBug/actions/workflows/ci.yml/badge.svg?branch=dev)](https://github.com/DylanSrz/ZeroBug/actions/workflows/ci.yml)
 
 API REST para la gestión operativa de un restaurante: **mesas, menú, reservas, usuarios/roles y pedidos**.
-Backend en NestJS + TypeScript sobre PostgreSQL, desarrollado con metodología SCRUM en 4 sprints.
+Backend en NestJS + TypeScript sobre PostgreSQL, desarrollado con metodología SCRUM en 3 sprints (18 sep – 16 oct 2026).
 
 - 📋 Tablero: <https://github.com/users/DylanSrz/projects/7>
 - 📘 Historias de usuario y reglas de negocio (RN-xxx): [`docs/`](docs/)
@@ -74,25 +74,32 @@ Todas están documentadas en [`.env.example`](.env.example). Si falta una obliga
 | `APP_PORT`                              | Puerto HTTP                                                            | `3000`        |
 | `DATABASE_HOST/PORT/USER/PASSWORD/NAME` | Conexión a PostgreSQL                                                  | puerto `5432` |
 | `CORS_ORIGIN`                           | Orígenes permitidos separados por coma. En producción no se admite `*` | `*`           |
+| `RESERVATION_DURATION_MINUTES`          | Minutos que una reserva ocupa la mesa (conflicto horario, RN-040)      | `120`         |
+| `RESERVATION_NO_SHOW_TOLERANCE_MINUTES` | Minutos de espera antes de poder marcar `NO_SHOW` (RN-078)             | `15`          |
+| `JWT_SECRET`                            | Firma de los access tokens. **Obligatorio**, mínimo 32 caracteres      | —             |
+| `JWT_EXPIRES_IN`                        | Vida del access token: segundos o `15m`, `1h`, `7d` (RN-092)           | `1h`          |
+| `PASSWORD_RESET_TTL_MINUTES`            | Minutos que vive el token de recuperación de contraseña (RN-103)       | `30`          |
+| `PASSWORD_RESET_URL`                    | Enlace del correo de recuperación; se le añade `?token=…`              | `http://localhost:3000/reset-password` |
 | `OBSERVE_*`                             | NestJS Observe (opcional)                                              | —             |
 
 Nunca se versiona `.env`; los secretos no van en el código (RN-013).
 
 ## Scripts
 
-| Comando                                                         | Qué hace                                |
-| --------------------------------------------------------------- | --------------------------------------- |
-| `npm run start:dev`                                             | API en modo watch                       |
-| `npm run build` / `npm run start:prod`                          | Compila a `dist/` y ejecuta             |
-| `npm run lint`                                                  | oxlint sobre `src/` y `test/`           |
-| `npm run format`                                                | Prettier                                |
-| `npm run test`                                                  | Tests unitarios (`*.spec.ts`)           |
-| `npm run test:e2e`                                              | Tests end-to-end (`test/*.e2e-spec.ts`) |
-| `npm run test:cov`                                              | Cobertura                               |
-| `npm run migration:generate -- src/database/migrations/Nombre`  | Genera migración desde las entidades    |
-| `npm run migration:run` / `migration:revert` / `migration:show` | Aplica, deshace o lista migraciones     |
-| `npm run migration:create -- src/database/migrations/Nombre`    | Migración vacía                         |
-| `npm run seed`                                                  | Carga datos de desarrollo (idempotente) |
+| Comando                                                         | Qué hace                                               |
+| --------------------------------------------------------------- | ------------------------------------------------------ |
+| `npm run start:dev`                                             | API en modo watch                                      |
+| `npm run build` / `npm run start:prod`                          | Compila a `dist/` y ejecuta                            |
+| `npm run lint`                                                  | oxlint sobre `src/` y `test/`                          |
+| `npm run format`                                                | Prettier                                               |
+| `npm run test`                                                  | Tests unitarios (`*.spec.ts`)                          |
+| `npm run test:e2e`                                              | Tests end-to-end (`test/*.e2e-spec.ts`)                |
+| `npm run test:cov`                                              | Cobertura                                              |
+| `npm run migration:generate -- src/database/migrations/Nombre`  | Genera migración desde las entidades                   |
+| `npm run migration:run` / `migration:revert` / `migration:show` | Aplica, deshace o lista migraciones                    |
+| `npm run migration:create -- src/database/migrations/Nombre`    | Migración vacía                                        |
+| `npm run seed`                                                  | Carga datos de desarrollo (idempotente)                |
+| `npm run seed:admin`                                            | Crea el primer ADMIN (`ADMIN_EMAIL`, `ADMIN_PASSWORD`) |
 
 ## Estructura del proyecto
 
@@ -228,6 +235,16 @@ ni borra lo existente, por lo que no pisa los cambios hechos al probar.
 Los datos viven en `src/database/seeds/seed-data.ts`; agregar filas allí es todo
 lo que hace falta para ampliarlos.
 
+### Primer administrador
+
+Las cuentas de empleados las crea un `ADMIN` (HU-016), y el primero tiene que existir antes. Se crea con:
+
+```bash
+ADMIN_EMAIL=admin@zerobug.dev ADMIN_PASSWORD='Cambia1234' npm run seed:admin
+```
+
+Es idempotente: si ya hay una cuenta con ese email no cambia nada (ni la contraseña ni el rol). La contraseña sigue la misma política que el registro (8–128 caracteres con una letra y un número). Después se puede iniciar sesión en `POST /api/v1/auth/login` con ese email y contraseña. `ADMIN_*` solo las lee el seed, no la aplicación.
+
 ## Decisiones técnicas
 
 | Decisión                                                                                  | Motivo                                                                                                                                          |
@@ -244,14 +261,15 @@ lo que hace falta para ampliarlos.
 
 Cada PR ejecuta el workflow **CI** (`.github/workflows/ci.yml`): `quality` (lint sin warnings, Prettier, build, unit) y `e2e` (PostgreSQL efímero, migraciones, tests e2e). Ambos checks son obligatorios para mergear en `dev` y `main`.
 
-SCRUM con sprints de 2 semanas; acuerdos de equipo y Definition of Done en [`docs/working-agreement.md`](docs/working-agreement.md). Cada tarea del tablero es una rama corta + un PR pequeño hacia `dev` con `Closes #N`, revisado por un compañero. `main` solo recibe merges de `dev` al cierre de cada sprint. Detalles en [`docs/guia-git.md`](docs/guia-git.md).
+SCRUM con sprints de una semana (lunes a viernes); acuerdos de equipo y Definition of Done en [`docs/working-agreement.md`](docs/working-agreement.md). Cada tarea del tablero es una rama corta + un PR pequeño hacia `dev` con `Closes #N`, revisado por un compañero. `main` solo recibe merges de `dev` al cierre de cada sprint. Detalles en [`docs/guia-git.md`](docs/guia-git.md).
 
 ## Equipo
 
-| Nombre             | Rol                          | Usuario de GitHub      |
-| ------------------ | ---------------------------- | ---------------------- |
-| Dylan Suárez       | Scrum Master · Desarrollador | @DylanSrz              |
-| Jonathan Rodríguez | Desarrollador                | @rodriguezvjhona-droid |
-| Kerin Barranco     | Desarrollador                | @Kerin0011             |
-| Diego Gonzales     | Desarrollador                | @Gonza204658           |
-| jorel Hernandez    | Desarrollador                | @jorel2610             |
+| Nombre         | Rol                          | Usuario de GitHub |
+| -------------- | ---------------------------- | ----------------- |
+| Dylan Suárez   | Scrum Master · Desarrollador | @DylanSrz         |
+| César Vega     | Desarrollador                | @cesarvega1       |
+| Dilant Murillo | Desarrollador                | @MrDilant         |
+| Leonardo Ayala | Desarrollador                | @leonardo-200224  |
+
+Desde el Sprint 2. En el Sprint 1 el equipo lo formaban, además de Dylan, Diego Gonzales (@Gonza204658), Kerin Barranco (@Kerin0011), Jonathan Rodríguez (@rodriguezvjhona-droid) y Jorel Hernández (@jorel2610); su trabajo está en [`docs/retros/sprint-1.md`](docs/retros/sprint-1.md) y en el [informe del Sprint 1](docs/informes-sprint/sprint-01/).

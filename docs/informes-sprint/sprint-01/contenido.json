@@ -1,0 +1,240 @@
+{
+  "sprint": 1,
+  "nombre": "Infraestructura y Gestión Base",
+  "periodo": {
+    "inicio": "2026-09-18",
+    "fin": "2026-09-24"
+  },
+  "fechaInforme": "2026-09-25",
+  "presenta": {
+    "nombre": "Dylan Suárez",
+    "rol": "Scrum Master"
+  },
+  "objetivo": "Dejar lista la plataforma base de la API y la administración de mesas, categorías, productos y el menú público del restaurante.",
+  "titular": "Objetivo cumplido: 5 de 5 historias y release v0.1.0",
+  "resultado": "Las cinco historias comprometidas se entregaron, se verificaron en la Sprint Review del 25 de septiembre y se publicaron en el release **v0.1.0**.",
+  "resumen": [
+    "Se entregaron las **5 historias** comprometidas (**55 de 55 puntos**) y se publicó el primer release, **v0.1.0**.",
+    "La API expone **21 endpoints** documentados en Swagger: mesas, categorías, productos, menú público y estado del servicio.",
+    "**216 pruebas automáticas** (109 unitarias y 107 e2e contra PostgreSQL real) se ejecutan en cada pull request; sin CI en verde no se puede integrar.",
+    "Quedó definido el marco de trabajo del equipo: Working Agreement, Definition of Done, guía de Git, plantillas y tablero con épicas, historias y tareas.",
+    "Al cierre, el equipo acordó pasar a **sprints de una semana** (lunes a viernes) y replanificó el resto del proyecto en consecuencia."
+  ],
+  "historias": {
+    "9": {
+      "corto": "Plataforma base",
+      "modulo": "plataforma",
+      "responsables": [
+        "DylanSrz",
+        "Kerin0011"
+      ],
+      "entrega": "NestJS 12 + TypeORM + PostgreSQL con migraciones versionadas, validación de variables de entorno, seguridad HTTP, formato uniforme de errores, Swagger y CI obligatorio."
+    },
+    "10": {
+      "corto": "Mesas",
+      "modulo": "tables",
+      "entrega": "Registro y administración de mesas con número único, capacidad mayor que cero, zonas y estados; filtros combinables por estado, zona y capacidad mínima."
+    },
+    "11": {
+      "corto": "Categorías",
+      "modulo": "categories",
+      "entrega": "Categorías del menú con nombre único y activación o desactivación; una categoría inactiva se conserva pero deja de mostrarse al cliente."
+    },
+    "12": {
+      "corto": "Productos",
+      "modulo": "products",
+      "entrega": "Productos asociados a una categoría existente, con precio mayor que cero, estado y disponibilidad independientes."
+    },
+    "13": {
+      "corto": "Menú público",
+      "modulo": "menu",
+      "entrega": "Consulta del menú para clientes: solo categorías y productos activos, con los no disponibles visibles pero marcados; refleja al instante los cambios de administración."
+    }
+  },
+  "integrantes": {
+    "DylanSrz": {
+      "destacados": [
+        "Puesta en marcha del proceso SCRUM: tablero con épicas, historias y tareas, milestones por sprint, Working Agreement, Definition of Done, guía de Git y plantillas de PR e issues.",
+        "**HU-001 Plataforma base**: migraciones TypeORM, validación del entorno con zod, `ValidationPipe`, Helmet y CORS, filtro global de errores, Swagger, README y pipeline de CI.",
+        "**HU-004 Productos** completa: entidad y migración, DTOs, servicio y controlador con 6 endpoints, 32 pruebas unitarias y 20 e2e.",
+        "Cierre del sprint: pruebas e2e del menú público, datos semilla de desarrollo, acta de la retrospectiva y release **v0.1.0**.",
+        "Revisión de código de los PRs del equipo, con correcciones aplicadas en las ramas cuando bloqueaban la integración."
+      ]
+    },
+    "Gonza204658": {
+      "destacados": [
+        "**HU-002 Mesas** completa, sus 5 tareas: entidad `Table` y migración, DTOs con validaciones, servicio con filtros combinables, controlador con 5 endpoints documentados en Swagger.",
+        "Suite e2e de mesas con **31 pruebas** contra PostgreSQL, y 10 pruebas unitarias del servicio.",
+        "Ejercicio de iniciación GitFlow y revisión de los DTOs de productos."
+      ]
+    },
+    "Kerin0011": {
+      "destacados": [
+        "**HU-001**: versionado de la API bajo `/api/v1` y endpoint de estado del servicio.",
+        "**HU-003 Categorías** completa: entidad y migración, DTOs, servicio y controlador con 5 endpoints, **28 pruebas unitarias y 27 e2e**.",
+        "Ejercicio de iniciación GitFlow y revisiones aprobadas a compañeros."
+      ]
+    },
+    "rodriguezvjhona-droid": {
+      "destacados": [
+        "**HU-005 Menú público**: servicio y controlador con los 4 endpoints del menú y las reglas de visibilidad RN-031 a RN-035.",
+        "10 pruebas unitarias del servicio del menú.",
+        "Ejercicio de iniciación GitFlow."
+      ]
+    },
+    "jorel2610": {
+      "destacados": [
+        "Incorporación al equipo durante el sprint: acceso al repositorio y al tablero.",
+        "Ejercicio de iniciación GitFlow completado."
+      ]
+    }
+  },
+  "ajustesTareas": {
+    "50": {
+      "pr": 149,
+      "nota": "El controller del menú se entregó en el mismo PR que el servicio."
+    },
+    "102": {
+      "pr": 121
+    },
+    "105": {
+      "login": "DylanSrz",
+      "nota": "Ceremonias del sprint: no tienen PR."
+    }
+  },
+  "calidad": [
+    "**CI obligatorio** en cada pull request: lint sin warnings, Prettier, build, pruebas unitarias y e2e con PostgreSQL efímero.",
+    "Las **pruebas e2e corren contra PostgreSQL real**, no contra simulaciones, y se pueden repetir sin dejar datos residuales.",
+    "**Formato uniforme de errores** con trazabilidad a la regla de negocio incumplida (`rule: \"RN-016\"`), lo que permite verificar los criterios de aceptación mirando la respuesta.",
+    "**Verificación cruzada**: en la Sprint Review, cada historia la prueba alguien distinto a su autor contra sus criterios de aceptación."
+  ],
+  "retro": {
+    "mantener": [
+      "CI obligatorio desde el primer día.",
+      "Working Agreement y Definition of Done escritos antes de programar.",
+      "Pruebas desde el principio, e2e contra PostgreSQL real.",
+      "Errores con trazabilidad a las reglas de negocio.",
+      "Tablero con jerarquía épica → historia → tarea."
+    ],
+    "mejorar": [
+      "Revisar la rama destino antes de abrir un PR (GitHub propone `main` por defecto).",
+      "Que el checklist del PR refleje lo que realmente se ejecutó.",
+      "Evitar cambios accidentales en archivos de otros compañeros.",
+      "Actualizar la rama con `dev` antes de pedir revisión.",
+      "Repartir más las revisiones: se concentraron en el Scrum Master.",
+      "Difundir antes las convenciones del proyecto (rutas, nombres, excepciones).",
+      "Anticipar el efecto de los cambios de configuración del repositorio antes de aplicarlos."
+    ],
+    "acciones": [
+      {
+        "accion": "Antes de cada push, revisar `git diff origin/dev...HEAD` en busca de archivos ajenos",
+        "responsable": "Todo el equipo"
+      },
+      {
+        "accion": "Antes de pedir revisión, actualizar la rama con `dev` y levantar la aplicación",
+        "responsable": "Todo el equipo"
+      },
+      {
+        "accion": "Documentar en el README las convenciones que más se olvidan",
+        "responsable": "Dylan Suárez"
+      },
+      {
+        "accion": "Que cada PR lo revise alguien distinto al Scrum Master siempre que sea posible",
+        "responsable": "Todo el equipo"
+      },
+      {
+        "accion": "Tras cada release, comprobar que `dev` sigue existiendo y sincronizarla con `main`",
+        "responsable": "Dylan Suárez"
+      }
+    ]
+  },
+  "decisiones": [
+    {
+      "titulo": "Sprints de una semana",
+      "detalle": "Desde el Sprint 2 los sprints duran una semana, de lunes a viernes. El Sprint 2 va del jueves 24 de septiembre al viernes 2 de octubre; desde el Sprint 3 la cadencia queda alineada al lunes."
+    },
+    {
+      "titulo": "Replanificación del proyecto",
+      "detalle": "Con media capacidad por sprint, el alcance se redistribuyó en cinco sprints: reservas en los Sprints 2 y 3, usuarios y seguridad en el 4, y pedidos en el 5 (cierre el 23 de octubre)."
+    },
+    {
+      "titulo": "Alcance acotado por sprint",
+      "detalle": "El Sprint 2 compromete 34 puntos en lugar de los 79 planificados originalmente para las dos semanas de reservas."
+    }
+  ],
+  "incidencias": [
+    {
+      "titulo": "Rama `dev` eliminada al publicar el release",
+      "detalle": "Al mergear el release **v0.1.0** a `main`, el borrado automático de ramas —activado ese mismo día para limpiar ramas viejas— eliminó también la rama `dev` del repositorio remoto, porque era la rama de origen del PR de release.",
+      "impacto": "No se perdió trabajo: todo el contenido estaba en `main`. Durante un día no se pudieron abrir PRs hacia `dev`.",
+      "solucion": "Se restauró `dev` el 25 de septiembre desde el release, se desactivó el borrado automático y se añadió al cierre de cada sprint la comprobación de que `dev` sigue existiendo.",
+      "estado": "Resuelta"
+    }
+  ],
+  "calendario": [
+    {
+      "sprint": 1,
+      "fechas": "18 – 24 sep",
+      "meta": "Plataforma, mesas, categorías, productos y menú",
+      "estado": "hecho"
+    },
+    {
+      "sprint": 2,
+      "fechas": "24 sep – 2 oct",
+      "meta": "Reservas: disponibilidad, registro y consulta",
+      "estado": "actual"
+    },
+    {
+      "sprint": 3,
+      "fechas": "5 – 9 oct",
+      "meta": "Reservas: modificación, cancelación, confirmación, check-in y no-show",
+      "estado": "siguiente"
+    },
+    {
+      "sprint": 4,
+      "fechas": "12 – 16 oct",
+      "meta": "Usuarios, autenticación JWT, roles y perfil",
+      "estado": "siguiente"
+    },
+    {
+      "sprint": 5,
+      "fechas": "19 – 23 oct",
+      "meta": "Pedidos por mesa",
+      "estado": "siguiente"
+    }
+  ],
+  "siguiente": {
+    "sprint": 2,
+    "periodo": {
+      "inicio": "2026-09-24",
+      "fin": "2026-10-02"
+    },
+    "objetivo": "Que un cliente pueda consultar la disponibilidad de mesas, registrar una reserva y consultarla después.",
+    "historias": [
+      {
+        "numero": 14,
+        "clave": "HU-006",
+        "titulo": "Consulta de disponibilidad de mesas",
+        "puntos": 13
+      },
+      {
+        "numero": 15,
+        "clave": "HU-007",
+        "titulo": "Registro de reserva",
+        "puntos": 13
+      },
+      {
+        "numero": 16,
+        "clave": "HU-008",
+        "titulo": "Consulta de reserva",
+        "puntos": 8
+      }
+    ],
+    "base": "Antes de las historias: la entidad `Reservation` con su migración (#52) y la definición de la regla de conflicto horario (#53).",
+    "riesgos": [
+      "La regla de conflicto horario (duración de una reserva, margen entre reservas, horario de servicio) debe quedar definida al inicio: disponibilidad y registro dependen de ella.",
+      "Las tres historias son secuenciales (registro depende de disponibilidad y consulta de registro); un retraso en HU-006 se arrastra al resto.",
+      "Con sprints de una semana el margen es menor; lo que no quepa pasa al Sprint 3 en lugar de alargar el sprint."
+    ]
+  }
+}

@@ -5,6 +5,7 @@ import { App } from 'supertest/types';
 import { DataSource } from 'typeorm';
 import { AppModule } from '../src/app.module.js';
 import { setupApp } from '../src/app.setup.js';
+import { authenticate } from './utils/auth.js';
 import { Category } from '../src/modules/categories/entities/category.entity.js';
 import { CategoryStatus } from '../src/modules/categories/enums/index.js';
 import { Product } from '../src/modules/products/entities/product.entity.js';
@@ -31,6 +32,7 @@ describe('Menu (e2e)', () => {
 
   const base = '/api/v1/menu';
   const http = () => request(app.getHttpServer());
+  let admin: Awaited<ReturnType<typeof authenticate>>;
 
   const runId = Date.now();
   const named = (suffix: string) => `e2e-menu-${runId}-${suffix}`;
@@ -52,6 +54,7 @@ describe('Menu (e2e)', () => {
     });
     setupApp(app, { corsOrigins: ['*'] });
     await app.init();
+    admin = await authenticate(app);
 
     dataSource = app.get(DataSource);
     const categories = dataSource.getRepository(Category);
@@ -103,6 +106,7 @@ describe('Menu (e2e)', () => {
         .getRepository(Category)
         .delete([activeCategoryId, inactiveCategoryId]);
     }
+    await admin?.cleanup();
     await app?.close();
   });
 
@@ -242,7 +246,9 @@ describe('Menu (e2e)', () => {
     it('desactivar un producto lo saca del menú en la siguiente consulta', async () => {
       const products = dataSource.getRepository(Product);
 
-      await http()
+      // Cambio de administración: requiere token (RN-094)
+      await admin
+        .http()
         .patch(`/api/v1/products/${availableProductId}/status`)
         .send({ status: ProductStatus.INACTIVE })
         .expect(200);
@@ -264,7 +270,9 @@ describe('Menu (e2e)', () => {
     it('desactivar una categoría la saca del menú en la siguiente consulta', async () => {
       const categories = dataSource.getRepository(Category);
 
-      await http()
+      // Cambio de administración: requiere token (RN-094)
+      await admin
+        .http()
         .patch(`/api/v1/categories/${activeCategoryId}/status`)
         .send({ status: CategoryStatus.INACTIVE })
         .expect(200);

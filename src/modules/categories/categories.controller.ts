@@ -8,6 +8,7 @@ import {
   Post,
 } from '@nestjs/common';
 import {
+  ApiBearerAuth,
   ApiBadRequestResponse,
   ApiConflictResponse,
   ApiCreatedResponse,
@@ -26,6 +27,8 @@ import { Category } from './entities/category.entity.js';
 import { CategoriesService } from './categories.service.js';
 
 @ApiTags('Categories')
+// Requiere access token (RN-094); los permisos por rol llegan con HU-017
+@ApiBearerAuth('bearer')
 @ApiBadRequestResponse({ description: 'Datos inválidos o campo no permitido' })
 @Controller('categories')
 export class CategoriesController {

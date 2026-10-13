@@ -1,0 +1,112 @@
+/* Documento PDF del informe de sprint — A4 vertical, tono formal.
+   El pie de página con la numeración lo añade generar.mjs (@page), porque
+   incluye el número de sprint. */
+
+:root {
+  --ink: #0f172a;
+  --ink-2: #334155;
+  --ink-3: #64748b;
+  --navy: #1e3a5f;
+  --ambar: #a16207;
+  --ok: #15803d;
+  --borde: #dbe2ea;
+  --suave: #f5f7fa;
+  --sans: "Noto Sans", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --mono: "JetBrains Mono", "JetBrainsMono NFM", Menlo, Consolas, monospace;
+}
+
+* { box-sizing: border-box; }
+html { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+body {
+  margin: 0; color: var(--ink); font-family: var(--sans);
+  font-size: 10pt; line-height: 1.5; background: #fff;
+}
+/* en pantalla se ve como una hoja */
+@media screen {
+  body { background: #e9edf2; padding: 24px 0; }
+  .hoja { width: 210mm; margin: 0 auto; background: #fff; padding: 18mm 16mm; box-shadow: 0 4px 24px rgba(15, 23, 42, .12); }
+}
+code { font-family: var(--mono); font-size: .88em; background: var(--suave); padding: 0 3px; border-radius: 3px; }
+a { color: var(--navy); text-decoration: none; }
+strong { color: var(--ink); }
+
+/* ── portada ───────────────────────────────────────────────────────────── */
+.cabecera {
+  display: flex; justify-content: space-between; align-items: flex-end; gap: 16px;
+  border-bottom: 3px solid var(--ambar); padding-bottom: 12px; margin-bottom: 14px;
+}
+.cabecera .marca { font-weight: 800; font-size: 13pt; letter-spacing: -0.02em; color: var(--navy); }
+.cabecera .marca span { color: var(--ambar); }
+.cabecera h1 { margin: 4px 0 0; font-size: 22pt; line-height: 1.1; color: var(--ink); letter-spacing: -0.02em; }
+.cabecera .sprint { text-align: right; color: var(--ink-3); font-size: 9pt; }
+.cabecera .sprint b { display: block; font-size: 26pt; line-height: 1; color: var(--navy); }
+
+table.ficha { width: 100%; border-collapse: collapse; margin-bottom: 16px; font-size: 9.5pt; }
+table.ficha th { text-align: left; width: 24%; color: var(--ink-3); font-weight: 600; padding: 4px 8px 4px 0; vertical-align: top; }
+table.ficha td { padding: 4px 0; color: var(--ink); }
+
+.estado-sprint {
+  display: flex; gap: 10px; align-items: flex-start; background: #ecfdf3; border: 1px solid #b7ebcb;
+  border-radius: 6px; padding: 10px 12px; margin-bottom: 14px;
+}
+.estado-sprint .icono { flex: none; width: 20px; height: 20px; border-radius: 50%; background: var(--ok); color: #fff; font-weight: 800; font-size: 11pt; display: grid; place-items: center; line-height: 1; }
+.estado-sprint p { margin: 0; }
+.estado-sprint .objetivo { color: var(--ink-3); font-size: 9pt; }
+
+.kpis { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; margin: 0 0 16px; }
+.kpis div { border: 1px solid var(--borde); border-radius: 6px; padding: 8px 10px; background: var(--suave); }
+.kpis b { display: block; font-size: 17pt; line-height: 1.1; color: var(--navy); font-variant-numeric: tabular-nums; }
+.kpis span { font-size: 8.5pt; color: var(--ink-3); }
+
+/* ── secciones ─────────────────────────────────────────────────────────── */
+h2 {
+  font-size: 13pt; color: var(--navy); margin: 20px 0 8px; padding-bottom: 4px;
+  border-bottom: 1px solid var(--borde); break-after: avoid;
+}
+h2 .n { color: var(--ambar); margin-right: 6px; }
+h3 { font-size: 11pt; margin: 0; color: var(--ink); break-after: avoid; }
+p { margin: 0 0 8px; }
+ul { margin: 0 0 8px; padding-left: 18px; }
+li { margin-bottom: 3px; }
+.nota { color: var(--ink-3); font-size: 8.5pt; }
+
+table.t { width: 100%; border-collapse: collapse; font-size: 9pt; margin-bottom: 10px; }
+table.t th { background: #eef2f7; color: var(--ink-2); text-align: left; font-weight: 600; padding: 5px 7px; border: 1px solid var(--borde); }
+table.t td { padding: 5px 7px; border: 1px solid var(--borde); vertical-align: top; }
+table.t td.num, table.t th.num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+table.t td.mono { font-family: var(--mono); font-size: 8.5pt; white-space: nowrap; color: var(--navy); }
+table.t tr { break-inside: avoid; }
+table.t tfoot td { font-weight: 700; background: var(--suave); }
+/* el total no se repite en cada página cuando la tabla se parte */
+table.t tfoot { display: table-row-group; }
+/* tablas cortas: nunca partidas entre páginas */
+table.t.junta { break-inside: avoid; }
+.ok { color: var(--ok); font-weight: 700; white-space: nowrap; }
+
+/* ── integrantes ───────────────────────────────────────────────────────── */
+.integrante { border: 1px solid var(--borde); border-radius: 8px; padding: 12px 14px; margin-bottom: 12px; }
+.integrante .cab { display: flex; gap: 12px; align-items: center; margin-bottom: 8px; break-after: avoid; }
+.avatar {
+  --c: #94a3b8; flex: none; width: 34px; height: 34px; border-radius: 9px; display: grid; place-items: center;
+  font-weight: 800; font-size: 11pt; color: #0b1220; background: var(--c);
+}
+.integrante .rol { color: var(--ink-3); font-size: 8.5pt; }
+.integrante .cifras { margin-left: auto; display: flex; gap: 14px; text-align: right; }
+.integrante .cifras b { display: block; font-size: 13pt; line-height: 1.1; color: var(--navy); font-variant-numeric: tabular-nums; }
+.integrante .cifras span { font-size: 8pt; color: var(--ink-3); }
+.integrante ul { margin-bottom: 8px; }
+.integrante table.t { margin-bottom: 0; }
+
+.dos { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.caja { border: 1px solid var(--borde); border-radius: 6px; padding: 10px 12px; break-inside: avoid; }
+.caja h3 { font-size: 10pt; margin-bottom: 6px; }
+
+.firma { margin-top: 22px; padding-top: 10px; border-top: 1px solid var(--borde); color: var(--ink-3); font-size: 8.5pt; }
+
+/* ── impresión ─────────────────────────────────────────────────────────── */
+@media print {
+  .hoja { padding: 0; }
+  .salto { break-before: page; }
+  .integrante, .caja { break-inside: avoid; }
+  .integrante.largo { break-inside: auto; }
+}

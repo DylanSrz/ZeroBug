@@ -18,6 +18,41 @@ export const envValidationSchema = z.object({
   // Orígenes permitidos por CORS, separados por coma. "*" solo fuera de producción.
   CORS_ORIGIN: z.string().min(1).default('*'),
 
+  // Reglas de reservas (decisión D-001 en docs/decisiones.md).
+  // Duración que ocupa una reserva en la mesa: define el conflicto horario (RN-040, RN-045).
+  RESERVATION_DURATION_MINUTES: z.coerce
+    .number()
+    .int()
+    .min(15)
+    .max(720)
+    .default(120),
+  // Minutos tras la hora reservada antes de poder marcarla como NO_SHOW (RN-078).
+  RESERVATION_NO_SHOW_TOLERANCE_MINUTES: z.coerce
+    .number()
+    .int()
+    .min(0)
+    .max(120)
+    .default(15),
+
+  // Firma de los access tokens (RN-092). Obligatorio: sin él la app no arranca.
+  JWT_SECRET: z
+    .string({ error: 'JWT_SECRET es obligatorio (mínimo 32 caracteres)' })
+    .min(32, 'JWT_SECRET debe tener al menos 32 caracteres'),
+  // Vida del access token: número de segundos o con unidad (15m, 1h, 7d)
+  JWT_EXPIRES_IN: z
+    .string()
+    .regex(/^\d+[smhd]?$/, 'JWT_EXPIRES_IN debe ser segundos o 15m, 1h, 7d…')
+    .default('1h'),
+
+  // Recuperación de contraseña (HU-018): vida del token y enlace que se envía
+  PASSWORD_RESET_TTL_MINUTES: z.coerce
+    .number()
+    .int()
+    .min(5)
+    .max(1440)
+    .default(30),
+  PASSWORD_RESET_URL: z.url().default('http://localhost:3000/reset-password'),
+
   OBSERVE_APP_KEY: z.string().optional(),
   OBSERVE_APP_SECRET: z.string().optional(),
   OBSERVE_SERVICE_ID: z.string().optional(),

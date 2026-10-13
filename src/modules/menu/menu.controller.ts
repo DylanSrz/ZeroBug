@@ -3,6 +3,7 @@ import { Controller, Get, Param, ParseUUIDPipe } from '@nestjs/common';
 import { ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 
 import { MenuService } from './menu.service.js';
+import { Public } from '../auth/decorators/index.js';
 
 import {
   MenuCategorySummaryDto,
@@ -10,7 +11,9 @@ import {
   MenuResponseDto,
 } from './dto/menu-response.dto.js';
 
+// Menú público: se consulta sin iniciar sesión (HU-005)
 @ApiTags('Menu')
+@Public()
 @Controller('menu')
 export class MenuController {
   constructor(private readonly menuService: MenuService) {}

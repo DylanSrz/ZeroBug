@@ -1,9 +1,9 @@
 import { INestApplication } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
-import request from 'supertest';
 import { DataSource } from 'typeorm';
 import { AppModule } from '../src/app.module.js';
 import { setupApp } from '../src/app.setup.js';
+import { authenticate } from './utils/auth.js';
 import { Table } from '../src/modules/tables/entities/table.entity.js';
 import { TableStatus, TableZone } from '../src/modules/tables/enums/index.js';
 
@@ -20,7 +20,9 @@ describe('Tables (e2e)', () => {
   let dataSource: DataSource;
 
   const base = '/api/v1/tables';
-  const http = () => request(app.getHttpServer());
+  // Endpoints protegidos (RN-094): cada petición lleva el token de un ADMIN de prueba
+  let auth: Awaited<ReturnType<typeof authenticate>>;
+  const http = () => auth.http();
 
   // `number` es un integer de PostgreSQL (máx. 2.147.483.647), así que no
   // sirve usar Date.now() directamente. Tomamos los últimos dígitos del
@@ -44,6 +46,7 @@ describe('Tables (e2e)', () => {
     });
     setupApp(app, { corsOrigins: ['*'] });
     await app.init();
+    auth = await authenticate(app);
 
     dataSource = app.get(DataSource);
   });
@@ -55,6 +58,7 @@ describe('Tables (e2e)', () => {
         await repo.delete({ id }).catch(() => undefined);
       }
     }
+    await auth?.cleanup();
     await app?.close();
   });
 
