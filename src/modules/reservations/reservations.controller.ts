@@ -7,6 +7,7 @@ import {
   Get,
   Param,
   ParseUUIDPipe,
+  Patch,
   Post,
   Query,
 } from '@nestjs/common';
@@ -101,5 +102,28 @@ export class ReservationsController {
     @Param('id', ParseUUIDPipe) id: string,
   ): Promise<ReservationResponseDto> {
     return this.reservationsService.findOne(id);
+  }
+
+  // PATCH /api/v1/reservations/{id}/cancel (HU-010)
+  @Patch(':id/cancel')
+  @ApiOperation({ summary: 'Cancelar una reserva' })
+  @ApiParam({ name: 'id', description: 'UUID de la reserva' })
+  @ApiResponse({
+    status: 200,
+    description: 'Reserva cancelada; se conserva en el historial',
+    type: ReservationResponseDto,
+  })
+  @ApiResponse({ status: 400, description: 'El id no es un UUID' })
+  @ApiResponse({ status: 401, description: 'Falta el token' })
+  @ApiResponse({ status: 404, description: 'La reserva no existe' })
+  @ApiResponse({
+    status: 409,
+    description:
+      'El estado no permite cancelar (ya cancelada RN-060, con check-in RN-061, estado final RN-057)',
+  })
+  cancel(
+    @Param('id', ParseUUIDPipe) id: string,
+  ): Promise<ReservationResponseDto> {
+    return this.reservationsService.cancel(id);
   }
 }
