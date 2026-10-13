@@ -1,0 +1,10 @@
+# Finales de línea LF en el repositorio para todos los sistemas operativos.
+# Sin esto, Git en Windows convierte los archivos a CRLF al hacer checkout y
+# Prettier (endOfLine: "lf") marca todos los archivos como mal formateados.
+* text=auto eol=lf
+
+# Binarios: nunca convertir
+*.pdf binary
+*.png binary
+*.jpg binary
+*.ico binary
