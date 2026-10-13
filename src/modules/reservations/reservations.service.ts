@@ -16,7 +16,11 @@ import { AvailabilityQueryDto } from './dto/availability-query.dto.js';
 import { AvailabilityResponseDto } from './dto/availability-response.dto.js';
 import { CreateReservationDto } from './dto/create-reservation.dto.js';
 import { Reservation } from './entities/reservation.entity.js';
-import { BLOCKING_STATUSES, ReservationStatus } from './enums/index.js';
+import {
+  BLOCKING_STATUSES,
+  ReservationStatus,
+  assertTransition,
+} from './enums/index.js';
 import { Table } from '../tables/entities/table.entity.js';
 import { TableStatus } from '../tables/enums/index.js';
 import { ConfigService } from '@nestjs/config';
@@ -182,6 +186,34 @@ export class ReservationsService {
     }
 
     return this.toResponse(reservation);
+  }
+
+  // HU-010: cancela la reserva conservándola en el historial (RN-062). No se
+  // toca la mesa: CANCELLED no está en BLOCKING_STATUSES, así que la
+  // disponibilidad deja de contarla sola (RN-063).
+  async cancel(id: string): Promise<ReservationResponseDto> {
+    const reservation = await this.reservationRepository.findOne({
+      where: { id },
+      relations: { table: true },
+    });
+
+    if (!reservation) {
+      throw new EntityNotFoundException('Reservation', id); // RN-059
+    }
+
+    // assertTransition respondería RN-057 (estado final); la HU pide RN-060
+    if (reservation.status === ReservationStatus.CANCELLED) {
+      throw new BusinessRuleException('La reserva ya está cancelada', 'RN-060');
+    }
+
+    // CHECKED_IN, COMPLETED o NO_SHOW → 409 con su regla (RN-061, RN-057)
+    assertTransition(reservation.status, ReservationStatus.CANCELLED);
+
+    reservation.status = ReservationStatus.CANCELLED;
+    reservation.cancelledAt = new Date(); // RN-064
+    const saved = await this.reservationRepository.save(reservation);
+
+    return this.toResponse(saved);
   }
 
   // Convierte la entidad en la respuesta pública: la hora en HH:MM y de la
