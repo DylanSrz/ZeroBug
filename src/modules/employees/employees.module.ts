@@ -8,4 +8,3 @@ import { Employee } from './entities/employee.entity.js';
   exports: [TypeOrmModule],
 })
 export class EmployeesModule {}
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         
