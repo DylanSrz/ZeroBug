@@ -1,4 +1,7 @@
-export { IsFutureDateTime } from './is-future-date-time.validator.js';
+export {
+  IsFutureDateTime,
+  isFutureInRestaurantTz,
+} from './is-future-date-time.validator.js';
 export { Match } from './match.decorator.js';
 export {
   MeetsPasswordPolicy,
