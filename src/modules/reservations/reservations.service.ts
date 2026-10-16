@@ -233,11 +233,15 @@ export class ReservationsService {
     // no permite pasar a CONFIRMED, lanza un 409.
     assertTransition(reservation.status, ReservationStatus.CONFIRMED);
 
-    // 3. La mesa asignada debe seguir operativa (RN-068). Si se dañó o se
-    // sacó de servicio, el personal tiene que reasignarla antes (HU-009).
-    if (reservation.table?.status === TableStatus.OUT_OF_SERVICE) {
+    // 3. La reserva debe conservar una mesa operativa (RN-068). Si no tiene
+    // mesa (por ejemplo, se eliminó) o está fuera de servicio, el personal
+    // tiene que asignar o reasignar otra antes de confirmar (HU-009).
+    if (
+      !reservation.table ||
+      reservation.table.status === TableStatus.OUT_OF_SERVICE
+    ) {
       throw new BusinessRuleException(
-        'La mesa asignada está fuera de servicio: reasigna la reserva a otra mesa antes de confirmarla',
+        'La reserva no tiene una mesa operativa asignada: asigna o reasigna una mesa antes de confirmarla',
         'RN-068',
       );
     }

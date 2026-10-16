@@ -58,7 +58,7 @@ describe('ReservationsService.confirm', () => {
         { provide: getRepositoryToken(Reservation), useValue: repository },
       ],
     })
-      // Otras dependencias del servicio (que confirm no usa) se simulan vacías
+      // Otras dependencias del servicio (que confirm no usa) se simulan vacías.
       .useMocker(() => ({}))
       .compile();
 
@@ -120,6 +120,20 @@ describe('ReservationsService.confirm', () => {
           status: TableStatus.OUT_OF_SERVICE,
         },
       }),
+    );
+
+    const error = await service.confirm(ID).catch((e: unknown) => e);
+
+    expect(error).toBeInstanceOf(BusinessRuleException);
+    expect((error as BusinessRuleException).getResponse()).toMatchObject({
+      rule: 'RN-068',
+    });
+    expect(repository.save).not.toHaveBeenCalled();
+  });
+
+  it('rechaza con 409 si la reserva no tiene mesa (RN-068)', async () => {
+    repository.findOne.mockResolvedValue(
+      buildReservation({ table: null, tableId: null }),
     );
 
     const error = await service.confirm(ID).catch((e: unknown) => e);
