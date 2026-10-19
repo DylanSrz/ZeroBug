@@ -126,4 +126,27 @@ export class ReservationsController {
   ): Promise<ReservationResponseDto> {
     return this.reservationsService.cancel(id);
   }
+
+  // PATCH /api/v1/reservations/{id}/confirm (HU-011)
+  @Patch(':id/confirm')
+  @ApiOperation({ summary: 'Confirmar una reserva pendiente' })
+  @ApiParam({ name: 'id', description: 'UUID de la reserva' })
+  @ApiResponse({
+    status: 200,
+    description: 'Reserva confirmada (PENDING → CONFIRMED)',
+    type: ReservationResponseDto,
+  })
+  @ApiResponse({ status: 400, description: 'El id no es un UUID válido' })
+  @ApiResponse({ status: 401, description: 'Falta el token' })
+  @ApiResponse({ status: 404, description: 'Reserva no encontrada (RN-065)' })
+  @ApiResponse({
+    status: 409,
+    description:
+      'La reserva no está PENDING (RN-066, RN-067) o su mesa está fuera de servicio (RN-068)',
+  })
+  confirm(
+    @Param('id', ParseUUIDPipe) id: string,
+  ): Promise<ReservationResponseDto> {
+    return this.reservationsService.confirm(id);
+  }
 }
