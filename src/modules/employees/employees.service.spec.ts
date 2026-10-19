@@ -125,6 +125,22 @@ describe('EmployeesService', () => {
       });
       expect(repository.manager.transaction).not.toHaveBeenCalled();
     });
+
+    it('si otra alta con el mismo correo gana la carrera, también responde RN-095', async () => {
+      usersService.create.mockRejectedValue(
+        new BusinessRuleException(
+          'Ya existe una cuenta con ese correo electrónico',
+          'RN-082',
+        ),
+      );
+
+      const error = await service.create(createDto).catch((e: unknown) => e);
+
+      expect(error).toBeInstanceOf(BusinessRuleException);
+      expect((error as BusinessRuleException).getResponse()).toMatchObject({
+        rule: 'RN-095',
+      });
+    });
   });
 
   it('findAll devuelve los empleados con los datos de su cuenta', async () => {

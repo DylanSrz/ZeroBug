@@ -165,6 +165,20 @@ describe('Employees (e2e)', () => {
       .patch(`${base}/${employeeId}`)
       .send({ role: UserRole.ADMIN })
       .expect(400);
+    // El estado solo se cambia en PATCH /{id}/status
+    await admin
+      .http()
+      .patch(`${base}/${employeeId}`)
+      .send({ status: UserStatus.INACTIVE })
+      .expect(400);
+
+    // Nada de lo anterior se guardó
+    const stored = await admin.http().get(`${base}/${employeeId}`).expect(200);
+    expect(stored.body).toMatchObject({
+      email,
+      role: UserRole.KITCHEN,
+      status: UserStatus.ACTIVE,
+    });
   });
 
   it('desactiva al empleado y ya no puede iniciar sesión (RN-098)', async () => {
