@@ -3,7 +3,7 @@
 // Los parámetros de duración y tolerancia se leen de ConfigService
 // (reservations.durationMinutes, reservations.noShowToleranceMinutes), nunca fijos.
 
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { EntityManager, Repository } from 'typeorm';
 import {
@@ -28,6 +28,7 @@ import { TableStatus } from '../tables/enums/index.js';
 import { ConfigService } from '@nestjs/config';
 
 const NOT_MODIFIABLE = [
+  ReservationStatus.CHECKED_IN,  // cliente ya sentado (RN-057)
   ReservationStatus.CANCELLED,
   ReservationStatus.NO_SHOW,
   ReservationStatus.COMPLETED,
@@ -249,8 +250,10 @@ export class ReservationsService {
 
       if (changed) {
         if (!isFutureInRestaurantTz(schedule.date, schedule.time)) {
-          throw new BadRequestException(
-            'Fecha y hora deben ser futuras (RN-053)',
+          // Mismo tipo de excepción y mensaje que el decorador @IsFutureDateTime (RN-053)
+          throw new BusinessRuleException(
+            'La fecha y hora deben ser futuras (zona horaria del restaurante)',
+            'RN-053',
           );
         }
         const { tables } = await this.findAvailableTables(
@@ -258,7 +261,26 @@ export class ReservationsService {
           manager,
           reservation.id,
         );
-        if (!tables.some((t) => t.id === reservation.tableId)) {
+        let keepsTable = tables.some((t) => t.id === reservation.tableId);
+
+        if (keepsTable) {
+          // Igual que lockFirstAvailableTable: bloquear la fila de la mesa y volver
+          // a comprobar. Sin este paso, dos transacciones concurrentes podrían
+          // asignar la misma mesa a dos reservas distintas (RN-045).
+          await manager.getRepository(Table).findOne({
+            // keepsTable es true solo si tables.some() encontró esa mesa → tableId no puede ser null
+            where: { id: reservation.tableId! },
+            lock: { mode: 'pessimistic_write' },
+          });
+          const again = await this.findAvailableTables(
+            schedule,
+            manager,
+            reservation.id,
+          );
+          keepsTable = again.tables.some((t) => t.id === reservation.tableId);
+        }
+
+        if (!keepsTable) {
           const tableId = await this.lockFirstAvailableTable(
             schedule,
             manager,

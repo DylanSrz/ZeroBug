@@ -116,6 +116,8 @@ describe('ReservationsService.update', () => {
   it('mantiene la mesa si sigue libre y con capacidad suficiente', async () => {
     const reservation = existingReservation();
     reservationRepo.findOne.mockResolvedValue(reservation);
+    tableRepo.findOne.mockResolvedValue({ id: 'table-1' }); // simula el lock de la mesa actual
+    // mismo valor en ambas llamadas: primer check y reverificación tras lock
     findAvailableTables.mockResolvedValue({
       available: true,
       tables: [candidate(1, 4), candidate(2, 6)],
@@ -124,13 +126,18 @@ describe('ReservationsService.update', () => {
     const dto: UpdateReservationDto = { time: '20:00' };
     await service.update('reservation-1', dto);
 
+    // Se llama dos veces: primer check + reverificación tras pessimistic_write (RN-045)
+    expect(findAvailableTables).toHaveBeenCalledTimes(2);
     expect(findAvailableTables).toHaveBeenCalledWith(
       { date: '2030-12-20', time: '20:00', guests: 4 },
       manager,
       'reservation-1',
     );
-    // Como table-1 está en tables, no hace falta llamar a lockFirstAvailableTable
-    expect(tableRepo.findOne).not.toHaveBeenCalled();
+    // La mesa actual se bloquea antes de confirmar que se conserva
+    expect(tableRepo.findOne).toHaveBeenCalledWith({
+      where: { id: 'table-1' },
+      lock: { mode: 'pessimistic_write' },
+    });
     expect(reservationRepo.save).toHaveBeenCalledWith(
       expect.objectContaining({
         time: '20:00',
@@ -182,10 +189,11 @@ describe('ReservationsService.update', () => {
   });
 
   it.each([
+    ReservationStatus.CHECKED_IN,
     ReservationStatus.CANCELLED,
     ReservationStatus.NO_SHOW,
     ReservationStatus.COMPLETED,
-  ])('estado final %s responde 409 con RN-057', async (status) => {
+  ])('estado no modificable %s responde 409 con RN-057', async (status) => {
     reservationRepo.findOne.mockResolvedValue(existingReservation(status));
 
     const dto: UpdateReservationDto = { customerName: 'Nuevo Nombre' };
@@ -196,6 +204,49 @@ describe('ReservationsService.update', () => {
     expect(error).toBeInstanceOf(BusinessRuleException);
     expect((error as BusinessRuleException).getResponse()).toMatchObject({
       rule: 'RN-057',
+    });
+    expect(reservationRepo.save).not.toHaveBeenCalled();
+  });
+
+  it('reasigna si la mesa actual es arrebatada entre el primer check y el bloqueo (RN-045)', async () => {
+    const reservation = existingReservation();
+    reservationRepo.findOne.mockResolvedValue(reservation);
+    // Secuencia de llamadas a findAvailableTables:
+    //   1ª (update): table-1 parece libre → keepsTable = true
+    //   2ª (update tras lock): mesa ya tomada → keepsTable = false
+    //   3ª (lockFirst, 1er check): table-2 disponible
+    //   4ª (lockFirst, tras lock de table-2): table-2 sigue disponible → retorna 'table-2'
+    findAvailableTables
+      .mockResolvedValueOnce({ available: true, tables: [candidate(1, 4)] })
+      .mockResolvedValueOnce({ available: false, tables: [] })
+      .mockResolvedValueOnce({ available: true, tables: [candidate(2, 6)] })
+      .mockResolvedValueOnce({ available: true, tables: [candidate(2, 6)] });
+    // Locks: primero table-1 (en update), luego table-2 (en lockFirst)
+    tableRepo.findOne
+      .mockResolvedValueOnce({ id: 'table-1' })
+      .mockResolvedValueOnce({ id: 'table-2' });
+
+    const dto: UpdateReservationDto = { time: '20:00' };
+    await service.update('reservation-1', dto);
+
+    expect(reservationRepo.save).toHaveBeenCalledWith(
+      expect.objectContaining({ tableId: 'table-2' }),
+    );
+  });
+
+  it('fecha en el pasado lanza BusinessRuleException con RN-053 y no guarda nada', async () => {
+    const reservation = existingReservation();
+    reservationRepo.findOne.mockResolvedValue(reservation);
+
+    // 2020-01-01 es pasado: isFutureInRestaurantTz retorna false
+    const dto: UpdateReservationDto = { date: '2020-01-01', time: '19:00' };
+    const error = await service
+      .update('reservation-1', dto)
+      .catch((e: unknown) => e);
+
+    expect(error).toBeInstanceOf(BusinessRuleException);
+    expect((error as BusinessRuleException).getResponse()).toMatchObject({
+      rule: 'RN-053',
     });
     expect(reservationRepo.save).not.toHaveBeenCalled();
   });
