@@ -30,15 +30,17 @@ export class UsersService {
     private readonly passwordService: PasswordService,
   ) {}
 
-  // Crea una cuenta ACTIVE (RN-086). Email repetido → 409 (RN-082).
-  async create(data: CreateUserData): Promise<User> {
+  // Crea una cuenta ACTIVE (RN-086). Email repetido → 409 (RN-082). Acepta el
+  // manager de una transacción para crearla junto con otros datos (HU-016).
+  async create(data: CreateUserData, manager?: EntityManager): Promise<User> {
+    const repository = manager?.getRepository(User) ?? this.userRepository;
     const email = this.normalizeEmail(data.email);
 
-    if (await this.userRepository.existsBy({ email })) {
+    if (await repository.existsBy({ email })) {
       throw this.duplicatedEmail();
     }
 
-    const user = this.userRepository.create({
+    const user = repository.create({
       firstName: data.firstName.trim(),
       lastName: data.lastName.trim(),
       email,
@@ -49,9 +51,9 @@ export class UsersService {
     });
 
     try {
-      const saved = await this.userRepository.save(user);
+      const saved = await repository.save(user);
       // Lo devolvemos recién leído, sin passwordHash (select: false)
-      return await this.userRepository.findOneByOrFail({ id: saved.id });
+      return await repository.findOneByOrFail({ id: saved.id });
     } catch (error) {
       // Dos registros simultáneos con el mismo email: el índice único decide
       if (
