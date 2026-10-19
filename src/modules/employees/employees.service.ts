@@ -43,32 +43,46 @@ export class EmployeesService {
   // sola transacción: si algo falla no queda ninguno de los dos.
   async create(dto: CreateEmployeeDto): Promise<EmployeeResponseDto> {
     if (await this.usersService.findByEmail(dto.email)) {
-      throw new BusinessRuleException(
-        'Ya existe una cuenta con ese correo electrónico',
-        'RN-095',
-      );
+      throw this.duplicatedEmail();
     }
 
-    const employee = await this.employeeRepository.manager.transaction(
-      async (manager) => {
-        const user = await this.usersService.create(
-          {
-            firstName: dto.firstName,
-            lastName: dto.lastName,
-            email: dto.email,
-            phone: dto.phone,
-            password: dto.password,
-            role: INITIAL_ROLE[dto.position],
-          },
-          manager,
-        );
-        const saved = await manager.save(
-          manager.create(Employee, { userId: user.id, position: dto.position }),
-        );
-        saved.user = user;
-        return saved;
-      },
-    );
+    let employee: Employee;
+    try {
+      employee = await this.employeeRepository.manager.transaction(
+        async (manager) => {
+          const user = await this.usersService.create(
+            {
+              firstName: dto.firstName,
+              lastName: dto.lastName,
+              email: dto.email,
+              phone: dto.phone,
+              password: dto.password,
+              role: INITIAL_ROLE[dto.position],
+            },
+            manager,
+          );
+          const saved = await manager.save(
+            manager.create(Employee, {
+              userId: user.id,
+              position: dto.position,
+            }),
+          );
+          saved.user = user;
+          return saved;
+        },
+      );
+    } catch (error) {
+      // Dos altas simultáneas con el mismo correo pasan el chequeo de arriba y
+      // las frena el índice único de users, que UsersService informa como
+      // RN-082. Para un empleado la regla es RN-095: misma respuesta siempre.
+      if (
+        error instanceof BusinessRuleException &&
+        (error.getResponse() as { rule?: string }).rule === 'RN-082'
+      ) {
+        throw this.duplicatedEmail();
+      }
+      throw error;
+    }
 
     return EmployeeResponseDto.from(employee);
   }
@@ -116,6 +130,13 @@ export class EmployeesService {
     employee.user.status = dto.status;
     await this.employeeRepository.manager.save(User, employee.user);
     return EmployeeResponseDto.from(employee);
+  }
+
+  private duplicatedEmail(): BusinessRuleException {
+    return new BusinessRuleException(
+      'Ya existe una cuenta con ese correo electrónico',
+      'RN-095',
+    );
   }
 
   private async findEntity(id: string): Promise<Employee> {
