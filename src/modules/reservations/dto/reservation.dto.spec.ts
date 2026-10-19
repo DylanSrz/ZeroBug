@@ -1,7 +1,7 @@
 import { plainToInstance } from 'class-transformer';
 import { validate } from 'class-validator';
 import { ZEROBUG } from '../../../common/constants/restaurant-timezone.js';
-import { CreateReservationDto } from './index.js';
+import { CreateReservationDto, UpdateReservationDto } from './index.js';
 
 // Devuelve los campos que fallaron, con las mismas opciones que el
 // ValidationPipe global (app.setup.ts).
@@ -10,6 +10,19 @@ async function invalidProps(
 ): Promise<string[]> {
   const errors = await validate(
     plainToInstance(CreateReservationDto, payload),
+    {
+      whitelist: true,
+      forbidNonWhitelisted: true,
+    },
+  );
+  return errors.map((e) => e.property).sort();
+}
+
+async function invalidUpdateProps(
+  payload: Record<string, unknown>,
+): Promise<string[]> {
+  const errors = await validate(
+    plainToInstance(UpdateReservationDto, payload),
     {
       whitelist: true,
       forbidNonWhitelisted: true,
@@ -180,5 +193,25 @@ describe('CreateReservationDto', () => {
     ])('rechaza guests %s', async (_label, guests) => {
       expect(await invalidProps({ ...valid, guests })).toEqual(['guests']);
     });
+  });
+});
+
+describe('UpdateReservationDto', () => {
+  it('solo time → válido', async () => {
+    expect(await invalidUpdateProps({ time: '20:30' })).toEqual([]);
+  });
+
+  it('guests: 0 → error', async () => {
+    expect(await invalidUpdateProps({ guests: 0 })).toEqual(['guests']);
+  });
+
+  it('email inválido → error', async () => {
+    expect(await invalidUpdateProps({ email: 'invalido' })).toEqual(['email']);
+  });
+
+  it('status → error (no está en el DTO)', async () => {
+    expect(await invalidUpdateProps({ status: 'CONFIRMED' })).toEqual([
+      'status',
+    ]);
   });
 });
