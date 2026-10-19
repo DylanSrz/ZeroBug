@@ -22,6 +22,11 @@ function nowInRestaurantTz(): string {
   return `${get('year')}-${get('month')}-${get('day')}T${get('hour')}:${get('minute')}`;
 }
 
+export function isFutureInRestaurantTz(date: string, time: string): boolean {
+  if (!DATE_RE.test(date) || !TIME_RE.test(time)) return false;
+  return `${date}T${time}` > nowInRestaurantTz();
+}
+
 // Se aplica sobre `time`; lee `date` del mismo objeto.
 export function IsFutureDateTime(
   dateProperty = 'date',
@@ -41,9 +46,8 @@ export function IsFutureDateTime(
 
           if (typeof date !== 'string' || typeof value !== 'string')
             return false;
-          if (!DATE_RE.test(date) || !TIME_RE.test(value)) return false;
 
-          return `${date}T${value}` > nowInRestaurantTz();
+          return isFutureInRestaurantTz(date, value);
         },
         defaultMessage() {
           return 'La fecha y hora deben ser futuras (zona horaria del restaurante)';
