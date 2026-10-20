@@ -3,7 +3,7 @@
 // Los parámetros de duración y tolerancia se leen de ConfigService
 // (reservations.durationMinutes, reservations.noShowToleranceMinutes), nunca fijos.
 
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { EntityManager, Repository } from 'typeorm';
 import {
@@ -250,11 +250,11 @@ export class ReservationsService {
 
       if (changed) {
         if (!isFutureInRestaurantTz(schedule.date, schedule.time)) {
-          // Mismo tipo de excepción y mensaje que el decorador @IsFutureDateTime (RN-053)
-          throw new BusinessRuleException(
-            'La fecha y hora deben ser futuras (zona horaria del restaurante)',
-            'RN-053',
-          );
+          throw new BadRequestException({
+            message:
+              'La fecha y hora deben ser futuras (zona horaria del restaurante)',
+            rule: 'RN-053',
+          });
         }
         const { tables } = await this.findAvailableTables(
           schedule,

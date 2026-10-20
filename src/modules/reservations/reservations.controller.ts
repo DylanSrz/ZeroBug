@@ -18,6 +18,7 @@ import {
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
+import { UpdateReservationDto } from './dto/update-reservation.dto.js';
 import { FilterReservationsDto } from './dto/filter-reservations.dto.js';
 import { ReservationResponseDto } from './dto/reservation-response.dto.js';
 import { ReservationsService } from './reservations.service.js';
@@ -102,6 +103,33 @@ export class ReservationsController {
     @Param('id', ParseUUIDPipe) id: string,
   ): Promise<ReservationResponseDto> {
     return this.reservationsService.findOne(id);
+  }
+
+  // PATCH /api/v1/reservations/{id} (HU-009)
+  @Patch(':id')
+  @ApiOperation({ summary: 'Modificar una reserva existente' })
+  @ApiParam({ name: 'id', description: 'UUID de la reserva' })
+  @ApiResponse({
+    status: 200,
+    description: 'Reserva modificada exitosamente',
+    type: ReservationResponseDto,
+  })
+  @ApiResponse({
+    status: 400,
+    description: 'Datos inválidos o fecha pasada (RN-053)',
+  })
+  @ApiResponse({ status: 401, description: 'Falta el token' })
+  @ApiResponse({ status: 404, description: 'La reserva no existe (RN-052)' })
+  @ApiResponse({
+    status: 409,
+    description:
+      'Estado no modificable (RN-057) o sin disponibilidad de mesas (RN-058)',
+  })
+  update(
+    @Param('id', ParseUUIDPipe) id: string,
+    @Body() dto: UpdateReservationDto,
+  ): Promise<ReservationResponseDto> {
+    return this.reservationsService.update(id, dto);
   }
 
   // PATCH /api/v1/reservations/{id}/cancel (HU-010)
