@@ -375,6 +375,73 @@ export class ReservationsService {
     return this.toResponse(saved);
   }
 
+  // HU-012: registra la llegada del cliente. En una sola transacción la
+  // reserva pasa a CHECKED_IN y su mesa a OCCUPIED: o se aplican las dos
+  // cosas o ninguna.
+  async checkIn(id: string): Promise<ReservationResponseDto> {
+    await this.reservationRepository.manager.transaction(async (manager) => {
+      const reservations = manager.getRepository(Reservation);
+      const tables = manager.getRepository(Table);
+
+      // 1. La reserva debe existir (RN-070). Se bloquea su fila para que dos
+      // check-in simultáneos de la misma reserva no pasen los dos.
+      const reservation = await reservations.findOne({
+        where: { id },
+        lock: { mode: 'pessimistic_write' },
+      });
+
+      if (!reservation) {
+        throw new EntityNotFoundException('Reservation', id);
+      }
+
+      // 2. Solo desde CONFIRMED (RN-071, RN-075): si el estado actual no
+      // permite pasar a CHECKED_IN, lanza un 409.
+      assertTransition(reservation.status, ReservationStatus.CHECKED_IN);
+
+      // 3. Debe tener una mesa asignada (RN-072).
+      if (!reservation.tableId) {
+        throw new BusinessRuleException(
+          'La reserva no tiene una mesa asignada: asigna una antes de registrar el check-in',
+          'RN-072',
+        );
+      }
+
+      // 4. Se carga y se bloquea la mesa dentro de la misma transacción.
+      const table = await tables.findOne({
+        where: { id: reservation.tableId },
+        lock: { mode: 'pessimistic_write' },
+      });
+
+      if (!table) {
+        throw new BusinessRuleException(
+          'La mesa asignada a la reserva ya no existe: asigna otra antes de registrar el check-in',
+          'RN-072',
+        );
+      }
+
+      // 5. Si la mesa ya está ocupada por otra reserva o pedido, no se puede
+      // ocupar de nuevo (RN-073).
+      if (table.status === TableStatus.OCCUPIED) {
+        throw new BusinessRuleException(
+          'La mesa asignada ya está ocupada por otra reserva o pedido',
+          'RN-073',
+        );
+      }
+
+      // 6. Se aplican los dos cambios y se registra la llegada (RN-073, RN-074).
+      reservation.status = ReservationStatus.CHECKED_IN;
+      reservation.checkedInAt = new Date();
+      table.status = TableStatus.OCCUPIED;
+
+      await reservations.save(reservation);
+      await tables.save(table);
+    });
+
+    // La transacción ya terminó: se devuelve la reserva con su mesa, en el
+    // mismo formato que el GET.
+    return this.findOne(id);
+  }
+
   // Convierte la entidad en la respuesta pública: la hora en HH:MM y de la
   // mesa solo su resumen, o null si no tiene (RN-050).
   private toResponse(reservation: Reservation): ReservationResponseDto {
