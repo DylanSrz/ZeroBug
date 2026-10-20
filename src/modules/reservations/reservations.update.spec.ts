@@ -1,3 +1,4 @@
+import { BadRequestException } from '@nestjs/common';
 import { describe, it, expect, beforeEach, vi, type Mock } from 'vitest';
 import { Test, TestingModule } from '@nestjs/testing';
 import { ConfigService } from '@nestjs/config';
@@ -234,7 +235,7 @@ describe('ReservationsService.update', () => {
     );
   });
 
-  it('fecha en el pasado lanza BusinessRuleException con RN-053 y no guarda nada', async () => {
+  it('fecha en el pasado lanza BadRequestException con RN-053 y no guarda nada', async () => {
     const reservation = existingReservation();
     reservationRepo.findOne.mockResolvedValue(reservation);
 
@@ -244,8 +245,8 @@ describe('ReservationsService.update', () => {
       .update('reservation-1', dto)
       .catch((e: unknown) => e);
 
-    expect(error).toBeInstanceOf(BusinessRuleException);
-    expect((error as BusinessRuleException).getResponse()).toMatchObject({
+    expect(error).toBeInstanceOf(BadRequestException);
+    expect((error as BadRequestException).getResponse()).toMatchObject({
       rule: 'RN-053',
     });
     expect(reservationRepo.save).not.toHaveBeenCalled();
