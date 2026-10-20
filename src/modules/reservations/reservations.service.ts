@@ -336,6 +336,45 @@ export class ReservationsService {
     return this.toResponse(saved);
   }
 
+  // HU-011: confirma una reserva pendiente (PENDING → CONFIRMED).
+  // Conserva la mesa asignada y registra cuándo se confirmó (RN-069).
+  async confirm(id: string): Promise<ReservationResponseDto> {
+    // 1. La reserva debe existir (RN-065). Se trae con su mesa para revisarla.
+    const reservation = await this.reservationRepository.findOne({
+      where: { id },
+      relations: { table: true },
+    });
+
+    if (!reservation) {
+      throw new EntityNotFoundException('Reservation', id);
+    }
+
+    // 2. Solo se confirma desde PENDING (RN-066, RN-067): si el estado actual
+    // no permite pasar a CONFIRMED, lanza un 409.
+    assertTransition(reservation.status, ReservationStatus.CONFIRMED);
+
+    // 3. La reserva debe conservar una mesa operativa (RN-068). Si no tiene
+    // mesa (por ejemplo, se eliminó) o está fuera de servicio, el personal
+    // tiene que asignar o reasignar otra antes de confirmar (HU-009).
+    if (
+      !reservation.table ||
+      reservation.table.status === TableStatus.OUT_OF_SERVICE
+    ) {
+      throw new BusinessRuleException(
+        'La reserva no tiene una mesa operativa asignada: asigna o reasigna una mesa antes de confirmarla',
+        'RN-068',
+      );
+    }
+
+    // 4. Se cambia el estado y se guarda la fecha y hora de confirmación (RN-069).
+    // La mesa no se toca: sigue asignada y la reserva sigue bloqueando el horario.
+    reservation.status = ReservationStatus.CONFIRMED;
+    reservation.confirmedAt = new Date();
+
+    const saved = await this.reservationRepository.save(reservation);
+    return this.toResponse(saved);
+  }
+
   // Convierte la entidad en la respuesta pública: la hora en HH:MM y de la
   // mesa solo su resumen, o null si no tiene (RN-050).
   private toResponse(reservation: Reservation): ReservationResponseDto {

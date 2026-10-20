@@ -13,9 +13,11 @@ import { HealthModule } from './modules/health/health.module.js';
 import { CategoriesModule } from './modules/categories/categories.module.js';
 import { ProductsModule } from './modules/products/products.module.js';
 import { TablesModule } from './modules/tables/tables.module.js';
+import { ProfileModule } from './modules/profile/profile.module.js';
 import { MenuModule } from './modules/menu/menu.module.js';
 import { ReservationsModule } from './modules/reservations/reservations.module.js';
 import { AuthModule } from './modules/auth/auth.module.js';
+import { EmployeesModule } from './modules/employees/employees.module.js';
 
 export const { ObserveModule, ObserveInstrument } = createObserveModule();
 
@@ -42,9 +44,11 @@ export const { ObserveModule, ObserveInstrument } = createObserveModule();
     CategoriesModule,
     ProductsModule,
     TablesModule,
+    ProfileModule,
     MenuModule,
     ReservationsModule,
     AuthModule,
+    EmployeesModule,
   ],
   controllers: [AppController],
   providers: [AppService],
