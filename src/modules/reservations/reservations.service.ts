@@ -28,7 +28,7 @@ import { TableStatus } from '../tables/enums/index.js';
 import { ConfigService } from '@nestjs/config';
 
 const NOT_MODIFIABLE = [
-  ReservationStatus.CHECKED_IN,  // cliente ya sentado (RN-057)
+  ReservationStatus.CHECKED_IN, // cliente ya sentado (RN-057)
   ReservationStatus.CANCELLED,
   ReservationStatus.NO_SHOW,
   ReservationStatus.COMPLETED,
