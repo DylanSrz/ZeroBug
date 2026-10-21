@@ -149,7 +149,7 @@ export class ReservationsController {
   ): Promise<ReservationResponseDto> {
     return this.reservationsService.confirm(id);
   }
-    // PATCH /api/v1/reservations/{id}/check-in (HU-012)
+  // PATCH /api/v1/reservations/{id}/check-in (HU-012)
   @Patch(':id/check-in')
   @ApiOperation({ summary: 'Registrar el check-in de una reserva' })
   @ApiParam({ name: 'id', description: 'UUID de la reserva' })
