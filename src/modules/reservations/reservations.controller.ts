@@ -149,4 +149,27 @@ export class ReservationsController {
   ): Promise<ReservationResponseDto> {
     return this.reservationsService.confirm(id);
   }
+    // PATCH /api/v1/reservations/{id}/check-in (HU-012)
+  @Patch(':id/check-in')
+  @ApiOperation({ summary: 'Registrar el check-in de una reserva' })
+  @ApiParam({ name: 'id', description: 'UUID de la reserva' })
+  @ApiResponse({
+    status: 200,
+    description:
+      'Check-in registrado: la reserva pasa a CHECKED_IN y su mesa a OCCUPIED',
+    type: ReservationResponseDto,
+  })
+  @ApiResponse({ status: 400, description: 'El id no es un UUID válido' })
+  @ApiResponse({ status: 401, description: 'Falta el token' })
+  @ApiResponse({ status: 404, description: 'La reserva no existe (RN-070)' })
+  @ApiResponse({
+    status: 409,
+    description:
+      'La reserva no está CONFIRMED (RN-071, RN-075), no tiene mesa asignada (RN-072) o su mesa ya está ocupada',
+  })
+  checkIn(
+    @Param('id', ParseUUIDPipe) id: string,
+  ): Promise<ReservationResponseDto> {
+    return this.reservationsService.checkIn(id);
+  }
 }
