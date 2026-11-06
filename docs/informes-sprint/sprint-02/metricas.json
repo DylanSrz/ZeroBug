@@ -1,12 +1,12 @@
 {
-  "generado": "2026-10-09T16:10:42.060Z",
+  "generado": "2026-10-13T04:00:29.892Z",
   "sprint": 2,
   "ventana": {
     "desde": "2026-10-05T00:00:00-05:00",
-    "hasta": "2026-10-09T16:10:24.171Z",
+    "hasta": "2026-10-12T22:55:07-05:00",
     "tagAnterior": "v0.1.0",
-    "release": null,
-    "codigoMedidoEn": "origin/dev"
+    "release": "v0.2.0",
+    "codigoMedidoEn": "v0.2.0"
   },
   "milestone": {
     "numero": 2,
@@ -14,23 +14,23 @@
     "vence": "2026-10-09T00:00:00Z"
   },
   "totales": {
-    "prs": 13,
-    "revisiones": 7,
+    "prs": 21,
+    "revisiones": 18,
     "historias": 6,
-    "historiasCerradas": 2,
+    "historiasCerradas": 6,
     "puntosComprometidos": 68,
-    "puntosCompletados": 26,
+    "puntosCompletados": 68,
     "tareas": 22,
-    "tareasCerradas": 14,
-    "adiciones": 4711,
-    "eliminaciones": 87
+    "tareasCerradas": 20,
+    "adiciones": 8230,
+    "eliminaciones": 92
   },
   "historias": [
     {
       "numero": 14,
       "titulo": "HU-006 — Consulta de Disponibilidad de Mesas",
-      "estado": "OPEN",
-      "cerrada": null,
+      "estado": "CLOSED",
+      "cerrada": "2026-10-11T02:30:13Z",
       "puntos": 13,
       "asignados": [
         "cesarvega1"
@@ -39,8 +39,8 @@
     {
       "numero": 15,
       "titulo": "HU-007 — Registro de Reserva",
-      "estado": "OPEN",
-      "cerrada": null,
+      "estado": "CLOSED",
+      "cerrada": "2026-10-13T03:28:41Z",
       "puntos": 13,
       "asignados": [
         "MrDilant"
@@ -49,8 +49,8 @@
     {
       "numero": 16,
       "titulo": "HU-008 — Consulta de Reserva",
-      "estado": "OPEN",
-      "cerrada": null,
+      "estado": "CLOSED",
+      "cerrada": "2026-10-11T02:32:09Z",
       "puntos": 8,
       "asignados": [
         "leonardo-200224"
@@ -59,8 +59,8 @@
     {
       "numero": 18,
       "titulo": "HU-010 — Cancelación de Reserva",
-      "estado": "OPEN",
-      "cerrada": null,
+      "estado": "CLOSED",
+      "cerrada": "2026-10-13T03:41:56Z",
       "puntos": 8,
       "asignados": [
         "leonardo-200224"
@@ -140,7 +140,7 @@
     {
       "numero": 55,
       "titulo": "ReservationsService.findAvailableTables + GET /reservations/availability + Swagger",
-      "estado": "OPEN",
+      "estado": "CLOSED",
       "etiquetas": [
         "tarea",
         "epic:reservas",
@@ -150,13 +150,13 @@
       "asignados": [
         "cesarvega1"
       ],
-      "resueltaPor": null,
-      "pr": null
+      "resueltaPor": "cesarvega1",
+      "pr": 177
     },
     {
       "numero": 56,
       "titulo": "Tests e2e de disponibilidad",
-      "estado": "OPEN",
+      "estado": "CLOSED",
       "etiquetas": [
         "tarea",
         "epic:reservas",
@@ -166,8 +166,8 @@
       "asignados": [
         "cesarvega1"
       ],
-      "resueltaPor": null,
-      "pr": null
+      "resueltaPor": "cesarvega1",
+      "pr": 178
     },
     {
       "numero": 57,
@@ -204,7 +204,7 @@
     {
       "numero": 59,
       "titulo": "ReservationsService.create con asignación automática de mesa (transaccional)",
-      "estado": "OPEN",
+      "estado": "CLOSED",
       "etiquetas": [
         "tarea",
         "epic:reservas",
@@ -214,13 +214,13 @@
       "asignados": [
         "MrDilant"
       ],
-      "resueltaPor": null,
-      "pr": null
+      "resueltaPor": "DylanSrz",
+      "pr": 179
     },
     {
       "numero": 60,
       "titulo": "POST /reservations + Swagger + tests e2e",
-      "estado": "OPEN",
+      "estado": "CLOSED",
       "etiquetas": [
         "tarea",
         "epic:reservas",
@@ -230,8 +230,8 @@
       "asignados": [
         "MrDilant"
       ],
-      "resueltaPor": null,
-      "pr": null
+      "resueltaPor": "DylanSrz",
+      "pr": 180
     },
     {
       "numero": 61,
@@ -268,7 +268,7 @@
     {
       "numero": 66,
       "titulo": "ReservationsService.cancel (estado, cancelledAt, liberación de disponibilidad)",
-      "estado": "OPEN",
+      "estado": "CLOSED",
       "etiquetas": [
         "tarea",
         "epic:reservas",
@@ -278,13 +278,13 @@
       "asignados": [
         "leonardo-200224"
       ],
-      "resueltaPor": null,
-      "pr": null
+      "resueltaPor": "DylanSrz",
+      "pr": 181
     },
     {
       "numero": 67,
       "titulo": "PATCH /reservations/{id}/cancel + Swagger + tests e2e",
-      "estado": "OPEN",
+      "estado": "CLOSED",
       "etiquetas": [
         "tarea",
         "epic:reservas",
@@ -294,8 +294,8 @@
       "asignados": [
         "leonardo-200224"
       ],
-      "resueltaPor": null,
-      "pr": null
+      "resueltaPor": "DylanSrz",
+      "pr": 182
     },
     {
       "numero": 74,
@@ -602,12 +602,104 @@
       "tareas": [
         62
       ]
+    },
+    {
+      "numero": 175,
+      "titulo": "docs: informe del Sprint 2",
+      "url": "https://github.com/DylanSrz/ZeroBug/pull/175",
+      "autor": "DylanSrz",
+      "mergedAt": "2026-10-09T16:38:55Z",
+      "adiciones": 2345,
+      "eliminaciones": 0,
+      "tareas": []
+    },
+    {
+      "numero": 176,
+      "titulo": "docs: D-003 mesas que cuentan para la disponibilidad",
+      "url": "https://github.com/DylanSrz/ZeroBug/pull/176",
+      "autor": "DylanSrz",
+      "mergedAt": "2026-10-09T18:52:07Z",
+      "adiciones": 21,
+      "eliminaciones": 0,
+      "tareas": []
+    },
+    {
+      "numero": 177,
+      "titulo": "feat: consulta de disponibilidad de mesas (HU-006)",
+      "url": "https://github.com/DylanSrz/ZeroBug/pull/177",
+      "autor": "cesarvega1",
+      "mergedAt": "2026-10-11T02:26:33Z",
+      "adiciones": 230,
+      "eliminaciones": 1,
+      "tareas": [
+        55
+      ]
+    },
+    {
+      "numero": 178,
+      "titulo": "test: e2e de disponibilidad de mesas (HU-006)",
+      "url": "https://github.com/DylanSrz/ZeroBug/pull/178",
+      "autor": "cesarvega1",
+      "mergedAt": "2026-10-11T02:29:28Z",
+      "adiciones": 223,
+      "eliminaciones": 0,
+      "tareas": [
+        56
+      ]
+    },
+    {
+      "numero": 179,
+      "titulo": "feat: registro de reserva con asignación automática de mesa (HU-007)",
+      "url": "https://github.com/DylanSrz/ZeroBug/pull/179",
+      "autor": "DylanSrz",
+      "mergedAt": "2026-10-13T03:01:26Z",
+      "adiciones": 179,
+      "eliminaciones": 2,
+      "tareas": [
+        59
+      ]
+    },
+    {
+      "numero": 180,
+      "titulo": "feat: endpoint POST /reservations (HU-007)",
+      "url": "https://github.com/DylanSrz/ZeroBug/pull/180",
+      "autor": "DylanSrz",
+      "mergedAt": "2026-10-13T03:11:27Z",
+      "adiciones": 181,
+      "eliminaciones": 1,
+      "tareas": [
+        60
+      ]
+    },
+    {
+      "numero": 181,
+      "titulo": "feat: cancelación de reserva (HU-010)",
+      "url": "https://github.com/DylanSrz/ZeroBug/pull/181",
+      "autor": "DylanSrz",
+      "mergedAt": "2026-10-13T03:36:02Z",
+      "adiciones": 153,
+      "eliminaciones": 1,
+      "tareas": [
+        66
+      ]
+    },
+    {
+      "numero": 182,
+      "titulo": "feat: endpoint PATCH /reservations/{id}/cancel (HU-010)",
+      "url": "https://github.com/DylanSrz/ZeroBug/pull/182",
+      "autor": "DylanSrz",
+      "mergedAt": "2026-10-13T03:40:04Z",
+      "adiciones": 187,
+      "eliminaciones": 0,
+      "tareas": [
+        67
+      ]
     }
   ],
   "revisiones": {
     "DylanSrz": {
-      "total": 7,
-      "aprobadas": 7,
+      "total": 10,
+      "aprobadas": 10,
       "cambios": 0,
       "comentarios": 0,
       "prs": [
@@ -616,7 +708,23 @@
         170,
         171,
         172,
-        173
+        173,
+        177,
+        178
+      ]
+    },
+    "MrDilant": {
+      "total": 8,
+      "aprobadas": 8,
+      "cambios": 0,
+      "comentarios": 0,
+      "prs": [
+        176,
+        179,
+        180,
+        181,
+        182,
+        183
       ]
     }
   },
@@ -629,10 +737,20 @@
         167,
         168,
         169,
-        174
+        174,
+        175,
+        176,
+        179,
+        180,
+        181,
+        182
       ],
       "tareas": [
         53,
+        59,
+        60,
+        66,
+        67,
         74,
         75,
         76,
@@ -642,8 +760,8 @@
         80
       ],
       "revisiones": {
-        "total": 7,
-        "aprobadas": 7,
+        "total": 10,
+        "aprobadas": 10,
         "cambios": 0,
         "comentarios": 0,
         "prs": [
@@ -652,7 +770,9 @@
           170,
           171,
           172,
-          173
+          173,
+          177,
+          178
         ]
       },
       "historias": [
@@ -663,11 +783,15 @@
     "cesarvega1": {
       "prs": [
         163,
-        170
+        170,
+        177,
+        178
       ],
       "tareas": [
         52,
-        54
+        54,
+        55,
+        56
       ],
       "revisiones": {
         "total": 0,
@@ -690,11 +814,18 @@
         58
       ],
       "revisiones": {
-        "total": 0,
-        "aprobadas": 0,
+        "total": 8,
+        "aprobadas": 8,
         "cambios": 0,
         "comentarios": 0,
-        "prs": []
+        "prs": [
+          176,
+          179,
+          180,
+          181,
+          182,
+          183
+        ]
       },
       "historias": [
         15
@@ -723,52 +854,52 @@
     }
   },
   "tests": {
-    "unit": 256,
-    "e2e": 167,
+    "unit": 274,
+    "e2e": 201,
     "porModulo": {
       "users": {
         "unit": 14,
         "e2e": 0
       },
-      "tables": {
-        "unit": 29,
-        "e2e": 31
-      },
-      "products": {
-        "unit": 32,
-        "e2e": 20
+      "reservations": {
+        "unit": 94,
+        "e2e": 44
       },
       "menu": {
         "unit": 10,
         "e2e": 16
       },
-      "auth": {
-        "unit": 41,
-        "e2e": 30
-      },
-      "reservations": {
-        "unit": 76,
-        "e2e": 0
-      },
-      "plataforma": {
-        "unit": 26,
-        "e2e": 43
+      "tables": {
+        "unit": 29,
+        "e2e": 31
       },
       "categories": {
         "unit": 28,
         "e2e": 27
+      },
+      "auth": {
+        "unit": 41,
+        "e2e": 50
+      },
+      "products": {
+        "unit": 32,
+        "e2e": 20
+      },
+      "plataforma": {
+        "unit": 26,
+        "e2e": 13
       }
     }
   },
   "endpoints": {
-    "total": 27,
+    "total": 30,
     "porModulo": {
       "auth": 4,
       "categories": 5,
       "health": 1,
       "menu": 4,
       "products": 6,
-      "reservations": 2,
+      "reservations": 5,
       "tables": 5
     }
   }

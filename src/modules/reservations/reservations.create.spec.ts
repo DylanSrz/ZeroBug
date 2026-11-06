@@ -97,7 +97,7 @@ describe('ReservationsService.create', () => {
       lock: { mode: 'pessimistic_write' },
     });
     // dentro de la transacción: siempre con el manager recibido
-    expect(findAvailableTables).toHaveBeenCalledWith(dto, manager);
+    expect(findAvailableTables).toHaveBeenCalledWith(dto, manager, undefined);
   });
 
   it('si otra solicitud tomó la primera mesa, usa la siguiente', async () => {

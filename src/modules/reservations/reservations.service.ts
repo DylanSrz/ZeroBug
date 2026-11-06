@@ -3,18 +3,20 @@
 // Los parámetros de duración y tolerancia se leen de ConfigService
 // (reservations.durationMinutes, reservations.noShowToleranceMinutes), nunca fijos.
 
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { EntityManager, Repository } from 'typeorm';
 import {
   BusinessRuleException,
   EntityNotFoundException,
 } from '../../common/exceptions/index.js';
+import { isFutureInRestaurantTz } from '../../common/validators/index.js';
 import { FilterReservationsDto } from './dto/filter-reservations.dto.js';
 import { ReservationResponseDto } from './dto/reservation-response.dto.js';
 import { AvailabilityQueryDto } from './dto/availability-query.dto.js';
 import { AvailabilityResponseDto } from './dto/availability-response.dto.js';
 import { CreateReservationDto } from './dto/create-reservation.dto.js';
+import { UpdateReservationDto } from './dto/update-reservation.dto.js';
 import { Reservation } from './entities/reservation.entity.js';
 import {
   BLOCKING_STATUSES,
@@ -24,6 +26,13 @@ import {
 import { Table } from '../tables/entities/table.entity.js';
 import { TableStatus } from '../tables/enums/index.js';
 import { ConfigService } from '@nestjs/config';
+
+const NOT_MODIFIABLE = [
+  ReservationStatus.CHECKED_IN, // cliente ya sentado (RN-057)
+  ReservationStatus.CANCELLED,
+  ReservationStatus.NO_SHOW,
+  ReservationStatus.COMPLETED,
+];
 
 @Injectable()
 export class ReservationsService {
@@ -40,6 +49,7 @@ export class ReservationsService {
   async findAvailableTables(
     query: AvailabilityQueryDto,
     manager: EntityManager = this.reservationRepository.manager,
+    excludeReservationId?: string,
   ): Promise<AvailabilityResponseDto> {
     // Inicio de la ventana solicitada como string 'YYYY-MM-DD HH:mm'
     const start = `${query.date} ${query.time}`;
@@ -73,11 +83,21 @@ export class ReservationsService {
           )
           .andWhere(
             'CAST(:start AS timestamp) < (r.date + r.time) + make_interval(mins => :duration)',
-          )
-          .getQuery();
-        return `NOT EXISTS ${conflict}`;
+          );
+
+        if (excludeReservationId) {
+          conflict.andWhere('r.id != :excludeReservationId');
+        }
+
+        return `NOT EXISTS ${conflict.getQuery()}`;
       })
-      .setParameters({ blocking: [...BLOCKING_STATUSES], start, duration })
+
+      .setParameters({
+        blocking: [...BLOCKING_STATUSES],
+        start,
+        duration,
+        excludeReservationId,
+      })
       // Capacidad ascendente: la primera mesa es la más ajustada (Dilant asigna esa)
       .orderBy('t.capacity', 'ASC')
       .addOrderBy('t.number', 'ASC')
@@ -94,42 +114,52 @@ export class ReservationsService {
     };
   }
 
+  private async lockFirstAvailableTable(
+    query: AvailabilityQueryDto,
+    manager: EntityManager,
+    excludeReservationId?: string,
+  ): Promise<string | null> {
+    const { tables } = await this.findAvailableTables(
+      query,
+      manager,
+      excludeReservationId,
+    );
+    for (const candidate of tables) {
+      await manager.getRepository(Table).findOne({
+        where: { id: candidate.id },
+        lock: { mode: 'pessimistic_write' },
+      });
+      const again = await this.findAvailableTables(
+        query,
+        manager,
+        excludeReservationId,
+      );
+      if (again.tables.some((t) => t.id === candidate.id)) return candidate.id;
+    }
+    return null;
+  }
+
   // HU-007: registra la reserva en la mesa libre más ajustada, sin permitir
   // que dos solicitudes simultáneas se queden con la misma mesa (RN-045).
   async create(dto: CreateReservationDto): Promise<ReservationResponseDto> {
     const id = await this.reservationRepository.manager.transaction(
       async (manager) => {
-        // Candidatas ordenadas por capacidad: la primera es la más ajustada
-        const { tables } = await this.findAvailableTables(dto, manager);
+        const tableId = await this.lockFirstAvailableTable(dto, manager);
 
-        for (const candidate of tables) {
-          // SELECT ... FOR UPDATE: otra transacción que quiera esta mesa espera
-          // a que esta termine
-          await manager.getRepository(Table).findOne({
-            where: { id: candidate.id },
-            lock: { mode: 'pessimistic_write' },
-          });
-
-          // Ya con el bloqueo, se comprueba de nuevo: otra solicitud pudo
-          // haberla reservado mientras esperábamos
-          const again = await this.findAvailableTables(dto, manager);
-          if (!again.tables.some((table) => table.id === candidate.id)) {
-            continue;
-          }
-
-          const saved = await manager.getRepository(Reservation).save({
-            ...dto,
-            status: ReservationStatus.PENDING, // RN-046
-            tableId: candidate.id,
-          });
-          return saved.id;
+        if (!tableId) {
+          // Lanzar dentro de la transacción hace rollback automático
+          throw new BusinessRuleException(
+            'No hay mesas disponibles para esa fecha, hora y número de personas',
+            'RN-044',
+          );
         }
 
-        // Lanzar dentro de la transacción hace rollback automático
-        throw new BusinessRuleException(
-          'No hay mesas disponibles para esa fecha, hora y número de personas',
-          'RN-044',
-        );
+        const saved = await manager.getRepository(Reservation).save({
+          ...dto,
+          status: ReservationStatus.PENDING, // RN-046
+          tableId,
+        });
+        return saved.id;
       },
     );
 
@@ -188,6 +218,96 @@ export class ReservationsService {
     return this.toResponse(reservation);
   }
 
+  // HU-009: modifica una reserva existente sin generar conflictos.
+  // Reasigna mesa solo si la actual ya no cumple capacidad o tiene solapamiento.
+  async update(
+    id: string,
+    dto: UpdateReservationDto,
+  ): Promise<ReservationResponseDto> {
+    await this.reservationRepository.manager.transaction(async (manager) => {
+      const repository = manager.getRepository(Reservation);
+      const reservation = await repository.findOne({
+        where: { id },
+        lock: { mode: 'pessimistic_write' },
+      });
+      if (!reservation) throw new EntityNotFoundException('Reservation', id); // RN-052
+      if (NOT_MODIFIABLE.includes(reservation.status)) {
+        throw new BusinessRuleException(
+          `Estado ${reservation.status}: no se modifica`,
+          'RN-057',
+        );
+      }
+
+      const schedule = {
+        date: dto.date ?? reservation.date,
+        time: dto.time ?? reservation.time.slice(0, 5), // BD: HH:MM:SS
+        guests: dto.guests ?? reservation.guests,
+      };
+      const changed =
+        schedule.date !== reservation.date ||
+        schedule.time !== reservation.time.slice(0, 5) ||
+        schedule.guests !== reservation.guests;
+
+      if (changed) {
+        if (!isFutureInRestaurantTz(schedule.date, schedule.time)) {
+          throw new BadRequestException({
+            message:
+              'La fecha y hora deben ser futuras (zona horaria del restaurante)',
+            rule: 'RN-053',
+          });
+        }
+        const { tables } = await this.findAvailableTables(
+          schedule,
+          manager,
+          reservation.id,
+        );
+        let keepsTable = tables.some((t) => t.id === reservation.tableId);
+
+        if (keepsTable) {
+          // Igual que lockFirstAvailableTable: bloquear la fila de la mesa y volver
+          // a comprobar. Sin este paso, dos transacciones concurrentes podrían
+          // asignar la misma mesa a dos reservas distintas (RN-045).
+          await manager.getRepository(Table).findOne({
+            // keepsTable es true solo si tables.some() encontró esa mesa → tableId no puede ser null
+            where: { id: reservation.tableId! },
+            lock: { mode: 'pessimistic_write' },
+          });
+          const again = await this.findAvailableTables(
+            schedule,
+            manager,
+            reservation.id,
+          );
+          keepsTable = again.tables.some((t) => t.id === reservation.tableId);
+        }
+
+        if (!keepsTable) {
+          const tableId = await this.lockFirstAvailableTable(
+            schedule,
+            manager,
+            reservation.id,
+          );
+          if (!tableId) {
+            throw new BusinessRuleException(
+              'No hay mesas para ese cambio',
+              'RN-058',
+            );
+          }
+          reservation.tableId = tableId; // RN-056
+        }
+      }
+
+      await repository.save(
+        repository.merge(reservation, {
+          customerName: dto.customerName ?? reservation.customerName,
+          phone: dto.phone ?? reservation.phone,
+          email: dto.email ?? reservation.email,
+          ...schedule,
+        }),
+      );
+    });
+    return this.findOne(id);
+  }
+
   // HU-010: cancela la reserva conservándola en el historial (RN-062). No se
   // toca la mesa: CANCELLED no está en BLOCKING_STATUSES, así que la
   // disponibilidad deja de contarla sola (RN-063).
@@ -214,6 +334,112 @@ export class ReservationsService {
     const saved = await this.reservationRepository.save(reservation);
 
     return this.toResponse(saved);
+  }
+
+  // HU-011: confirma una reserva pendiente (PENDING → CONFIRMED).
+  // Conserva la mesa asignada y registra cuándo se confirmó (RN-069).
+  async confirm(id: string): Promise<ReservationResponseDto> {
+    // 1. La reserva debe existir (RN-065). Se trae con su mesa para revisarla.
+    const reservation = await this.reservationRepository.findOne({
+      where: { id },
+      relations: { table: true },
+    });
+
+    if (!reservation) {
+      throw new EntityNotFoundException('Reservation', id);
+    }
+
+    // 2. Solo se confirma desde PENDING (RN-066, RN-067): si el estado actual
+    // no permite pasar a CONFIRMED, lanza un 409.
+    assertTransition(reservation.status, ReservationStatus.CONFIRMED);
+
+    // 3. La reserva debe conservar una mesa operativa (RN-068). Si no tiene
+    // mesa (por ejemplo, se eliminó) o está fuera de servicio, el personal
+    // tiene que asignar o reasignar otra antes de confirmar (HU-009).
+    if (
+      !reservation.table ||
+      reservation.table.status === TableStatus.OUT_OF_SERVICE
+    ) {
+      throw new BusinessRuleException(
+        'La reserva no tiene una mesa operativa asignada: asigna o reasigna una mesa antes de confirmarla',
+        'RN-068',
+      );
+    }
+
+    // 4. Se cambia el estado y se guarda la fecha y hora de confirmación (RN-069).
+    // La mesa no se toca: sigue asignada y la reserva sigue bloqueando el horario.
+    reservation.status = ReservationStatus.CONFIRMED;
+    reservation.confirmedAt = new Date();
+
+    const saved = await this.reservationRepository.save(reservation);
+    return this.toResponse(saved);
+  }
+
+  // HU-012: registra la llegada del cliente. En una sola transacción la
+  // reserva pasa a CHECKED_IN y su mesa a OCCUPIED: o se aplican las dos
+  // cosas o ninguna.
+  async checkIn(id: string): Promise<ReservationResponseDto> {
+    await this.reservationRepository.manager.transaction(async (manager) => {
+      const reservations = manager.getRepository(Reservation);
+      const tables = manager.getRepository(Table);
+
+      // 1. La reserva debe existir (RN-070). Se bloquea su fila para que dos
+      // check-in simultáneos de la misma reserva no pasen los dos.
+      const reservation = await reservations.findOne({
+        where: { id },
+        lock: { mode: 'pessimistic_write' },
+      });
+
+      if (!reservation) {
+        throw new EntityNotFoundException('Reservation', id);
+      }
+
+      // 2. Solo desde CONFIRMED (RN-071, RN-075): si el estado actual no
+      // permite pasar a CHECKED_IN, lanza un 409.
+      assertTransition(reservation.status, ReservationStatus.CHECKED_IN);
+
+      // 3. Debe tener una mesa asignada (RN-072).
+      if (!reservation.tableId) {
+        throw new BusinessRuleException(
+          'La reserva no tiene una mesa asignada: asigna una antes de registrar el check-in',
+          'RN-072',
+        );
+      }
+
+      // 4. Se carga y se bloquea la mesa dentro de la misma transacción.
+      const table = await tables.findOne({
+        where: { id: reservation.tableId },
+        lock: { mode: 'pessimistic_write' },
+      });
+
+      if (!table) {
+        throw new BusinessRuleException(
+          'La mesa asignada a la reserva ya no existe: asigna otra antes de registrar el check-in',
+          'RN-072',
+        );
+      }
+
+      // 5. Si la mesa ya está ocupada por otra reserva o pedido, no se puede
+      // ocupar de nuevo (RN-073).
+      if (table.status === TableStatus.OCCUPIED) {
+        throw new BusinessRuleException(
+          'La mesa asignada ya está ocupada por otra reserva o pedido',
+          'RN-073',
+        );
+      }
+
+      // 6. Se aplican los dos cambios y se registra la llegada (RN-073, RN-074).
+      reservation.status = ReservationStatus.CHECKED_IN;
+      reservation.checkedInAt = new Date();
+      table.status = TableStatus.OCCUPIED;
+
+      await reservations.save(reservation);
+      await tables.save(table);
+    });
+
+    // La transacción ya terminó: se devuelve la reserva con su mesa, en el
+    // mismo formato que el GET.
+    return this.findOne(id);
   }
 
   // Convierte la entidad en la respuesta pública: la hora en HH:MM y de la

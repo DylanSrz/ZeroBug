@@ -1,0 +1,41 @@
+name: Daily en Discord
+
+# Los cron de GitHub van en UTC. Colombia es UTC−5 todo el año (sin horario de verano).
+# Solo se ejecutan desde la rama por defecto (main).
+on:
+  schedule:
+    - cron: '30 17 * * 1-5' # 12:30 p. m.: recordatorio de la reunión de la 1:00 p. m.
+    - cron: '0 13 * * 1-5' # 8:00 a. m.: daily asíncrona en días sin reunión
+  workflow_dispatch:
+    inputs:
+      modo:
+        description: Tipo de mensaje
+        type: choice
+        options: [auto, recordatorio, asincrona]
+        default: auto
+      fecha:
+        description: Simular otro día (AAAA-MM-DD); vacío = hoy
+        type: string
+        default: ''
+      dry_run:
+        description: Solo mostrar el mensaje en el log, sin enviarlo
+        type: boolean
+        default: true
+
+permissions:
+  contents: read
+
+jobs:
+  daily:
+    name: daily
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Enviar mensaje a #daily
+        env:
+          DISCORD_WEBHOOK_DAILY: ${{ secrets.DISCORD_WEBHOOK_DAILY }}
+          MODO: ${{ github.event_name == 'schedule' && (github.event.schedule == '30 17 * * 1-5' && 'recordatorio' || 'asincrona') || inputs.modo }}
+          FECHA: ${{ inputs.fecha }}
+          DRY_RUN: ${{ github.event_name == 'workflow_dispatch' && inputs.dry_run && '1' || '0' }}
+        run: bash scripts/daily-discord.sh
