@@ -2,7 +2,7 @@
 
 [![CI](https://github.com/DylanSrz/ZeroBug/actions/workflows/ci.yml/badge.svg?branch=dev)](https://github.com/DylanSrz/ZeroBug/actions/workflows/ci.yml)
 
-API REST para la gestión operativa de un restaurante: **mesas, menú, reservas, usuarios/roles y pedidos**.
+API REST para la gestión operativa de un restaurante: **mesas, menú, reservas y usuarios/roles**. Los pedidos están fuera de lo implementado hasta ahora.
 Backend en NestJS + TypeScript sobre PostgreSQL, desarrollado con metodología SCRUM en 3 sprints (18 sep – 16 oct 2026).
 
 - 📋 Tablero: <https://github.com/users/DylanSrz/projects/7>
